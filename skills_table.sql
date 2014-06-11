@@ -1,4 +1,4 @@
-INSERT INTO `kba07_pf_skills` (`id`, `skill`, `category`) VALUES
+fINSERT INTO `kba07_pf_skills` (`id`, `skill`, `category`) VALUES
 (1, '.NET for Web', 1),
 (2, '.NET Framework', 1),
 (3, 'Acronis', 1),
