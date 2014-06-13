@@ -133,7 +133,7 @@ class PFprojectsControllerForm extends JControllerForm
 
             // Store the current project id in session
             $recordId = JRequest::getUInt('id');
-
+echo "recordid is $recordId"; exit;
             if ($recordId) {
                 // Store the current project id in session
                 $context = "$this->option.copy.$this->context.id";

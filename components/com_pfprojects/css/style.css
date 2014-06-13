@@ -1,0 +1,445 @@
+#addtask{
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+    color: #a00;
+}
+ul.token-input-list li {
+    list-style-type: none;
+}
+li.token-input-input-token {
+    list-style-type: none;
+}
+li.token-input-input-token {
+    list-style-type: none;
+}
+li {
+    line-height: 18px;
+}
+ul.token-input-list li {
+    list-style-type: none;
+}
+.control-group .token-input-list input {
+    margin: 0px !important;
+        margin-top: 0px;
+        margin-right-value: 0px;
+        margin-bottom: 0px;
+        margin-left-value: 0px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+}
+li.token-input-token {
+    overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    height: auto !important;
+    margin: 3px;
+        margin-top: 3px;
+        margin-right-value: 3px;
+        margin-bottom: 3px;
+        margin-left-value: 3px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+    padding: 3px;
+        padding-top: 3px;
+        padding-right-value: 3px;
+        padding-bottom: 3px;
+        padding-left-value: 3px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    background-color: rgb(246, 246, 246);
+    color: rgb(68, 68, 68);
+    cursor: default;
+    border: 1px solid rgb(235, 235, 235);
+        border-top-width: 1px;
+        border-right-width-value: 1px;
+        border-right-width-ltr-source: physical;
+        border-right-width-rtl-source: physical;
+        border-bottom-width: 1px;
+        border-left-width-value: 1px;
+        border-left-width-ltr-source: physical;
+        border-left-width-rtl-source: physical;
+        border-top-style: solid;
+        border-right-style-value: solid;
+        border-right-style-ltr-source: physical;
+        border-right-style-rtl-source: physical;
+        border-bottom-style: solid;
+        border-left-style-value: solid;
+        border-left-style-ltr-source: physical;
+        border-left-style-rtl-source: physical;
+        border-top-color: rgb(235, 235, 235);
+        border-right-color-value: rgb(235, 235, 235);
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-bottom-color: rgb(235, 235, 235);
+        border-left-color-value: rgb(235, 235, 235);
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image-source: none;
+        border-image-slice: 100% 100% 100% 100%;
+        border-image-width: 1 1 1 1;
+        border-image-outset: 0 0 0 0;
+        border-image-repeat: stretch stretch;
+    font-size: 14px;
+    float: left;
+    white-space: nowrap;
+    font-weight: normal;
+}
+li.token-input-token {
+    overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    height: auto !important;
+    margin: 3px;
+        margin-top: 3px;
+        margin-right-value: 3px;
+        margin-bottom: 3px;
+        margin-left-value: 3px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+    padding: 3px 5px;
+        padding-top: 3px;
+        padding-right-value: 5px;
+        padding-bottom: 3px;
+        padding-left-value: 5px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    background-color: rgb(236, 243, 246);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    cursor: default;
+    display: block;
+}
+li.token-input-token {
+    overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    height: auto !important;
+    margin: 3px;
+        margin-top: 3px;
+        margin-right-value: 3px;
+        margin-bottom: 3px;
+        margin-left-value: 3px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+    padding: 4px;
+        padding-top: 4px;
+        padding-right-value: 4px;
+        padding-bottom: 4px;
+        padding-left-value: 4px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    background-color: rgb(246, 246, 246);
+    color: rgb(0, 0, 0);
+    cursor: default;
+    border: 1px solid rgb(235, 235, 235);
+        border-top-width: 1px;
+        border-right-width-value: 1px;
+        border-right-width-ltr-source: physical;
+        border-right-width-rtl-source: physical;
+        border-bottom-width: 1px;
+        border-left-width-value: 1px;
+        border-left-width-ltr-source: physical;
+        border-left-width-rtl-source: physical;
+        border-top-style: solid;
+        border-right-style-value: solid;
+        border-right-style-ltr-source: physical;
+        border-right-style-rtl-source: physical;
+        border-bottom-style: solid;
+        border-left-style-value: solid;
+        border-left-style-ltr-source: physical;
+        border-left-style-rtl-source: physical;
+        border-top-color: rgb(235, 235, 235);
+        border-right-color-value: rgb(235, 235, 235);
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-bottom-color: rgb(235, 235, 235);
+        border-left-color-value: rgb(235, 235, 235);
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image-source: none;
+        border-image-slice: 100% 100% 100% 100%;
+        border-image-width: 1 1 1 1;
+        border-image-outset: 0 0 0 0;
+        border-image-repeat: stretch stretch;
+    font-size: 13px;
+    float: left;
+    white-space: nowrap;
+}
+li.token-input-token {
+    padding: 2px !important;
+        padding-top: 2px;
+        padding-right-value: 2px;
+        padding-bottom: 2px;
+        padding-left-value: 2px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+}
+li {
+    line-height: 18px;
+}
+ul.token-input-list {
+    cursor: text;
+    list-style-type: none;
+    color: rgb(51, 51, 51);
+}
+ul.token-input-list {
+    cursor: text;
+    font-size: 12px;
+    list-style-type: none;
+}
+ul.token-input-list {
+    line-height: 18px;
+    color: rgb(85, 85, 85);
+    font-size: 14px;
+    cursor: text;
+    list-style-type: none;
+}
+ul.token-input-list {
+    font-size: 12px !important;
+}
+ul.token-input-list {
+    overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    height: auto !important;
+    width: 92%;
+    cursor: text;
+    min-height: 1px;
+    z-index: 999;
+    background: none repeat scroll 0% 0% rgb(252, 252, 252);
+        background-color: rgb(252, 252, 252);
+        background-image: none;
+        background-repeat: repeat;
+        background-attachment: scroll;
+        background-position: 0% 0%;
+        background-clip: border-box;
+        background-origin: padding-box;
+        background-size: auto auto;
+    list-style-type: none;
+    clear: left;
+    color: rgb(51, 51, 51);
+    border: 1px solid rgb(204, 204, 204);
+        border-top-width: 1px;
+        border-right-width-value: 1px;
+        border-right-width-ltr-source: physical;
+        border-right-width-rtl-source: physical;
+        border-bottom-width: 1px;
+        border-left-width-value: 1px;
+        border-left-width-ltr-source: physical;
+        border-left-width-rtl-source: physical;
+        border-top-style: solid;
+        border-right-style-value: solid;
+        border-right-style-ltr-source: physical;
+        border-right-style-rtl-source: physical;
+        border-bottom-style: solid;
+        border-left-style-value: solid;
+        border-left-style-ltr-source: physical;
+        border-left-style-rtl-source: physical;
+        border-top-color: rgb(204, 204, 204);
+        border-right-color-value: rgb(204, 204, 204);
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-bottom-color: rgb(204, 204, 204);
+        border-left-color-value: rgb(204, 204, 204);
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image-source: none;
+        border-image-slice: 100% 100% 100% 100%;
+        border-image-width: 1 1 1 1;
+        border-image-outset: 0 0 0 0;
+        border-image-repeat: stretch stretch;
+    padding: 5px;
+        padding-top: 5px;
+        padding-right-value: 5px;
+        padding-bottom: 5px;
+        padding-left-value: 5px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    border-radius: 3px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+}
+ul {
+    list-style: disc outside none;
+}
+ul {
+    list-style: disc outside none;
+}
+ul {
+    list-style-type: none;
+}
+
+ul.token-input-list li input {
+    border: 0px none;
+        border-top-width: 0px;
+        border-right-width-value: 0px;
+        border-right-width-ltr-source: physical;
+        border-right-width-rtl-source: physical;
+        border-bottom-width: 0px;
+        border-left-width-value: 0px;
+        border-left-width-ltr-source: physical;
+        border-left-width-rtl-source: physical;
+        border-top-style: none;
+        border-right-style-value: none;
+        border-right-style-ltr-source: physical;
+        border-right-style-rtl-source: physical;
+        border-bottom-style: none;
+        border-left-style-value: none;
+        border-left-style-ltr-source: physical;
+        border-left-style-rtl-source: physical;
+        border-top-color: -moz-use-text-color;
+        border-right-color-value: -moz-use-text-color;
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-bottom-color: -moz-use-text-color;
+        border-left-color-value: -moz-use-text-color;
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image-source: none;
+        border-image-slice: 100% 100% 100% 100%;
+        border-image-width: 1 1 1 1;
+        border-image-outset: 0 0 0 0;
+        border-image-repeat: stretch stretch;
+    padding: 8px;
+        padding-top: 8px;
+        padding-right-value: 8px;
+        padding-bottom: 8px;
+        padding-left-value: 8px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    background: none repeat scroll 0% 0% transparent;
+        background-color: transparent;
+        background-image: none;
+        background-repeat: repeat;
+        background-attachment: scroll;
+        background-position: 0% 0%;
+        background-clip: border-box;
+        background-origin: padding-box;
+        background-size: auto auto;
+    margin: -1px 0px;
+    font-size: 14px;
+    font-family: Arial,Helvetica,sans-serif;
+    width: auto !important;
+}
+ul.token-input-list li input {
+    border: 0px none;
+        border-top-width: 0px;
+        border-right-width-value: 0px;
+        border-right-width-ltr-source: physical;
+        border-right-width-rtl-source: physical;
+        border-bottom-width: 0px;
+        border-left-width-value: 0px;
+        border-left-width-ltr-source: physical;
+        border-left-width-rtl-source: physical;
+        border-top-style: none;
+        border-right-style-value: none;
+        border-right-style-ltr-source: physical;
+        border-right-style-rtl-source: physical;
+        border-bottom-style: none;
+        border-left-style-value: none;
+        border-left-style-ltr-source: physical;
+        border-left-style-rtl-source: physical;
+        border-top-color: -moz-use-text-color;
+        border-right-color-value: -moz-use-text-color;
+        border-right-color-ltr-source: physical;
+        border-right-color-rtl-source: physical;
+        border-bottom-color: -moz-use-text-color;
+        border-left-color-value: -moz-use-text-color;
+        border-left-color-ltr-source: physical;
+        border-left-color-rtl-source: physical;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image-source: none;
+        border-image-slice: 100% 100% 100% 100%;
+        border-image-width: 1 1 1 1;
+        border-image-outset: 0 0 0 0;
+        border-image-repeat: stretch stretch;
+    width: 94.5%;
+    font-size: 16px;
+    font-family: Arial,Helvetica,sans-serif;
+    padding: 7px 8px;
+}
+
+li.token-input-token p {
+    float: left;
+    padding: 0px;
+        padding-top: 0px;
+        padding-right-value: 0px;
+        padding-bottom: 0px;
+        padding-left-value: 0px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    margin: 0px;
+        margin-top: 0px;
+        margin-right-value: 0px;
+        margin-bottom: 0px;
+        margin-left-value: 0px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+}
+li.token-input-token p {
+    display: inline;
+    padding: 0px;
+        padding-top: 0px;
+        padding-right-value: 0px;
+        padding-bottom: 0px;
+        padding-left-value: 0px;
+        padding-left-ltr-source: physical;
+        padding-left-rtl-source: physical;
+        padding-right-ltr-source: physical;
+        padding-right-rtl-source: physical;
+    margin: 0px;
+        margin-top: 0px;
+        margin-right-value: 0px;
+        margin-bottom: 0px;
+        margin-left-value: 0px;
+        margin-left-ltr-source: physical;
+        margin-left-rtl-source: physical;
+        margin-right-ltr-source: physical;
+        margin-right-rtl-source: physical;
+}

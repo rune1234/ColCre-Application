@@ -66,6 +66,7 @@ class PFprojectsControllerProjects extends JControllerAdmin
         $tmpl    = JRequest::getCmd('tmpl');
         $layout  = JRequest::getCmd('layout');
         $item_id = JRequest::getInt('Itemid');
+       
         $return  = $this->getReturnPage();
         $append  = '';
 

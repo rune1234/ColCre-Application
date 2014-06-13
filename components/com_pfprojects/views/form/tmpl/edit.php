@@ -43,9 +43,7 @@ Joomla.submitbutton = function(task)
 
 <form action="<?php echo JRoute::_('index.php?option=com_pfprojects&view=form&id=' . (int) $this->item->id . '&layout=edit'); ?>" method="post" name="adminForm" id="item-form" class="form-inline" enctype="multipart/form-data">
 	<fieldset>
-		<div class="formelm-buttons btn-toolbar">
-		    <?php echo $this->toolbar; ?>
-		</div>
+		
 		<div class="formelm control-group">
 			<div class="control-label">
 		    	<?php echo $this->form->getLabel('title'); ?>
@@ -55,13 +53,73 @@ Joomla.submitbutton = function(task)
 		    </div>
 		</div>
 		<div class="control-group">
+                    <div class="control-label">Description:</div>
 			<div class="controls">
 				<?php echo $this->form->getInput('description'); ?>
 			</div>
 		</div>
+            <div class="control-group"><div class="control-label control-group">Skills Required:
+                    <ul class="token-input-list">
+             
+
+    <li class="token-input-token">
+        <p>
+
+            jquery mobile
+
+        </p>
+        <span class="token-input-delete-token">
+
+            ×
+
+        </span>
+    </li>
+    <li class="token-input-token">
+        <p>
+
+            psd to joomla
+
+        </p>
+        <span class="token-input-delete-token">
+
+            ×
+
+        </span>
+    </li>
+    
+     <li class="token-input-input-token">
+
+  
+</li></ul> 
+                <input id="ctl00_ctl00_guB_guB_ctl00_txtSkills_txtSkills_TextBox" class="txtInput" type="text" maxlength="50" name="ctl00$ctl00$guB$guB$ctl00$txtSkills$txtSkills_TextBox" style="display: none;"></input>
+                </div></div>
+            
+            <div class="control-group">
+                    <div class="control-label"><?php echo $this->form->getLabel('project_brief'); ?>:</div>
+                    <div class="controls"><textarea name='jform[project_brief]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
+				<?php// echo $this->form->getInput('project_brief'); ?>
+			</div>
+		</div>
+            
 	</fieldset>
 
     <hr />
+    <h2>Add Tasks</h2>
+    <p>Here you can divide your project into the different tasks and goals required for the project to be completed.</p>
+        <div class="control-group">
+                    <div class="control-label">Task 1:</div>
+                    <div class="controls"><textarea name='taskform[task]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
+                        <br /><br />Choose how you will measure the success of this task<br /><br />
+                        <div style='float: left;'><select name='taskform[measure]'>
+                            <option value='1'>Likes</option>
+                            <option value='2'>Comments</option>
+                            <option value='3'>Commitments</option>
+                        </select></div>
+                            <div style="float: right;">How Many? <input type='text' /></div>
+                        <br /><br />
+                        <div id="addtask">Add Another Task</div>	
+		</div><br /><br />
+      <hr />
 
     <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?>
     <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_PUBLISHING'), 'project-publishing') ;?>
@@ -178,5 +236,8 @@ Joomla.submitbutton = function(task)
 	<input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
     <input type="hidden" name="view" value="<?php echo htmlspecialchars($this->get('Name'), ENT_COMPAT, 'UTF-8');?>" />
 	<?php echo JHtml::_( 'form.token' ); ?>
+    <div class="formelm-buttons btn-toolbar">
+		    <?php echo $this->toolbar; ?>
+		</div>
 </form>
 </div>

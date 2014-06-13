@@ -46,9 +46,11 @@ class PFprojectsController extends JControllerLegacy
         JHtml::_('pfhtml.script.jQuery');
         JHtml::_('pfhtml.script.bootstrap');
         JHtml::_('pfhtml.script.projectfork');
-
+ 
         JHtml::_('behavior.tooltip');
-
+         $document = JFactory::getDocument();
+         $uribase = JURI::base(true). "/components/com_pfprojects/css/style.css";
+         $document->addStyleSheet($uribase);
         $view      = JRequest::getCmd('view');
         $id        = JRequest::getUInt('id');
         $urlparams = array(
