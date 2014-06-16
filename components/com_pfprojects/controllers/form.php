@@ -39,15 +39,14 @@ class PFprojectsControllerForm extends JControllerForm
      * Constructor
      *
      */
-    public function __construct($config = array())
-	{
+     public function __construct($config = array())
+     {
 	    parent::__construct($config);
-
-        // Register additional tasks
-        $this->registerTask('save2milestone', 'save');
-		$this->registerTask('save2tasklist', 'save');
-		$this->registerTask('save2task', 'save');
-    }
+            // Register additional tasks
+            $this->registerTask('save2milestone', 'save');
+	    $this->registerTask('save2tasklist', 'save');
+	    $this->registerTask('save2task', 'save');
+     }
 
 
     /**
@@ -93,7 +92,7 @@ class PFprojectsControllerForm extends JControllerForm
     {
         $data = JRequest::getVar('jform', array(), 'post', 'array');
         $task = $this->getTask();
-
+            
         // Separate the different component rules before passing on the data
         if (isset($data['rules'])) {
             $rules = $data['rules'];
@@ -130,10 +129,17 @@ class PFprojectsControllerForm extends JControllerForm
                     }
                 }
             }
-
+//echo "taxxsk is $task"; exit;
             // Store the current project id in session
             $recordId = JRequest::getUInt('id');
-echo "recordid is $recordId"; exit;
+            /*$projskills = isset($_POST['projskills']) ? $_POST['projskills'] : '';
+            if (is_array($projskills))
+            { 
+                $db =& JFactory::getDBO();  
+                foreach($projskills as $skillID)
+                { $query = "INSERT INTO #__pf_project_skills (project_id,skill_id) VALUES ($recordId, $skillID)"; $db->setQuery($query); $db->Query(); }
+            }
+            echo $query; exit;*/
             if ($recordId) {
                 // Store the current project id in session
                 $context = "$this->option.copy.$this->context.id";
@@ -247,10 +253,12 @@ echo "recordid is $recordId"; exit;
         else {
             JRequest::setVar('jform', $data, 'post');
         }
-
-        return parent::save($key, $urlVar);
+            
+        /*return*/ $newstate = parent::save($key, $urlVar);
+            
+        return $newstate;
     }
-
+            
 
     /**
      * Method to check if you can add a new record.
@@ -383,10 +391,42 @@ echo "recordid is $recordId"; exit;
      *
      * @return    void
      */
-    protected function postSaveHook($model, $data = array())
+    private function projectSkills($id)
+    {
+        $skills = $_POST['projskills'];
+        $db =& JFactory::getDBO();  
+        if (is_array($skills)) {
+            foreach($skills as $sk)
+            {
+                if (!is_numeric($sk)) continue;
+                $query = "INSERT INTO #__pf_project_skills (project_id,skill_id) VALUES ($id, $sk)"; 
+                $db->setQuery($query); $db->Query();  
+            
+            }
+        }
+    }
+    private function projectTasks($id)
+    { 
+        $db =& JFactory::getDBO(); 
+        $tasks = $_POST['taskform'];
+        foreach($tasks as $tsk)
+        {
+             $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
+VALUES (NULL , '0', '$id', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
+            $db->setQuery($query);
+            //echo $query;
+            $db->Query();
+        }
+       //exit;
+    }
+    protected function postSaveHook($model, $data = array())//function override for a native Joomla function in JControllerForm
     {
         $task = $this->getTask();
-
+        $item = $model->getItem();
+        $id = $item->get('id');
+        if (is_numeric($id)) { 
+            $this->projectSkills($id); 
+            $this->projectTasks($id); }
         switch($task)
         {
             case 'save2copy':

@@ -47,7 +47,7 @@ class PFprojectsControllerProjects extends JControllerAdmin
     public function &getModel($name = 'Form', $prefix = 'PFprojectsModel', $config = array('ignore_request' => true))
     {
         $model = parent::getModel($name, $prefix, $config);
-
+ 
         return $model;
     }
 

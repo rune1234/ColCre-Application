@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die();
 
-
+ 
 // Include dependancies
 jimport('joomla.application.component.controller');
 jimport('joomla.application.component.helper');
@@ -19,4 +19,5 @@ jimport('projectfork.framework');
 
 $controller = JControllerLegacy::getInstance('PFprojects');
 $controller->execute(JFactory::getApplication()->input->get('task'));
+
 $controller->redirect();

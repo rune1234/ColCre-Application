@@ -61,38 +61,14 @@ Joomla.submitbutton = function(task)
             <div class="control-group"><div class="control-label control-group">Skills Required:
                     <ul class="token-input-list">
              
-
-    <li class="token-input-token">
-        <p>
-
-            jquery mobile
-
-        </p>
-        <span class="token-input-delete-token">
-
-            ×
-
-        </span>
-    </li>
-    <li class="token-input-token">
-        <p>
-
-            psd to joomla
-
-        </p>
-        <span class="token-input-delete-token">
-
-            ×
-
-        </span>
-    </li>
+ 
     
      <li class="token-input-input-token">
-
+ <input type='text' class="SkillInput" style='width: 100%'/>
+                
   
-</li></ul> 
-                <input id="ctl00_ctl00_guB_guB_ctl00_txtSkills_txtSkills_TextBox" class="txtInput" type="text" maxlength="50" name="ctl00$ctl00$guB$guB$ctl00$txtSkills$txtSkills_TextBox" style="display: none;"></input>
-                </div></div>
+     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList'></ul></div>
+               </div></div>
             
             <div class="control-group">
                     <div class="control-label"><?php echo $this->form->getLabel('project_brief'); ?>:</div>
@@ -107,10 +83,11 @@ Joomla.submitbutton = function(task)
     <h2>Add Tasks</h2>
     <p>Here you can divide your project into the different tasks and goals required for the project to be completed.</p>
         <div class="control-group">
-                    <div class="control-label">Task 1:</div>
-                    <div class="controls"><textarea name='taskform[task]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
+                    <div class="control-label">Task 1:</div><br />
+                    <div class="controls">Title: <input type='text' name='taskform[0][title]' /></div><br />
+                    <div class="controls">Description: <textarea name='taskform[0][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
                         <br /><br />Choose how you will measure the success of this task<br /><br />
-                        <div style='float: left;'><select name='taskform[measure]'>
+                        <div style='float: left;'><select name='taskform[0][measure]'>
                             <option value='1'>Likes</option>
                             <option value='2'>Comments</option>
                             <option value='3'>Commitments</option>

@@ -7,12 +7,7 @@
 ul.token-input-list li {
     list-style-type: none;
 }
-li.token-input-input-token {
-    list-style-type: none;
-}
-li.token-input-input-token {
-    list-style-type: none;
-}
+
 li {
     line-height: 18px;
 }
@@ -95,37 +90,10 @@ li.token-input-token {
     white-space: nowrap;
     font-weight: normal;
 }
-li.token-input-token {
+
+li.token-input-token, .SkillInput {
     overflow: hidden;
-        overflow-x: hidden;
-        overflow-y: hidden;
-    height: auto !important;
-    margin: 3px;
-        margin-top: 3px;
-        margin-right-value: 3px;
-        margin-bottom: 3px;
-        margin-left-value: 3px;
-        margin-left-ltr-source: physical;
-        margin-left-rtl-source: physical;
-        margin-right-ltr-source: physical;
-        margin-right-rtl-source: physical;
-    padding: 3px 5px;
-        padding-top: 3px;
-        padding-right-value: 5px;
-        padding-bottom: 3px;
-        padding-left-value: 5px;
-        padding-left-ltr-source: physical;
-        padding-left-rtl-source: physical;
-        padding-right-ltr-source: physical;
-        padding-right-rtl-source: physical;
-    background-color: rgb(236, 243, 246);
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    cursor: default;
-    display: block;
-}
-li.token-input-token {
-    overflow: hidden;
+    background: #f00;
         overflow-x: hidden;
         overflow-y: hidden;
     height: auto !important;
@@ -188,6 +156,7 @@ li.token-input-token {
     float: left;
     white-space: nowrap;
 }
+
 li.token-input-token {
     padding: 2px !important;
         padding-top: 2px;
@@ -277,7 +246,7 @@ ul.token-input-list {
         border-image-width: 1 1 1 1;
         border-image-outset: 0 0 0 0;
         border-image-repeat: stretch stretch;
-    padding: 5px;
+    /*padding: 5px;
         padding-top: 5px;
         padding-right-value: 5px;
         padding-bottom: 5px;
@@ -285,7 +254,7 @@ ul.token-input-list {
         padding-left-ltr-source: physical;
         padding-left-rtl-source: physical;
         padding-right-ltr-source: physical;
-        padding-right-rtl-source: physical;
+        padding-right-rtl-source: physical;*/
     border-radius: 3px;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
@@ -442,4 +411,39 @@ li.token-input-token p {
         margin-left-rtl-source: physical;
         margin-right-ltr-source: physical;
         margin-right-rtl-source: physical;
+}
+
+ul.resultsList li
+{
+    list-style-type: none;
+}
+ul.resultsList {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: rgb(255, 255, 255);
+    border-color: -moz-use-text-color rgb(194, 194, 194) rgb(194, 194, 194);
+    border-image: none;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    display: none;
+    max-height: 308px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0px;
+    position: absolute;
+    left: -42px;
+    top: -10px;
+    width: 300px;
+    z-index: 10;
+}
+.token-input-delete-token{
+    margin-left: 20px;
+    font-weight: bold;
+}
+.token-input-input-token
+{
+    height: 32px;
+    
 }

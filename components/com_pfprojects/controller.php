@@ -37,6 +37,16 @@ class PFprojectsController extends JControllerLegacy
      *
      * @return    JController             A JController object to support chaining.
      */
+    public function getSKills()
+    {
+          $db =& JFactory::getDBO();
+          $query = "SELECT * FROM #__pf_skills WHERE skill LIKE '".$db->escape($_POST['skill'])."%'";
+          //echo $query;
+          $db->setQuery($query);
+          $rows = $db->loadObjectList();
+          echo json_encode($rows);
+          die();
+    }
     public function display($cachable = false, $urlparams = false)
     {
         // Load CSS and JS assets
@@ -48,9 +58,15 @@ class PFprojectsController extends JControllerLegacy
         JHtml::_('pfhtml.script.projectfork');
  
         JHtml::_('behavior.tooltip');
-         $document = JFactory::getDocument();
-         $uribase = JURI::base(true). "/components/com_pfprojects/css/style.css";
-         $document->addStyleSheet($uribase);
+        $document = JFactory::getDocument();
+        $uribase = JURI::base(true). "/components/com_pfprojects/css/style.css";
+        $document->addStyleSheet($uribase);
+        $document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
+        $js = "var tasksURL = '".JURI::root()."';";
+        $document->addScriptDeclaration($js);
+        
+        
+        
         $view      = JRequest::getCmd('view');
         $id        = JRequest::getUInt('id');
         $urlparams = array(
@@ -66,7 +82,7 @@ class PFprojectsController extends JControllerLegacy
             'filter_search'    => 'STRING',
             'filter_published' => 'CMD'
         );
-
+ 
         // Inject default view if not set
         if (empty($view)) {
             JRequest::setVar('view', $this->default_view);
