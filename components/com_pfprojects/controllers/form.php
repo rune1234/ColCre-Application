@@ -391,19 +391,48 @@ class PFprojectsControllerForm extends JControllerForm
      *
      * @return    void
      */
-    private function projectSkills($id)
+    private function projectSkills($id, $taskid, $skills)
     {
-        $skills = $_POST['projskills'];
+            
+        /*
+         * Array ( [jform] => Array ( [title] => Quesadilla! [description] =>
+
+Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla!
+[project_brief] => Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! 
+         * [catid] => 0 
+         * [labels] => Array ( [0] => [1] => [2] => [3] => [4] => [5] => [6] => ) 
+         * [attribs] => Array ( [repo_dir] => [website] => [email] => [phone] => ) 
+         * [alias] => 
+         * [created] => 
+         * [id] => 
+         * [asset_id] => 
+         * [elements] => ) 
+         * 
+         * [taskform] => Array ( 
+         * [1] => Array ( [title] => Task #1 for this [measure] => 1 [howmanylikes] => 45 
+         * [SkillInput] => Array ( [0] => 157 [1] => 129 [2] => 142 ) ) 
+         * [0] => Array ( [description] => zinco de mayo! ) 
+         * 
+         * [2] => Array ( [title] => grrrr 
+         * [measure] => 2 
+         * [howmanylikes] => 66 
+         * [SkillInput] => Array ( [0] => 165 [1] => 379 [2] => 587 [3] => 455 ) ) ) 
+         * 
+         * [task] => form.save [return] => L2NvbGNyZS9pbmRleC5waHAvcHJvamVjdHM= [view] => form [3d1871929a137f1560970ed130eb6795] => 1 ) 
+         */
+        //$skills = $_POST['projskills'];
         $db =& JFactory::getDBO();  
         if (is_array($skills)) {
             foreach($skills as $sk)
             {
                 if (!is_numeric($sk)) continue;
-                $query = "INSERT INTO #__pf_project_skills (project_id,skill_id) VALUES ($id, $sk)"; 
+                $query = "INSERT INTO #__pf_project_skills (project_id,task_id, skill_id) VALUES ($id, $taskid, $sk)"; 
+                //echo $query; echo "<br /><br />";
                 $db->setQuery($query); $db->Query();  
             
             }
         }
+            
     }
     private function projectTasks($id)
     { 
@@ -414,8 +443,9 @@ class PFprojectsControllerForm extends JControllerForm
              $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
 VALUES (NULL , '0', '$id', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
             $db->setQuery($query);
-            //echo $query;
             $db->Query();
+            $taskid = $db->insertid();
+            $this->projectSkills($id, $taskid, $tsk['SkillInput']);
         }
        //exit;
     }
@@ -424,9 +454,7 @@ VALUES (NULL , '0', '$id', '0', '0', '".$db->escape($tsk['title'])."', '".str_re
         $task = $this->getTask();
         $item = $model->getItem();
         $id = $item->get('id');
-        if (is_numeric($id)) { 
-            $this->projectSkills($id); 
-            $this->projectTasks($id); }
+        if (is_numeric($id)) { $this->projectTasks($id); }
         switch($task)
         {
             case 'save2copy':

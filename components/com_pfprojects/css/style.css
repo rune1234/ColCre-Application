@@ -14,7 +14,7 @@ li {
 ul.token-input-list li {
     list-style-type: none;
 }
-.control-group .token-input-list input {
+.control-group .token-input-list input, .task-group {
     margin: 0px !important;
         margin-top: 0px;
         margin-right-value: 0px;
@@ -24,6 +24,18 @@ ul.token-input-list li {
         margin-left-rtl-source: physical;
         margin-right-ltr-source: physical;
         margin-right-rtl-source: physical;
+}
+.task-group:nth-child(even)
+{
+    background: #fff;
+    padding: 10px;
+    width: 100%;
+}
+.task-group:nth-child(odd)
+{
+    background: #ddd;
+    padding: 10px;
+    width: 100%;
 }
 li.token-input-token {
     overflow: hidden;

@@ -40,11 +40,16 @@ class PFprojectsController extends JControllerLegacy
     public function getSKills()
     {
           $db =& JFactory::getDBO();
-          $query = "SELECT * FROM #__pf_skills WHERE skill LIKE '".$db->escape($_POST['skill'])."%'";
+          $data = json_decode(file_get_contents("php://input"));
+          $query = "SELECT * FROM #__pf_skills WHERE skill LIKE '".$db->escape($data->skill)."%'";
           //echo $query;
           $db->setQuery($query);
           $rows = $db->loadObjectList();
-          echo json_encode($rows);
+          $fr = new stdClass();
+          $fr->skills = json_encode($rows);
+             $fr->msg = '';
+             echo json_encode($fr);
+             exit;
           die();
     }
     public function display($cachable = false, $urlparams = false)
@@ -60,8 +65,11 @@ class PFprojectsController extends JControllerLegacy
         JHtml::_('behavior.tooltip');
         $document = JFactory::getDocument();
         $uribase = JURI::base(true). "/components/com_pfprojects/css/style.css";
+        
         $document->addStyleSheet($uribase);
-        $document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
+        $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+        //$document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
+        $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
         $js = "var tasksURL = '".JURI::root()."';";
         $document->addScriptDeclaration($js);
         
