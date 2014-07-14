@@ -86,13 +86,16 @@ $is_ssl = JFactory::getURI()->isSSL();
                     <?php endif; ?>
                 </div>
             </div>
-
+<div id='userProfileDiv' style="width: 65%;">
+            <ul id='userProfUl'><li>Most Popular</li><li>New this Week</li><li>Most Awarded</li><li>Most Funded</li></ul></div>
             <div class="clearfix"></div>
-            <div class="row-striped">
+            <div class="row-striped" style="margin: auto; margin-top: 15px; width: 98%;">
+                <div>
                 <?php
                 $k = 0;
                 $current_cat = '';
                 foreach($this->items AS $i => $item) :
+                     
                     $access = PFprojectsHelper::getActions($item->id);
                     $link   = PfprojectsHelperRoute::getDashboardRoute($item->slug);
 
@@ -122,20 +125,20 @@ $is_ssl = JFactory::getURI()->isSSL();
                         $watch = '';
                     }
                 ?>
-                <?php if ($item->category_title != $current_cat && !is_numeric($this->state->get('filter.category'))) : ?>
+                <?php /*if ($item->category_title != $current_cat && !is_numeric($this->state->get('filter.category'))) : ?>
                     <h3><?php echo $this->escape($item->category_title);?></h3>
                     <hr />
 
-                <?php $current_cat = $item->category_title; endif; ?>
-                	<div class="row-fluid">
-    	    	    	<div class="span7">
+                <?php $current_cat = $item->category_title; endif;*/ ?>
+                	
+    	    	    	<div class="span3 pull-left projectBox">
     	    	    		<a href="<?php echo JRoute::_($link);?>">
 	    	    	    		<?php if (!empty($item->logo_img)) : ?>
-	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100" class="thumbnail pull-left" alt="<?php echo $this->escape($item->title);?>" />
+	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100%" alt="<?php echo $this->escape($item->title);?>" />
 	    	    	    		<?php else : ?>
-	    	    	    		        <img src="<?php echo JURI::root(true) . '/media/com_projectfork/projectfork/images/icons/project-placeholder.png'; ?>"  class="thumbnail pull-left" width="100" alt="<?php echo $this->escape($item->title);?>" />
+	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".png"; ?>" width="100%" alt="<?php echo $this->escape($item->category_alias);?>" />
 	    	    	    		<?php endif ; ?>
-	    	    	    		</a>
+                                </a><div class="projcatg"><?php echo $item->category_title;?></div><div style='padding: 10px;'>
     	    	    		<h2 class="item-title">
                                 <?php if ($can_change || $uid) : ?>
                                     <label for="cb<?php echo $i; ?>" class="checkbox pull-left">
@@ -155,14 +158,14 @@ $is_ssl = JFactory::getURI()->isSSL();
 	    	    	    	<div class="project-description"><?php echo JHtml::_('pf.html.truncate', $item->description, 200); ?></div>
 
 
-    	    	    	</div>
-    	    	    	<div class="span5">
+    	    	    	 
     	    	    		<hr class="visible-phone" />
     	    	    		<div class="progress progress-<?php echo $progress_class;?> progress-striped progress-project">
     	    	    		    <div class="bar" style="width: <?php echo ($item->progress > 0) ? $item->progress . "%" : "24px"; ?>">
     	    	    		        <span class="label label-<?php echo $progress_class;?> pull-right"><?php echo $item->progress; ?>%</span>
     	    	    		    </div>
     	    	    		</div>
+                                <!--
     	    	    		<dl class="article-info dl-horizontal">
                         		<?php if($item->start_date != $nulldate): ?>
                         			<dt class="start-title">
@@ -214,9 +217,9 @@ $is_ssl = JFactory::getURI()->isSSL();
                                         <?php echo $item->params->get('phone');?>
                             		</dd>
                                 <?php endif; ?>
-                        	</dl>
-    	    	    	</div>
-    	    	    	<div class="span12 hidden-phone">
+                        	</dl>-->
+                        </div></div>
+    	    	    	<!--<div class="span12 hidden-phone">
     	    	    		<div class="btn-toolbar">
     	    	    			<?php if ($can_edit || $can_edit_own) : ?>
     	    	    			<div class="btn-group">
@@ -267,13 +270,14 @@ $is_ssl = JFactory::getURI()->isSSL();
     	    	    			<?php endif; ?>
     	    	    			<?php echo $watch; ?>
     	    	    		</div>
-    	    	    	</div>
-    	    	    </div>
+    	    	    	</div>-->
+    	    	    
 
                 <?php
                     $k = 1 - $k;
                     endforeach;
                 ?>
+                        </div>
                 </div>
 
         	<?php if ($this->pagination->get('pages.total') > 1) : ?>
