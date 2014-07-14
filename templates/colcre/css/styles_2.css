@@ -1,0 +1,274 @@
+*
+{
+    font-family: sans-serif;
+    padding: 0px;
+    margin: 0px;
+}
+a
+{
+     color: #e84c3d;
+}
+body
+{
+    background: #ddd;
+}
+
+
+
+
+#all
+{
+    width: 1299px;
+    margin: 0px auto;
+    background: #fff;
+}
+header
+{
+   background: #e74c3c;
+   height: 60px;
+    
+}
+.logoheader
+{
+    float: left;
+    margin-left: 3%;
+}
+#leftarea ul.menu
+{
+    color: #000;
+}
+#leftarea ul.menu li{
+    list-style-type: none;
+    margin-top: 10px;
+}
+
+#leftarea ul.menu li a
+{
+    color: #666;
+    text-decoration: none;
+    
+}
+header ul.menu
+{
+    padding: 0px;
+    margin: 0px;
+    margin-left: 30%;
+}
+header ul.menu li
+{
+    /*background: #fff;*/
+    padding-top: 20px;
+    float: left;
+    height: 40px;
+    width: 150px;
+    display: inline;
+    text-decoration: none;
+    list-style-type: none;
+    text-align: center;
+     
+}
+header ul.menu li.current
+{
+    background: #e74c3c;
+    
+}
+ header ul.menu li.current a
+{
+    color: #fff;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+header ul.menu li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+h1#logo
+{
+    font-size: 40px;
+    color: #fff;
+    margin: 10px;
+}
+section.subheader
+{
+    
+    height: 370px;
+    margin-top: 0px;
+     
+}
+.subheader1
+{
+    background: #fff url('../images/profind_bng.png');
+}
+.subheader2
+{
+    background: #fff url('../images/project_bng.png');
+}
+section.subheader div.custom
+{
+    margin-left: 45%;
+    margin-top: 200px;
+}
+section.subheader h1
+{
+    margin-top: 0px;
+    /*margin-left: 45%;*/
+    font-size: 40px;
+}
+section.subheader h2
+{
+    margin-top: 20px;
+    /*margin-left: 45%;*/
+    font-size: 25px;
+    color: #fff;
+}
+section .signbutton
+{
+    float: left;
+    background: #e74c3c;
+    padding: 15px;
+    width: 150px;
+    text-align: center;
+    margin: 10px;
+    margin-top: 20px;
+}
+section #signor
+{
+    float: left;
+    margin: 15px;
+    margin-top: 32px;
+    color: #fff;
+}
+#footer-inner
+{
+    text-align: center;
+}
+#footer-inner h1{
+    color: #e74c3c;
+    margin: 70px auto;
+}
+
+footer
+{
+    background: #2e2e2e;
+    height: 260px;
+}
+footer ul.menu li a
+{
+    color: #e84946;
+    font-size: 13px;
+    text-decoration: none;
+}
+footer ul.menu li.parent
+{
+    display: inline;
+    float: left;
+    margin: 10px;
+    margin-right: 10%;
+}
+footer ul.menu li.parent a
+{
+    font-size: 20px !important;
+}
+footer ul.menu li.parent ul
+{
+    margin-top: 40px;
+    list-style-type: none;
+}
+#leftarea
+{
+    background: #fff;
+    width: 235px;
+}
+#contentarea
+{
+    background: #f4f4f4;
+    float: right;
+    width: 1030px;
+}
+#contentarea_2
+{
+    background: #f4f4f4;
+    padding: 10px;
+    
+}
+
+#leftarea{
+    width: 235px;
+    background: #fff;
+    padding: 10px;
+    float: left;
+}
+.colcrep, .colcrea, .project-title
+{
+    color: #f13a36;
+}
+h2 .project-title
+{
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0px;
+    line-height: 0px;
+}
+h1.colcreh, h3.colcreh
+{
+    text-align: center;
+    color: #f13a36 !important;
+    font-size: 40px !important;
+    font-weight: normal !important;
+}
+.maincatgbox{
+    margin: 10px auto;
+    width: 90%;
+}
+.catgbox
+{
+    float: left; width: 200px; height: 200px; background: #fff; margin: 5px;
+    
+}
+.catgtitle
+{
+    background: #e84c3d;
+    padding: 5px;
+    color: #fff;
+    height: 40px;
+    text-align: center;
+}
+
+.projectBox
+{
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;-webkit-box-shadow:0 0 1px rgba(0, 0, 0, 0.2);-moz-box-shadow:0 0 1px rgba(0, 0, 0, 0.2);box-shadow:0 0 1px rgba(0, 0, 0, 0.2);
+    padding:0px;position:relative;
+    background: rgb(255, 255, 255) !important;
+    height: 570px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+#userProfileDiv
+{
+    margin: 60px auto;
+    width: 50%;
+     
+}
+ul#userProfUl
+{
+    display: inline;
+     
+}
+ul#userProfUl li
+{
+    display: inline;
+     
+    margin-right: 20px;
+    text-decoration: underline;
+}
+.projcatg
+{
+     background: #555;
+     padding: 5px;
+     text-align: center;
+     color: #fff;
+}
