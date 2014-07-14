@@ -60,6 +60,7 @@ class PFprojectsModelProjects extends JModelList
     public function getItems()
     {
         $items     = parent::getItems();
+       // print_r($items);
         $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
         $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
 
@@ -67,7 +68,7 @@ class PFprojectsModelProjects extends JModelList
         $repo_exists  = PFApplicationHelper::enabled('com_pfrepo');
 
         $pks = JArrayHelper::getColumn($items, 'id');
-
+ 
         // Get aggregate data
         $progress        = array();
         $total_tasks     = array();
@@ -180,7 +181,7 @@ class PFprojectsModelProjects extends JModelList
               ->join('LEFT', '#__pf_milestones AS ma ON ma.project_id = a.id');
 
         // Join over the categories.
-        $query->select('c.title AS category_title')
+        $query->select('c.alias as category_alias, c.title AS category_title')
               ->join('LEFT', '#__categories AS c ON c.id = a.catid');
 
         // Join over the task lists for list count
@@ -246,7 +247,7 @@ class PFprojectsModelProjects extends JModelList
 
         // Add the list ordering clause.
         $query->order($this->getState('list.ordering', 'category_title, a.title') . ' ' . $this->getState('list.direction', 'ASC'));
-
+ 
         return $query;
     }
 
