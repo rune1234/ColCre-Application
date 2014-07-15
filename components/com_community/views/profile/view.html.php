@@ -797,7 +797,9 @@ if (!class_exists('CommunityViewProfile')) {
         public function skills($data)//redacron function
         {
             $mainframe = JFactory::getApplication();
-
+            $document = JFactory::getDocument();  
+            $css = rtrim(JURI::root(), '/') . '/components/com_pfprojects/css/style.css';
+            $document->addStyleSheet($css);
             // access check
             CFactory::setActiveProfile();
             if (!$this->accessAllowed('registered'))
