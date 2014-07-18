@@ -75,7 +75,16 @@ Joomla.submitbutton = function(task)
         <div class="task-group" ng-repeat="task in tasks">
                     <div class="control-label">Task {{task.id}}:</div><br />
                     <div class="controls">Title: <input type='text' name='taskform[{{task.id}}][title]' /></div><br />
-                    <div class="controls">Description: <textarea name='taskform[0][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
+                    <div class="controls">Task Category: <select name="taskform[{{task.id}}][category]">
+                            
+                    <?php 
+                    foreach($this->categories as $catg)
+                    {
+                        echo "<option value='$catg->id'>$catg->title</option>\n";
+                    }
+                     ?>
+                        </select></div><br />
+                    <div class="controls">Description: <textarea name='taskform[{{task.id}}][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
                         <br /><br />Choose how you will measure the success of this task<br /><br />
                         <div style='float: left;'><select name='taskform[{{task.id}}][measure]'>
                             <option value='1'>Likes</option>
@@ -185,7 +194,7 @@ Joomla.submitbutton = function(task)
 			<fieldset>
                 <?php foreach ($this->form->getFieldset($name) as $field) : ?>
                     <div class="formelm control-group">
-                    	<div class="control-label"><?php echo $field->label; ?></div>
+                    	<div class="control-label"> <?php echo $field->label; ?></div>
             		    <div class="controls"><?php echo $field->input; ?></div>
             		</div>
                 <?php endforeach; ?>
