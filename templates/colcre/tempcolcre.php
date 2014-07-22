@@ -81,11 +81,20 @@ class tempColcre
     }
     public function popularProjects()
     {
-         $query = "SELECT * FROM #__pf_projects WHERE state=1 ORDER BY start_date DESC LIMIT 4";
+         $query = "SELECT * FROM #__pf_projects WHERE state=1 ORDER BY id DESC LIMIT 4";
                                     $this->_db->setQuery($query);
                                     $rows = $this->_db->loadObjectList();
                                     return $rows;
     }
+    public function getCatgInfo($id)
+    {
+        if (!is_numeric($id)) return;
+        $query = "SELECT title, alias FROM #__categories WHERE id = $id LIMIT 1";
+                                    $this->_db->setQuery($query);
+                                    $row = $this->_db->loadObject();
+                                    return $row;
+    }        
+            
     public function popularUsers()
     {
         $db = $this->_db;
@@ -93,16 +102,16 @@ class tempColcre
                 . ' FROM ' . $db->quoteName('#__users') . ' AS a '
                 . ' LEFT JOIN ' . $db->quoteName('#__session') . ' AS b '
                 . ' ON a.' . $db->quoteName('id') . '=b.' . $db->quoteName('userid')
-                . ' WHERE a.' . $db->quoteName('block') . '=' . $db->Quote(0)." LIMIT 4";
-            /*$tmpAdmins = $this->_getSuperAdmins();
-            $query .= ' AND a.' . $db->quoteName('id') . ' NOT IN(';
+                . ' WHERE a.' . $db->quoteName('block') . '=' . $db->Quote(0)." AND a.id != 859 LIMIT 4";
+           $tmpAdmins = $this->_getSuperAdmins();
+           /* $query .= ' AND a.' . $db->quoteName('id') . ' NOT IN(';
             for ($i = 0; $i < count($tmpAdmins); $i++) {
                 $admin = $tmpAdmins[$i];
                 $query .= $db->Quote($admin->id);
                 $query .= $i < count($tmpAdmins) - 1 ? ',' : '';
             }
-            $query .= ')';*/
-            //echo $query;
+            $query .= ')';
+            echo $query; exit;*/
         $db->setQuery($query);
         $users = $db->loadObjectList();
         //print_r($users);
@@ -117,11 +126,21 @@ class tempColcre
                 $obj->country = $this->_getInfo('FIELD_COUNTRY',$us->id);
                 $obj->state = $this->_getInfo('FIELD_STATE',$us->id);
                 $obj->city = $this->_getInfo('FIELD_CITY',$us->id);
+                $obj->skill_category = $this->getCategoryTitle($this->_getInfo('SKILL_CATEGORY',$us->id));
                 $results[] = $obj;
         }
         //print_r($results);
         return $results;
         
+    }
+    function getCategoryTitle($id)
+    {
+          $db =& JFactory::getDBO();
+          if (!is_numeric($id)) return;
+          $query = "SELECT title FROM #__categories WHERE extension='com_pfprojects' AND id = $id AND published = 1 ORDER BY id ASC";
+          $db->setQuery($query);
+          $rows = $db->loadResult();
+          return $rows;
     }
     private function _getSuperAdmins() {
         $db = $this->_db;
