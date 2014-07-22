@@ -22,7 +22,11 @@ function dump(arr,level) {
 	}
 	return dumped_text;
 }
- 
+function addUserSkill()
+{
+    alert('adding skill');
+    return false;
+} 
 var projectModule = angular.module('myProj', []);
 projectModule.factory('theMenus', function() { return });
 projectModule.factory('theService', function(theMenus, $http) {
