@@ -798,9 +798,16 @@ if (!class_exists('CommunityViewProfile')) {
         {
             $mainframe = JFactory::getApplication();
             $document = JFactory::getDocument();  
-            $css = rtrim(JURI::root(), '/') . '/components/com_pfprojects/css/style.css';
+            $css = rtrim(JURI::root(), '/') . '/components/com_pfprojects/css/style.css';//CSS from com_community. It is used to mimic the add skills functionality of Creating a Project
             $document->addStyleSheet($css);
-            // access check
+            $document->addScriptDeclaration("var tasksURL='".JUri::base()."'");
+            $document->addScript(JURI::root() . 'media/jui/js/jquery.min.js');
+            //$document->addScript(JURI::root() . 'libraries/projectfork/js/jquery.extend.js');
+            $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+            /*$document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');*/
+            $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+            
+           // access check
             CFactory::setActiveProfile();
             if (!$this->accessAllowed('registered'))
                 return;
