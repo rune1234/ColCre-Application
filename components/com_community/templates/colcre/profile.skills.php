@@ -76,7 +76,7 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
             <tr><td valign='top'>Description:  </td><td><textarea name='skilldesc' style='width: 320px; height: 200px;'></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td><textarea name='skilltags' style='width: 320px; height: 100px;'></textarea></td></tr>
         </table> 
-    <input type='hidden' name='skillcatg' value='fuck' />
+    <input type='hidden' name='skillcatg' value='' />
     <input type='submit' value='Submit' /> 
     <span id="skillboxWarn">One of the fields is empty</span>
     </form>    
