@@ -22,9 +22,45 @@ function dump(arr,level) {
 	}
 	return dumped_text;
 }
+function addSkillLayer($this)
+{
+    var centerHeight = (( jQuery($this).outerHeight()) /1) + 100;
+             var centerWidth = '30%';//Math.max(0, (( jQuery(window).width() - jQuery(this).outerWidth()) / 2));
+             var catg = jQuery($this).data('catg');
+             if (isNaN(catg)) { alert('ERROR - category ID is not recognized'); return; }
+             jQuery("input[name=skillcatg]").val(catg);
+             var ff = jQuery('#addskillbox');
+             ff.fadeIn().css({'top': centerHeight, 'left': centerWidth });
+             title = jQuery($this).children('div.catgtitle').html();
+             jQuery('#addskillbox > h1').html("Add Category for "  + title);
+             ff.prepend('<a class="close2"><img src="images/close-bl.png" class="btn_close" title="Close Window" alt="Close" /></a>');; 
+             jQuery('body').append('<div id="fade"></div>'); //Add the fade layer to bottom of the body tag.
+             jQuery('#fade').fadeIn();
+             jQuery('.close2').click(function(){ removeLayer(); });
+}
 function addUserSkill()
 {
-    alert('adding skill');
+    var skilltoAdd = jQuery("input[name=skill2dd]").val();
+    var skillDesc = jQuery("textarea[name=skilldesc]").val();
+    var skillTags = jQuery("textarea[name=skilltags]").val();
+    var skillCatg = jQuery("input[name=skillcatg]").val();
+    if (isNaN(skillCatg)) { jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
+    if (skilltoAdd.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Your skill must have a name'); return false; }
+    if (skillTags.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Add skill tags'); return false; }
+    if (skillDesc.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Add a skill description'); return false; }
+    if (jQuery('#skillboxWarn').is(":visible")) { jQuery('#skillboxWarn').fadeOut().html(''); }
+    $fragment_refresh = {
+		url: tasksURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task:'addUserKill', skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
+		success: function( data ) { 
+                     data = JSON.parse(data);
+                     if (!data.status)
+                     {
+                         alert(data.error);
+                     }
+                } };
+    jQuery.ajax( $fragment_refresh );
     return false;
 } 
 var projectModule = angular.module('myProj', []);
