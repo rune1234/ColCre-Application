@@ -52,6 +52,27 @@ class PFprojectsController extends JControllerLegacy
              exit;
           die();
     }
+    public function addUserKill()
+    {
+        //print_r($_POST);
+        $response = array();
+        $response['status'] = 0;
+        $response['error'] = "There was an error adding data to the database";
+        echo  json_encode($response);
+        exit;/*
+         * Array
+(
+    [option] => com_pfprojects
+    [task] => addUserKill
+    [skilltoAdd] => ariel
+    [skillDesc] => European, Asian, this woman had the whole world in her. 
+    [skillTags] => divination, murder
+         * skillCatg => skillCatg
+)
+         */
+        $db = JFactory::getDbo();
+        $query = "INSERT INTO #__";
+    }
     public function display($cachable = false, $urlparams = false)
     {
         // Load CSS and JS assets
@@ -76,6 +97,7 @@ class PFprojectsController extends JControllerLegacy
         
         
         $view      = JRequest::getCmd('view');
+        
         $id        = JRequest::getUInt('id');
         $urlparams = array(
             'id'               => 'INT',
@@ -101,7 +123,7 @@ class PFprojectsController extends JControllerLegacy
 			// Somehow the person just went to the form - we don't allow that.
 			return JError::raiseError(403, JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 		}
-
+ 
         // Display the view
         parent::display($cachable, $urlparams);
 
