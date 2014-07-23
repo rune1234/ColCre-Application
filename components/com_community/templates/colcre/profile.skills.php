@@ -14,20 +14,7 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
 <script><!--
     jQuery(document).ready(function($) {  
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
-        jQuery('.catgbox').click(function(e) 
-        {  
-            var centerHeight = (( jQuery(this).outerHeight()) /1) + 100;
-            var centerWidth = '30%';//Math.max(0, (( jQuery(window).width() - jQuery(this).outerWidth()) / 2));
-             var ff = jQuery('#addskillbox');
-             ff.fadeIn().css({'top': centerHeight, 'left': centerWidth });
-             title = jQuery(this).children('div.catgtitle').html();
-             jQuery('#addskillbox > h1').html("Add Category for "  + title);
-             ff.prepend('<a class="close2"><img src="<?php echo JUri::base();?>images/close-bl.png" class="btn_close" title="Close Window" alt="Close" /></a>');; 
-             
-             jQuery('body').append('<div id="fade"></div>'); //Add the fade layer to bottom of the body tag.
-             jQuery('#fade').fadeIn();
-             jQuery('.close2').click(function(){ removeLayer(); });
-        } );
+        jQuery('.catgbox').click(function(e) {   addSkillLayer(this); } );
 });
     function removeLayer() { jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } ); return false; }
      
@@ -54,7 +41,7 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
         <?php
         foreach ($skillCategories as $skctg)
         {
-             echo "<div class='catgbox'>\n<div class='catgtitle'>".$skctg->category."</div></div>\n";
+             echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".$skctg->category."</div></div>\n";
         }
         ?>
         <div style='clear: both;'></div>
@@ -85,12 +72,13 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
 </div>
 <div id="addskillbox"><h1>Add Skill to</h1>
     <form onSubmit='return addUserSkill()'><table>
-            <tr><td valign='top'>Skill: </td><td><input style='width: 320px;' type='text' name='skill' /></td></tr>
+            <tr><td valign='top'>Skill: </td><td><input style='width: 320px;' type='text' name='skill2dd' /></td></tr>
             <tr><td valign='top'>Description:  </td><td><textarea name='skilldesc' style='width: 320px; height: 200px;'></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td><textarea name='skilltags' style='width: 320px; height: 100px;'></textarea></td></tr>
         </table> 
-    <input type='hidden' name='skillcatg' value='' />
+    <input type='hidden' name='skillcatg' value='fuck' />
     <input type='submit' value='Submit' /> 
+    <span id="skillboxWarn">One of the fields is empty</span>
     </form>    
     
 </div>    
