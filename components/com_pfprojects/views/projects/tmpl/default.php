@@ -131,7 +131,7 @@ $is_ssl = JFactory::getURI()->isSSL();
 
                 <?php $current_cat = $item->category_title; endif;*/ ?>
                 	
-    	    	    	<div class="span3 pull-left projectBox">
+    	    	    	<div class="span3 pull-left projectBox"> 
     	    	    		<a href="<?php echo JRoute::_($link);?>">
 	    	    	    		<?php if (!empty($item->logo_img)) : ?>
 	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100%" alt="<?php echo $this->escape($item->title);?>" />
