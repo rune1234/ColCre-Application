@@ -236,7 +236,7 @@ h1.colcreh, h3.colcreh
     text-align: center;
 }
 
-.projectBox
+.projectBox, .projectFrame, .userMatch
 {
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
@@ -246,6 +246,12 @@ h1.colcreh, h3.colcreh
     height: 570px;
     margin-bottom: 20px;
     margin-right: 20px;
+}
+.projectFrame, .userMatch{
+    height: auto;
+}
+.userMatch{
+    padding: 10px;
 }
 #userProfileDiv
 {
