@@ -440,14 +440,14 @@ Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadil
         $tasks = $_POST['taskform'];
         foreach($tasks as $tsk)
         {
-             $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
-VALUES (NULL , '0', '$id', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
+             $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,category_id, list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
+VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
             $db->setQuery($query);
             $db->Query();
             $taskid = $db->insertid();
             $this->projectSkills($id, $taskid, $tsk['SkillInput']);
         }
-       //exit;
+            
     }
     protected function postSaveHook($model, $data = array())//function override for a native Joomla function in JControllerForm
     {
