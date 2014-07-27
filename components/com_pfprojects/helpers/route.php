@@ -32,6 +32,8 @@ abstract class PFprojectsHelperRoute
      */
     public static function getDashboardRoute($project = '')
     {
+        $project = explode(":", $project);
+        $project = $project[0];
         if ($project) {
             $link = 'index.php?option=com_projectfork&view=dashboard&id=' . $project;
         }
@@ -40,7 +42,7 @@ abstract class PFprojectsHelperRoute
         }
 
         $needles = array('id'  => array((int) $project));
-
+ 
         if ($item = PFApplicationHelper::itemRoute($needles, 'com_projectfork.dashboard')) {
             $link .= '&Itemid=' . $item;
         }
