@@ -9,34 +9,17 @@
 */
 defined('_JEXEC') or die();
 $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', true ), JText::_( 'Password', true ), 4 );
+$user = JFactory::getUser();
 //redacron file ******************
 ?>
-<script><!--
-    jQuery(document).ready(function($) {  
-        jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
-        jQuery('.catgbox').click(function(e) {   addSkillLayer(this); } );
+ <script><!--
+    jQuery(document).ready(function($) { jQuery('.catgbox').click(function(e) { window.location.href = '<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>&catgid='+ jQuery(this).data('catg'); });
 });
-    function removeLayer() { jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } ); return false; }
      
-
-    --></script>
+--></script>
 <div class="cLayout cProfile-Edit"> 
     <h1 class='colcreh'>Add Skills</h1><br />
-    <div ng-app="myProj"><div ng-controller="taskControl">
-     <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
-               <div class="task-group" ng-repeat="task in tasks">
-                                <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{task.id}}_{{chosenSK.id}}' name="taskform[{{task.id}}][SkillInput][]" />
-                    <ul class="token-input-list">
-             
- <li class="token-input-token" ng-repeat='chosenSK in skillChosen[task.id]'><p>{{chosenSK.skill}}</p> <span class="token-input-delete-token" ng-click='deleteSKill(task.id, chosenSK.id)'>×</span></li>
-    
-     <li class="token-input-input-token" ng-click='focusOnInput(task.id)'>
-         <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='width: 400px !important; border: 0 none !important;' ng-keyup="skillPress($event.altKey, task.id)" />
-                
-  
-     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{task.id}}'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li></ul></div>
-               </div></div></div>
-    </div></div>
+     
     <div class='maincatgbox'>
         <?php
         foreach ($skillCategories as $skctg)
@@ -48,40 +31,9 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
     </div>
     
 	 
-		<div class="cTabsContent space-24">
-			<div id="basicSet" class="section"> <!-- Profile Basic Setting -->
-				<form name="jsform-profile-edit" id="frmSaveProfile" action="<?php echo CRoute::getURI(); ?>" method="POST" class="cForm community-form-validate" autocomplete="off">
-					 
-
-
-					<ul class="cFormList cFormHorizontal cResetList">
-						 
-						<li>
-							<div class="form-field">
-								<input type="hidden" name="action" value="profile" />
-								<?php echo JHTML::_( 'form.token' ); ?>
-								<input type="submit" name="frmSubmit" onclick="submitbutton('frmSaveProfile'); return false;" class="btn btn-primary" value="<?php echo JText::_('COM_COMMUNITY_SAVE_BUTTON'); ?>" />
-							</div>
-						</li>
-					</ul>
-				</form>
-			</div> <!-- end basic setting -->
-
-			
-	</div> <!-- .end: .cTabsContent-->
+		
 </div>
-<div id="addskillbox"><h1>Add Skill to</h1>
-    <form onSubmit='return addUserSkill()'><table>
-            <tr><td valign='top'>Skill: </td><td><input style='width: 320px;' type='text' name='skill2dd' /></td></tr>
-            <tr><td valign='top'>Description:  </td><td><textarea name='skilldesc' style='width: 320px; height: 200px;'></textarea></td></tr>
-        <tr><td valign='top'>Skill Tags: </td><td><textarea name='skilltags' style='width: 320px; height: 100px;'></textarea></td></tr>
-        </table> 
-    <input type='hidden' name='skillcatg' value='' />
-    <input type='submit' value='Submit' /> 
-    <span id="skillboxWarn">One of the fields is empty</span>
-    </form>    
-    
-</div>    
+  
 <script type="text/javascript">
 
 	joms.jQuery( document ).ready( function(){
