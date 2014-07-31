@@ -283,13 +283,14 @@ ul#userProfUl li
     -webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.35);
     -moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.35);  
     box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.35);
-   width: 45%;
-   height: 510px;
-   position: absolute;
+   width: 90%;
+   /*height: 510px;
+ /*  position: absolute;
    left: 0px;
-   top: 0px;
-   display: none;
+   top: 0px;*/
+  /*display: none;*/
    z-index: 4;
+   margin: 10px;
    padding: 5px 20px;
 }
 #addskillbox > h1
