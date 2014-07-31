@@ -787,7 +787,114 @@ if (!class_exists('CommunityViewProfile')) {
             echo $tmpl->set('content', $content)
                     ->fetch('profile.editlayout');
         }
+ public function addskill($data)//redacron function
+        {
+            $mainframe = JFactory::getApplication();
+            $document = JFactory::getDocument();  
+            $css = rtrim(JURI::root(), '/') . '/components/com_pfprojects/css/style.css';//CSS from com_community. It is used to mimic the add skills functionality of Creating a Project
+            $document->addStyleSheet($css);
+            $document->addScriptDeclaration("var tasksURL='".JUri::base()."'");
+            $document->addScript(JURI::root() . 'media/jui/js/jquery.min.js');
+            //$document->addScript(JURI::root() . 'libraries/projectfork/js/jquery.extend.js');
+            $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+            /*$document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');*/
+            $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+            
+           // access check
+            CFactory::setActiveProfile();
+            if (!$this->accessAllowed('registered'))
+                return;
 
+            $my = CFactory::getUser();
+            $config = CFactory::getConfig();
+            $userParams = $my->getParams();
+
+            $pathway = $mainframe->getPathway();
+            $pathway->addItem(JText::_($my->getDisplayName()), CRoute::_('index.php?option=com_community&view=profile&userid=' . $my->id));
+            $pathway->addItem(JText::_('COM_COMMUNITY_PROFILE_EDIT'), '');
+
+            /**
+             * Opengraph
+             */
+            CHeadHelper::setType('website', JText::_('COM_COMMUNITY_PROFILE_EDIT'));
+
+            $js = 'assets/validate-1.5.min.js';
+            CAssets::attach($js, 'js');
+
+            $this->showSubmenu();
+
+            $jConfig = JFactory::getConfig();
+            $app = CAppPlugins::getInstance();
+
+            $appFields = $app->triggerEvent('onFormDisplay', array('jsform-profile-edit'));
+            $beforeFormDisplay = CFormElement::renderElements($appFields, 'before');
+            $afterFormDisplay = CFormElement::renderElements($appFields, 'after');
+
+            $multiprofile = JTable::getInstance('MultiProfile', 'CTable');
+            $multiprofile->load($my->getProfileType());
+
+            $model = CFactory::getModel('Profile');
+            $profileTypes = $model->getProfileTypes();
+
+            // @rule: decide to show multiprofile or not.
+            $showProfileType = ( $config->get('profile_multiprofile') && $profileTypes && count($profileTypes) >= 1 && !$multiprofile->profile_lock);
+
+            $isAdmin = COwnerHelper::isCommunityAdmin();
+            $profileField = $data->profile ['fields'];
+                        
+            if (!is_null($profileField)) {
+                foreach ($profileField as $key => $val) {
+                    foreach ($val as $pkey => $field) {
+                        if (!$isAdmin && $field['visible'] == 2) {
+                            unset($profileField[$key][$pkey]);
+                        }
+                    }
+                }
+            }
+
+            $fbHtml = '';
+            $connectModel = CFactory::getModel('Connect');
+            $associated = $connectModel->isAssociated($my->id);
+
+            if ($config->get('fbconnectkey') && $config->get('fbconnectsecret') && !$config->get('usejfbc')) {
+
+                $facebook = new CFacebook();
+                $fbHtml = $facebook->getLoginHTML();
+            }
+
+
+            if ($config->get('usejfbc')) {
+                if (class_exists('JFBCFactory')) {
+                   $providers = JFBCFactory::getAllProviders();
+
+                   foreach($providers as $p){
+                        $fbHtml .= $p->loginButton();
+                   }
+                }
+            }
+
+            $isUseFirstLastName = CUserHelper::isUseFirstLastName();
+
+            $data->profile ['fields'] = $profileField;
+            $tmpl = new CTemplate();
+            echo $tmpl->set('showProfileType', $showProfileType)
+                    ->set('multiprofile', $multiprofile)
+                    ->set('beforeFormDisplay', $beforeFormDisplay)
+                    ->set('afterFormDisplay', $afterFormDisplay)
+                    ->set('fields', $data->profile ['fields'])
+                    ->set('user', $my)
+                   // ->set('skillCategories', $data->skillCategories)
+                    ->set('fbHtml', $fbHtml)
+                    ->set('fbPostStatus', $userParams->get('postFacebookStatus'))
+                    ->set('jConfig', $jConfig)
+                    ->set('params', $data->params)
+                    ->set('config', $config)
+                    ->set('associated', $associated)
+                    ->set('isAdmin', COwnerHelper::isCommunityAdmin())
+                    ->set('offsetList', $data->offsetList)
+                    ->set('isUseFirstLastName', $isUseFirstLastName)
+                    ->fetch('profile.addskill');
+        }
         /**
          * Edits a user profile
          *
@@ -800,12 +907,12 @@ if (!class_exists('CommunityViewProfile')) {
             $document = JFactory::getDocument();  
             $css = rtrim(JURI::root(), '/') . '/components/com_pfprojects/css/style.css';//CSS from com_community. It is used to mimic the add skills functionality of Creating a Project
             $document->addStyleSheet($css);
-            $document->addScriptDeclaration("var tasksURL='".JUri::base()."'");
-            $document->addScript(JURI::root() . 'media/jui/js/jquery.min.js');
+            //$document->addScriptDeclaration("var tasksURL='".JUri::base()."'");
+            //$document->addScript(JURI::root() . 'media/jui/js/jquery.min.js');
             //$document->addScript(JURI::root() . 'libraries/projectfork/js/jquery.extend.js');
-            $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+           // $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
             /*$document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');*/
-            $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+           // $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
             
            // access check
             CFactory::setActiveProfile();
