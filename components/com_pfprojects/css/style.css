@@ -6,14 +6,13 @@
 }
 ul.token-input-list li {
     list-style-type: none;
+    
 }
 
 li {
     line-height: 18px;
 }
-ul.token-input-list li {
-    list-style-type: none;
-}
+
 .control-group .token-input-list input, .task-group {
     margin: 0px !important;
         margin-top: 0px;
@@ -29,7 +28,7 @@ ul.token-input-list li {
 {
     background: #fff;
     padding: 10px;
-    width: 100%;
+    width: 500px;
 }
 .task-group:nth-child(odd)
 {
@@ -185,6 +184,8 @@ li {
 }
 ul.token-input-list {
     cursor: text;
+    width: 600px;
+     
     list-style-type: none;
     color: rgb(51, 51, 51);
 }
@@ -208,7 +209,7 @@ ul.token-input-list {
         overflow-x: hidden;
         overflow-y: hidden;
     height: auto !important;
-    width: 92%;
+    
     cursor: text;
     min-height: 1px;
     z-index: 999;
