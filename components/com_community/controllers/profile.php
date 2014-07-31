@@ -2130,6 +2130,133 @@ class CommunityProfileController extends CommunityBaseController {
         $view = $this->getView('profile');
         echo $view->get(__FUNCTION__);
     }
+    public function addSkill()//redacron function
+    {
+                      CFactory::setActiveProfile();
+
+        $user = CFactory::getUser();
+        $mainframe = JFactory::getApplication();
+        $jinput = $mainframe->input;
+        $action = $jinput->post->get('action', '');
+                            
+        if ($user->id == 0) {
+            return $this->blockUnregister();
+        }
+        // Get/Create the model
+        $model = $this->getModel('profile');
+        $model->setProfile('hello me');
+       
+
+        $data = new stdClass();
+        $data->profile = $model->getEditableProfile($user->id, $user->getProfileType());
+
+        if ($action == 'profile') { /* JomSocial profile update */
+            if ($this->_saveProfile()) {
+                $msg = JText::_('COM_COMMUNITY_SETTINGS_SAVED');
+                $mainframe->redirect(CRoute::_('index.php?option=com_community&view=profile&task=edit', false), $msg);
+            } else {
+                $postData = $_POST;
+                foreach ($data->profile['fields'] as $key => $fields) {
+                    foreach ($fields as $key2 => $field) {
+                        if (is_array($postData['field' . $field['id']])) {
+                            $glue = ($field['type'] == 'birthdate') ? '-' : '';
+                            $postData['field' . $field['id']] = implode($glue, $postData['field' . $field['id']]);
+                        }
+                        $data->profile['fields'][$key][$key2]['value'] = $postData['field' . $field['id']];
+                    }
+                }
+            }
+        } elseif ($action == 'detail') { /* Joomla! user detail update */
+            $this->save();
+        }
+
+        /* template display */
+        $document = JFactory::getDocument();
+                             
+        $viewType = $document->getType();
+                            
+        $viewName = JRequest::getCmd('view', $this->getName());
+
+
+        $lang = JFactory::getLanguage();
+        $lang->load(COM_USER_NAME);
+
+        // Check if user is really allowed to edit.
+        //$params = $mainframe->getParams();
+        $params = null;
+        // check to see if Frontend User Params have been enabled
+        $usersConfig = JComponentHelper::getParams('com_users');
+        $check = $usersConfig->get('frontend_userparams');
+
+        if ($check == '1' || $check == 1 || $check == NULL) {
+            if ($user->authorise(COM_USER_NAME, 'edit')) {
+                $params = $user->getParameters(true);
+
+                //In Joomla 1.6, $params will be a JRegistry class, whereas it was JParameter in 1.5
+                //render() does not exist in JRegistry. Will need to translate the JForm XML in 1.6 to those acceptable for JParameter in 1.5.
+                if (get_class($params) != 'JParameter') {
+
+                    $vals = $params->toArray();
+                    $params = CJForm::getInstance('editDetails', JPATH_ADMINISTRATOR . '/components/com_users/models/forms/user.xml');
+
+                    //set data for the form
+                    foreach ($vals as $k => $v) {
+                        $params->setValue($k, 'params', $v);
+                    }
+                }
+            } else {
+                //user can only edit front end value [ > 1.5, user can only edit timezone and language ]
+                $params = $user->getParameters(true);
+
+                if ((get_class($params) != 'JParameter' || get_class($params) != 'CParameter')) {
+                    $vals = $params->toArray();
+                    $params = CJForm::getInstance('editDetails', JPATH_ADMINISTRATOR . '/components/com_users/models/forms/user.xml');
+
+                    //set data for the form
+                    foreach ($vals as $k => $v) {
+                        //@since 2.6, accept timezone and language only
+                        if ($k == 'timezone' || $k == 'language') {
+                            $params->setValue($k, 'params', $v);
+                        } else {
+                            $stat = $params->removeField($k, 'params');
+                        }
+                    }
+                }
+            }
+        }
+
+
+        $my = CFactory::getUser();
+        $config = CFactory::getConfig();
+
+        $myParams = $my->getParams();
+        $myDTS = $myParams->get('daylightsavingoffset');
+        $cOffset = ( $myDTS != '' ) ? $myDTS : $config->get('daylightsavingoffset');
+
+        $dstOffset = array();
+        $counter = -4;
+        for ($i = 0; $i <= 8; $i++) {
+            $dstOffset[] = JHTML::_('select.option', $counter, $counter);
+            $counter++;
+        }
+
+        $offSetLists = JHTML::_('select.genericlist', $dstOffset, 'daylightsavingoffset', 'class="inputbox" size="1"', 'value', 'text', $cOffset);
+
+        $data->params = $params;
+        $data->offsetList = $offSetLists;
+         //let's get the redacron model:
+        $model = $this->getModel('colcre');
+        //$data->skillCategories = $model->getSkillsList();
+        $view = $this->getView($viewName, '', $viewType);
+                            
+        $this->_icon = 'edit';
+
+        if (!$data->profile) {
+            echo $view->get('error', JText::_('COM_COMMUNITY_USER_NOT_FOUND'));
+        } else {
+            echo $view->get(__FUNCTION__, $data);
+        }      
+    }
     public function skills()//redacron function
     {
                       CFactory::setActiveProfile();
@@ -2172,7 +2299,7 @@ class CommunityProfileController extends CommunityBaseController {
 
         /* template display */
         $document = JFactory::getDocument();
-
+                             
         $viewType = $document->getType();
                             
         $viewName = JRequest::getCmd('view', $this->getName());
