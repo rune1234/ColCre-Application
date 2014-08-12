@@ -24,7 +24,7 @@ class ProjectforkViewDashboard extends JViewLegacy
     protected $toolbar;
     protected $commonQuery = "SELECT users.name DeveloperName, users.id user_id,
 	projects.title ProjectTitle, 
-	project_skills.task_id + 1 MatchingTaskId, 
+	project_skills.task_id  MatchingTaskId, 
 	skills.skill SkillName, 
 	round(1 / (
 		SELECT count(user_skills.user_id)
@@ -60,7 +60,7 @@ private function getCandidates($userid)
 {
     $query = "SELECT users.name DeveloperName, users.id user_id,
 	projects.title ProjectTitle, 
-	project_skills.task_id + 1 MatchingTaskId, 
+	project_skills.task_id MatchingTaskId, 
 	skills.skill SkillName, 
 	round(1 / (
 		SELECT count(user_skills.user_id)
@@ -136,12 +136,16 @@ public function specifyMatch($description, $taskId, $projectId, $userId, $matchi
      $skill = $this->getMatchDesc($userId, $matchid);
      $desc = $skill->skillDesc;
      if (!$desc) return;
-     $query = "SELECT users.name DeveloperName, projects.title ProjectTitle, MATCH (project_tasks.description) "
+     $query = "SELECT projects.title ProjectTitle,
+MATCH (project_tasks.description) AGAINST ('$desc' IN NATURAL LANGUAGE MODE)
+FROM #__pf_tasks AS project_tasks JOIN #__pf_projects AS projects ON projects.id = project_tasks.project_id
+WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId'";
+    /* $query = "SELECT users.name DeveloperName, projects.title ProjectTitle, MATCH (project_tasks.description) "
             . "AGAINST ('$desc' IN NATURAL LANGUAGE MODE) FROM #__users users, "
             . "#__pf_project_skills_added user_skills_added, #__pf_tasks AS project_tasks "
             . "JOIN #__pf_projects AS projects ON projects.id = project_tasks.project_id WHERE "
             . "project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId' AND "
-            . "user_skills_added.userid = users.id AND users.id = '$userId'";
+            . "user_skills_added.userid = users.id AND users.id = '$userId'";*/
      echo "<br /><p style='font-size: 10px;'>".$query."</p><br />";
      $db = JFactory::getDbo();
      $db->setQuery($query);
@@ -171,7 +175,8 @@ public function specifyMatch($description, $taskId, $projectId, $userId, $matchi
          
         $myUser = JFactory::getUser();
         $this->user = $myUser;
-        if (1 ==1 || ($this->item->created_by && $this->user->id)) { $this->matches = $this->getProjectCandidates($this->user->id, $this->item->id); }
+          
+        if (1 ==1 || ($this->item->created_by && $this->user->id)) { $this->matches = $this->getProjectCandidates($this->user->id, $this->item->id);   }
         else $this->matches = false;
         $dispatcher	   = JDispatcher::getInstance();
 
