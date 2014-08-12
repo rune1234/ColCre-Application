@@ -148,6 +148,7 @@ $doc->addScript($this->baseurl . '/templates/' . $this->template . '/javascript/
 				<div <?php echo ($showno) ? "id=\"contentarea\"" : "id=\"contentarea_2\""; ?>>
 					 <jdoc:include type="modules" name="position-0" />
                                          <jdoc:include type="component" />
+                                         <jdoc:include type="modules" name="position-4" />
 				</div> <!-- end contentarea -->
                                 <?php if ($showleft) {echo "<div style='clear: both;'></div>"; } ?>
 			</div><!-- back -->
@@ -158,9 +159,10 @@ $doc->addScript($this->baseurl . '/templates/' . $this->template . '/javascript/
 			 
 
 			 
-				<footer id="footer">
-					<jdoc:include type="modules" name="position-14" />
-				</footer><!-- end footer -->
+				 <?php
+                                include_once('footer.php');
+                                ?>
+			 
 			 
 		</div>
                         </div><!-- all -->
