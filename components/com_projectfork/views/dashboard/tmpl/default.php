@@ -9,6 +9,52 @@
  */
 
 defined('_JEXEC') or die();
+function showMatches($matches, $item, $bla, $task = '')
+{
+    $userMatches = array();
+    $shownMatches = false;
+     if ($matches){
+         foreach ($matches as $match)
+         {
+             if ($task != '') { if ($match->MatchingTaskId != $task->id) {   continue;} }
+             else $shownMatches = true;
+             $userMatches[$match->user_id][] = $match->SkillName;
+         }
+         foreach ($matches as $match)
+         {
+             if ($task != '') { if ($match->MatchingTaskId != $task->id) continue; }
+             if (isset($userMatches[$match->user_id]) && is_array($userMatches[$match->user_id]))
+             {
+                 $matchesImplode = implode(', ', $userMatches[$match->user_id]);
+                 unset($userMatches[$match->user_id]);//let's get rid of the array, so we don't show the same users over and over again
+             }
+             else continue;
+             echo "<div class='row-fluid'><div class='span10 userMatch'>";
+//print_r($match);
+             $spec = $bla->specifyMatch($item->text, $match->MatchingTaskId, $item->id, $match->user_id, $match->MatchingTaskId);
+             //print_r($spec);
+             if (is_array($spec))
+             {
+                 print_r($spec);
+             }
+             $avatar = getAvatarThumb($match->user_id);
+             if ($avatar)
+             {
+                 echo "<img src='$avatar' alt='user avatar' style='float: left; margin-right: 5px;' />";
+             }
+             echo "<p><b>Name:</b> ".ucwords($match->DeveloperName);
+             echo "<br /><b>SkillName:</b> ".ucwords($matchesImplode);//ucwords($match->SkillName);
+             echo "<br /><b>Task Percentage:</b> ".$match->TaskMatchPercentage."%";
+             echo "<br /><b>Project Match Percentage:</b> ".$match->ProjectMatchPercentage."%";
+
+             echo "</p>";
+
+             echo "</div><div style='clear: both;'></div></div>";
+         }
+         echo "<div style='clear: both;'></div>";
+         return $shownMatches;
+     }
+}
 function getAvatarThumb($userid)
 {
     if (!is_numeric($userid) || $userid == 0) return;
@@ -145,39 +191,28 @@ $details_active = ($state->get('project.request') ? ' active' : '');
         </form>
  <?php   
  //index.php?option=com_pftasks&view=task&id=13&Itemid=130
+ $MTCFound = false;
   if ($this->tasks){ //$this->getProjectTasks($this->item->id);
       echo "<h3>Project Tasks</h3>";
      foreach ($this->tasks as $task)
      {
          echo "<div class='row-fluid'><div class='span10 userMatch'>";
-          //print_r($task);
+          //print_r($task);//MatchingTaskId
          echo "<p><b>Title:</b> <a href=".JRoute::_('index.php?option=com_pftasks&view=task&id='.$task->id.'&Itemid=130').">".ucwords($task->title)."</a>";
          echo "<br />".$task->description;
+         $shownMatches = showMatches($this->matches, $item, $this, $task);
+         if ($shownMatches) { $MTCFound = true; }
          echo "</div><div style='clear: both;'></div></div>";
+         
      }
      echo "<div style='clear: both;'></div>";
  } 
- if ($this->matches){
-     foreach ($this->matches as $match)
-     {
-         echo "<div class='row-fluid'><div class='span10 userMatch'>";
-         //print_r($match);
-         $avatar = getAvatarThumb($match->user_id);
-         if ($avatar)
-         {
-             echo "<img src='$avatar' alt='user avatar' style='float: left; margin-right: 5px;' />";
-         }
-         echo "<p><b>Name:</b> ".ucwords($match->DeveloperName);
-         echo "<br /><b>SkillName:</b> ".ucwords($match->SkillName);
-         echo "<br /><b>Task Percentage:</b> ".$match->TaskMatchPercentage."%";
-         echo "<br /><b>Project Match Percentage:</b> ".$match->ProjectMatchPercentage."%";
-         
-         echo "</p>";
-         
-         echo "</div><div style='clear: both;'></div></div>";
-     }
-     echo "<div style='clear: both;'></div>";
- } ?>
+
+ if (! $MTCFound )
+ {
+      showMatches($this->matches, $item, $this);
+ }
+ ?>
         <!-- Begin Dashboard Modules -->
         <?php if(count(JModuleHelper::getModules('pf-dashboard-top'))) : ?>
         <div class="row-fluid">
