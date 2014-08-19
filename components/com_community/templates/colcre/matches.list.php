@@ -37,7 +37,16 @@ defined('_JEXEC') or die();
 		<td class="js-mail-checkbox">
 		 
 		</td>
-		<td><?php print_r($match); ?>
+		<td><?php //print_r($match);
+                $match->created_by;
+                echo '<div class="span9 pull-left" style="background: #fff;">';
+                echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->project_id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
+                echo "<p>".$match->description."</p>";
+                echo "<p>Skill Needed: ".$match->skill."</p>";
+                 echo "<p>Project Match Percentage: ".$match->MatchAgainst."%</p>";
+                if ($match->created) { echo "<p style='font-size: 10px;'>Created: ".date('M-d-Y', (strtotime($match->created)))."</p>"; }
+                echo "</div>\n"
+                ?>
                     <div class="pull-right small"></div>
 		</td>
 	</tr>
