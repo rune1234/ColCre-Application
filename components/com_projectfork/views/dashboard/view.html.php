@@ -120,10 +120,10 @@ private function getPrjTskCandidates($userid, $taskid)
       $rows = $db->loadObjectList();
       return $rows;
 }
-private function getMatchDesc($userId, $taskid)
+private function getMatchDesc($userId)
 {
     $db = JFactory::getDbo();
-     if (!is_numeric($taskid) || !is_numeric($userId) ) return;
+     if (!is_numeric($userId) ) return;
     $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = $userId LIMIT 1";
     //echo $query;
      $db->setQuery($query);
@@ -133,7 +133,7 @@ private function getMatchDesc($userId, $taskid)
 }
 public function specifyMatch($description, $taskId, $projectId, $userId, $matchid)
 {
-     $skill = $this->getMatchDesc($userId, $matchid);
+     $skill = $this->getMatchDesc($userId);
      $desc = $skill->skillDesc;
      if (!$desc) return;
      $query = "SELECT projects.title ProjectTitle,
@@ -146,7 +146,7 @@ WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId'";
             . "JOIN #__pf_projects AS projects ON projects.id = project_tasks.project_id WHERE "
             . "project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId' AND "
             . "user_skills_added.userid = users.id AND users.id = '$userId'";*/
-     echo "<br /><p style='font-size: 10px;'>".$query."</p><br />";
+     //echo "<br /><p style='font-size: 10px;'>".$query."</p><br />";
      $db = JFactory::getDbo();
      $db->setQuery($query);
      $rows = $db->loadObjectList();
