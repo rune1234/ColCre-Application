@@ -43,6 +43,8 @@ defined('_JEXEC') or die();
                 echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->project_id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
                 echo "<p>".$match->description."</p>";
                 echo "<p>Skill Needed: ".$match->skill."</p>";
+                echo "<p>Task Match Percentage: ".$match->TaskMatchPercentage."%";
+                echo "<p>Project Match Percentage: ".$match->ProjectMatchPercentage."%";
                  echo "<p>Project Match Percentage: ".$match->MatchAgainst."%</p>";
                 if ($match->created) { echo "<p style='font-size: 10px;'>Created: ".date('M-d-Y', (strtotime($match->created)))."</p>"; }
                 echo "</div>\n"
