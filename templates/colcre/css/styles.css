@@ -122,6 +122,26 @@ footer
     background: #2e2e2e;
     height: 260px;
 }
+#footer-links
+{
+    
+}
+footer a
+{
+    color: #d5493a;
+}
+#footer-links tr.top-links a
+{
+    font-weight: bold;
+}
+#footerfollow
+{
+    margin: auto;
+    margin-top: 50px;
+    width: 50%;
+    text-align: center;
+    padding: 0px;
+}
 footer ul.menu li a
 {
     color: #e84946;
