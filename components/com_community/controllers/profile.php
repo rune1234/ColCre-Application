@@ -2246,6 +2246,8 @@ class CommunityProfileController extends CommunityBaseController {
         $data->offsetList = $offSetLists;
          //let's get the redacron model:
         $model = $this->getModel('colcre');
+         $data->skillCategories = $model->getSkillsList();
+        // print_r($data->skillCategories);
         //$data->skillCategories = $model->getSkillsList();
         $view = $this->getView($viewName, '', $viewType);
                             
