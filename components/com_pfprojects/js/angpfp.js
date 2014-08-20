@@ -24,8 +24,8 @@ function dump(arr,level) {
 }
 function addSkillLayer($this)
 {
-    var centerHeight = (( jQuery($this).outerHeight()) /1) + 100;
-             var centerWidth = '30%';//Math.max(0, (( jQuery(window).width() - jQuery(this).outerWidth()) / 2));
+    var centerHeight = (( jQuery($this).outerHeight()) /1);
+             var centerWidth = '20%';//Math.max(0, (( jQuery(window).width() - jQuery(this).outerWidth()) / 2));
              var catg = jQuery($this).data('catg');
              if (isNaN(catg)) { alert('ERROR - category ID is not recognized'); return; }
              jQuery("input[name=skillcatg]").val(catg);
@@ -42,9 +42,21 @@ function addUserSkill()
 {
     var skilltoAdd = jQuery("input[name=skill2dd]").val();
     var skillDesc = jQuery("textarea[name=skilldesc]").val();
-    var skillTags = jQuery("textarea[name=skilltags]").val();
+    var userid = jQuery("input[name=userid]").val();
+    //var skillTags = jQuery("textarea[name=skilltags]").val();
+    var taskNames = [];
+    var taskIds = [];
+    jQuery(".taskNfNam").each(function() { var aValue = $(this).val();   taskNames.push(aValue); });
+    jQuery(".taskfID").each(function() { var aValue = $(this).val();   taskIds.push(aValue); });
+    var taskIds = JSON.stringify(taskIds);
+    var skillTags = taskNames.join();
+    
+     
     var skillCatg = jQuery("input[name=skillcatg]").val();
-    if (isNaN(skillCatg)) { jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
+    
+    if (isNaN(skillCatg) || skillCatg == 0) { jQuery('#categoryPan').css({'color' : '#a00'}); jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
+     
+    if (isNaN(userid)) { jQuery('#skillboxWarn').fadeIn().html('ERROR - user id is not valid. You may need to log in'); return false; }
     if (skilltoAdd.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Your skill must have a name'); return false; }
     if (skillTags.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Add skill tags'); return false; }
     if (skillDesc.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Add a skill description'); return false; }
@@ -52,12 +64,16 @@ function addUserSkill()
     $fragment_refresh = {
 		url: tasksURL,
 		type: 'POST',
-		data: { option: 'com_pfprojects', task:'addUserKill', skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
-		success: function( data ) { 
+		data: { option: 'com_pfprojects', taskIds: taskIds, task:'addUserKill', userid:userid, skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
+		success: function( data ) {  
                      data = JSON.parse(data);
                      if (!data.status)
                      {
                          alert(data.error);
+                     }
+                     else
+                     {
+                         jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } );
                      }
                 } };
     jQuery.ajax( $fragment_refresh );
