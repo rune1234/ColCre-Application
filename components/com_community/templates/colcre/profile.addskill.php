@@ -15,26 +15,49 @@ $user = JFactory::getUser();
 <script><!--
     jQuery(document).ready(function($) {  
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
-        jQuery('.catgbox').click(function(e) {   addSkillLayer(this); } );
+       jQuery('.catgbox').click(function(e) { jQuery('#addskillbox').slideDown();
+           jQuery("input[name=skillcatg]").val(jQuery(this).data('catg')); 
+           var categName = jQuery(this).children('.catgtitle').html(); 
+           jQuery('#categoryPan').html(categName).css({'color' : '#000'}); } );
 });
     function removeLayer() { jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } ); return false; }
      
 
     --></script>
 <div style='padding: 5px; padding-left: 10px;'><a href='<?php echo JRoute::_('index.php?option=com_community&view=profile&task=skills&Itemid=103');?>'>Go Back</a></div>
-<div id="addskillbox"><h1>Add Skill to</h1>
-    <form onSubmit='return addUserSkill()'><table>
+<div class="cLayout cProfile-Edit"> 
+    <h1 class='colcreh'>Add Skills</h1><br />
+     
+    <div class='maincatgbox'>
+        <?php
+        //print_r($_POST);
+        foreach ($skillCategories as $skctg)
+        {
+             echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".$skctg->category."</div></div>\n";
+        }
+        ?>
+        <div style='clear: both;'></div>
+    </div>
+    
+	 
+		
+</div>
+<div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
+    <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=skills&Itemid=103');?>"><table>
             <tr><td valign='top'>Skill: </td><td><input style='width: 520px;' type='text' name='skill2dd' /><br /></td></tr>
+            <tr><td valign='top'>Category: </td><td><div id="categoryPan" style="font-weight: bold;">None</div><br /></td></tr>
             <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
                   <div ng-app="myProj"><div ng-controller="taskControl">
      <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
                <div class="task-group" ng-repeat="task in tasks">
-                                <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{task.id}}_{{chosenSK.id}}' name="taskform[{{task.id}}][SkillInput][]" />
-                    <ul class="token-input-list">
+                    <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
+                    <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.skill}}' id='skiinnam_{{$index}}' class='taskNfNam' name="taskNfNam[{{$index}}]" />
+                                <ul class="token-input-list">
              
- <li class="token-input-token" ng-repeat='chosenSK in skillChosen[task.id]'><p>{{chosenSK.skill}}</p> <span class="token-input-delete-token" ng-click='deleteSKill(task.id, chosenSK.id)'>×</span></li>
+ <li class="token-input-token" ng-repeat='chosenSK in skillChosen[task.id]'><p>{{chosenSK.skill}}</p> 
+     <span class="token-input-delete-token" ng-click='deleteSKill(task.id, chosenSK.id)'>×</span></li>
     
      <li class="token-input-input-token" ng-click='focusOnInput(task.id)'>
          <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='border: 0 none !important;' ng-keyup="skillPress($event.altKey, task.id)" />
@@ -44,7 +67,7 @@ $user = JFactory::getUser();
                </div></div></div>
     </div></div>
                 
-                <textarea name='skilltags' style='width: 320px; height: 100px;'></textarea></td></tr>
+               </td></tr>
         </table> 
     <input type='hidden' name='skillcatg' value='' />
     
