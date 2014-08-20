@@ -883,7 +883,7 @@ if (!class_exists('CommunityViewProfile')) {
                     ->set('afterFormDisplay', $afterFormDisplay)
                     ->set('fields', $data->profile ['fields'])
                     ->set('user', $my)
-                   // ->set('skillCategories', $data->skillCategories)
+                     ->set('skillCategories', $data->skillCategories)
                     ->set('fbHtml', $fbHtml)
                     ->set('fbPostStatus', $userParams->get('postFacebookStatus'))
                     ->set('jConfig', $jConfig)
