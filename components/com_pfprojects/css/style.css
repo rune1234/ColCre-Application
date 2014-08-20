@@ -35,8 +35,9 @@ li {
     background: #ddd;
     padding: 10px;
     width: 100%;
-}
+}/*
 li.token-input-token {
+   
     overflow: hidden;
         overflow-x: hidden;
         overflow-y: hidden;
@@ -100,7 +101,7 @@ li.token-input-token {
     float: left;
     white-space: nowrap;
     font-weight: normal;
-}
+}*/
 
 li.token-input-token, .SkillInput {
     overflow: hidden;
@@ -169,15 +170,15 @@ li.token-input-token, .SkillInput {
 }
 
 li.token-input-token {
-    padding: 2px !important;
-        padding-top: 2px;
-        padding-right-value: 2px;
-        padding-bottom: 2px;
-        padding-left-value: 2px;
+     position: relative;
+     padding: 10px !important;
+     padding-right: 20px !important;
+        
         padding-left-ltr-source: physical;
         padding-left-rtl-source: physical;
         padding-right-ltr-source: physical;
         padding-right-rtl-source: physical;
+        min-width: 50px;
 }
 li {
     line-height: 18px;
@@ -452,8 +453,14 @@ ul.resultsList {
     z-index: 10;
 }
 .token-input-delete-token{
-    margin-left: 20px;
     font-weight: bold;
+    position: absolute;
+    top: 0px;
+    width: 20px; height: 20px;
+    
+     right: 1px;
+   display: block !important;
+   z-index: 99 !important;
 }
 .token-input-input-token
 {
