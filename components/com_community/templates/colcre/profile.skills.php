@@ -22,6 +22,7 @@ $user = JFactory::getUser();
      
     <div class='maincatgbox'>
         <?php
+        //print_r($_POST);
         foreach ($skillCategories as $skctg)
         {
              echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".$skctg->category."</div></div>\n";
