@@ -45,7 +45,7 @@ defined('_JEXEC') or die();
                 echo "<p>Skill Needed: ".$match->skill."</p>";
                 echo "<p>Task Match Percentage: ".$match->TaskMatchPercentage."%";
                 echo "<p>Project Match Percentage: ".$match->ProjectMatchPercentage."%";
-                 echo "<p>Project Match Percentage: ".$match->MatchAgainst."%</p>";
+                 echo "<p>Skill Description Score: ".$match->MatchAgainst."%</p>";
                 if ($match->created) { echo "<p style='font-size: 10px;'>Created: ".date('M-d-Y', (strtotime($match->created)))."</p>"; }
                 echo "</div>\n"
                 ?>
