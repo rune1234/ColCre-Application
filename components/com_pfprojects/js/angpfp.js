@@ -83,7 +83,7 @@ var projectModule = angular.module('myProj', []);
 projectModule.factory('theMenus', function() { return });
 projectModule.factory('theService', function(theMenus, $http) {
     
-    var $tasks = [{id:'1'}];
+    var $tasks = [{id:1}];
     var $inputs = [];
     var $chosenSkill = [];
     return {
