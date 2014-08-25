@@ -20,8 +20,17 @@ implements CNotificationsInterface
 
 			$db = $this->getDBO();
 
-		        $sql = "SELECT a.*, e.title as task_title, b.*,d.skill, c.title,c.alias,c.description, c.created_by, c.created, c.access, c.state FROM #__pf_project_skills as a INNER JOIN #__pf_user_skills as b ON b.skill_id = a.skill_id INNER JOIN #__pf_projects as c ON c.id = a.project_id INNER JOIN #__pf_skills as d ON d.id = a.skill_id INNER JOIN #__pf_tasks as e ON e.id = a.task_id WHERE b.user_id=$my->id ORDER BY created DESC";
-			/*$sql = "SELECT projects.alias,
+		        //$sql = "SELECT a.*, e.title as task_title, b.*,d.skill, c.title,c.alias,c.description, c.created_by, c.created, c.access, c.state FROM #__pf_project_skills as a INNER JOIN #__pf_user_skills as b ON b.skill_id = a.skill_id INNER JOIN #__pf_projects as c ON c.id = a.project_id INNER JOIN #__pf_skills as d ON d.id = a.skill_id INNER JOIN #__pf_tasks as e ON e.id = a.task_id WHERE b.user_id=$my->id ORDER BY created DESC";
+		$sql = "SELECT a.*, e.title as task_title, b.*,d.skill, c.title,c.alias,c.description, c.created_by, c.created, c.access, c.state, round((  (select count(*) "
+            . "FROM #__pf_user_skills ab join #__pf_project_skills bc ON ab.skill_id = bc.skill_id where ab.user_id = $my->id and bc.task_id = e.id) / "
+            . "(SELECT count(cd.task_id) FROM `#__pf_project_skills` as cd WHERE cd.task_id = e.id) * 100)) as TaskMatchPercentage, round((select count(*) "
+            . "FROM #__pf_user_skills de join #__pf_project_skills ef ON de.skill_id = ef.skill_id where de.user_id = $my->id and ef.project_id = c.id)  / "
+            . "(SELECT count(ef.task_id) FROM `#__pf_project_skills` as ef WHERE project_id = c.id) * 100) as ProjectMatchPercentage "
+            . "FROM #__pf_project_skills as a INNER JOIN #__pf_user_skills as b ON b.skill_id = a.skill_id INNER JOIN "
+            . "#__pf_projects as c ON c.id = a.project_id INNER JOIN #__pf_skills as d ON d.id = a.skill_id INNER "
+            . "JOIN #__pf_tasks as e ON e.id = a.task_id WHERE b.user_id= $my->id ORDER BY created DESC ";	
+               //echo $query;
+                        /*$sql = "SELECT projects.alias,
    project_skills.*, 
    projects.description, projects.title, projects.created,
 	skills.skill FROM kba07_users users, 	
@@ -51,8 +60,8 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
                         foreach($result as $rs)
                         {
                            $spec = $this->specifyMatch($rs->description, $rs->task_id, $rs->project_id, $my->id);
-                           $result[$i]->ProjectMatchPercentage = $this->getProjPercen($my->id, $rs->project_id);
-                           $result[$i]->TaskMatchPercentage = $this->getTaskPercen($my->id, $rs->task_id);
+                           //$result[$i]->ProjectMatchPercentage = $this->getProjPercen($my->id, $rs->project_id);
+                           //$result[$i]->TaskMatchPercentage = $this->getTaskPercen($my->id, $rs->task_id);
                            //print_r($matchPercent);
                           /* if ($matchPercent)
                            {
@@ -98,8 +107,7 @@ WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId' L
 private function getProjPercen($userid, $projectid)
 {
     if (!is_numeric($userid) || !is_numeric($projectid)) return;
-    $query = "select round((select count(*) FROM kba07_pf_user_skills a join kba07_pf_project_skills b ON a.skill_id = b.skill_id where a.user_id = $userid and b.project_id = $projectid) / (SELECT count(task_id) FROM `kba07_pf_project_skills` WHERE project_id = $projectid) * 100) as projectPercentage
-FROM kba07_pf_project_skills` WHERE project_id = $projectid";
+    $query = "SELECT a.*, e.title as task_title, b.*,d.skill, c.title,c.alias,c.description, c.created_by, c.created, c.access, c.state, ((  (select count(*) FROM #__pf_user_skills ab join #__pf_project_skills bc ON ab.skill_id = bc.skill_id where ab.user_id = 860 and bc.task_id = e.id) / (SELECT count(cd.task_id) FROM `#__pf_project_skills` as cd WHERE cd.task_id = e.id) * 100)) as TaskMatchPercentage, round((select count(*) FROM #__pf_user_skills de join #__pf_project_skills ef ON de.skill_id = ef.skill_id where de.user_id =860 and ef.project_id = c.id)  / (SELECT count(ef.task_id) FROM `#__pf_project_skills` as ef WHERE project_id = c.id) * 100) as projectPercentage FROM #__pf_project_skills as a INNER JOIN #__pf_user_skills as b ON b.skill_id = a.skill_id INNER JOIN #__pf_projects as c ON c.id = a.project_id INNER JOIN #__pf_skills as d ON d.id = a.skill_id INNER JOIN #__pf_tasks as e ON e.id = a.task_id WHERE b.user_id=860 ORDER BY created DESC ";
     
      $db = $this->getDBO();
     $db->setQuery($query);
@@ -111,7 +119,7 @@ private function getTaskPercen($userid, $taskid)
      if (!is_numeric($userid) || !is_numeric($taskid)) return;
     $query = "select round((select count(*) FROM kba07_pf_user_skills a join kba07_pf_project_skills b ON a.skill_id = b.skill_id where a.user_id = $userid and b.task_id = $taskid) / (SELECT count(task_id) FROM `kba07_pf_project_skills` WHERE task_id = $taskid) * 100) as TaskMatchPercentage
 FROM kba07_pf_project_skills` WHERE task_id = $taskid";
-    echo $query;
+    //echo $query;
      $db = $this->getDBO();
     $db->setQuery($query);
 	 $result = $db->loadResult();
