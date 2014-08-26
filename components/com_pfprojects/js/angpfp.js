@@ -83,7 +83,7 @@ var projectModule = angular.module('myProj', []);
 projectModule.factory('theMenus', function() { return });
 projectModule.factory('theService', function(theMenus, $http) {
     
-    var $tasks = [{id:1}];
+    var $tasks = [];
     var $inputs = [];
     var $chosenSkill = [];
     return {
@@ -148,7 +148,7 @@ projectModule.factory('theService', function(theMenus, $http) {
           }
         },
         theTasks: {
-            addTask: function(task){
+            addTask: function(task){  
             $tasks.push(task);
         },
             getTasks: function() { return $tasks; } 
@@ -174,6 +174,18 @@ projectModule.controller('taskControl',
              var id = $scope.tasks.length + 1;
              var task = {};
              task.id = id;
+             jQuery(".resultsList").css("display", "none");
+             theService.theTasks.addTask(task);
+         }
+         $scope.editTask = function()
+         {
+             var task = jQuery('#task_1').html();
+             task = angular.fromJson(task);
+             var id = $scope.tasks.length + 1;
+             // var task = {};
+             task.id = id;
+             task.title= task[0].title;
+             task.description = task[0].description;
              jQuery(".resultsList").css("display", "none");
              theService.theTasks.addTask(task);
          }
