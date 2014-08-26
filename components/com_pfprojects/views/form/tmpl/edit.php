@@ -50,6 +50,7 @@ Joomla.submitbutton = function(task)
 		    </div>
 		    <div class="controls">
 		    	<?php echo $this->form->getInput('title'); ?>
+                       
 		    </div>
 		</div>
 		<div class="control-group">
@@ -68,14 +69,16 @@ Joomla.submitbutton = function(task)
 		</div>
             
 	</fieldset>
-
-    <hr /><div ng-app="myProj"><div ng-controller="taskControl">
+<div id="task_1"><?php echo json_encode($this->tasks);?></div>
+    <hr /><div ng-app="myProj"><div id="projTasks" ng-controller="taskControl" data-ng-init="editTask()">
+             
     <h2>Add Tasks</h2>
     <p>Here you can divide your project into the different tasks and goals required for the project to be completed.</p>
+    <?php $addTask = 4; ?> 
         <div class="task-group" ng-repeat="task in tasks">
-                    <div class="control-label">Task {{task.id}}:</div><br />
-                    <div class="controls">Title: <input type='text' name='taskform[{{task.id}}][title]' /></div><br />
-                    <div class="controls">Task Category: <select name="taskform[{{task.id}}][category]">
+                    <div class="control-label">Task {{<?php echo $addTask;?> + task.id}}:</div><br />
+                    <div class="controls">Title: <input type='text' name='taskform[{{<?php echo $addTask;?> + task.id}}][title]' value="{{task.title}}" /></div><br />
+                    <div class="controls">Task Category: <select name="taskform[{{<?php echo $addTask;?> + task.id}}][category]">
                             
                     <?php 
                     foreach($this->categories as $catg)
@@ -84,26 +87,31 @@ Joomla.submitbutton = function(task)
                     }
                      ?>
                         </select></div><br />
-                    <div class="controls">Description: <textarea name='taskform[{{task.id}}][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
+                    <div class="controls">Description: <textarea name='taskform[{{<?php echo $addTask;?> + task.id}}][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'>{{task.description}}</textarea>
                         <br /><br />Choose how you will measure the success of this task<br /><br />
-                        <div style='float: left;'><select name='taskform[{{task.id}}][measure]'>
+                        <div style='float: left;'><select name='taskform[{{<?php echo $addTask;?> + task.id}}][measure]'>
                             <option value='1'>Likes</option>
                             <option value='2'>Comments</option>
                             <option value='3'>Commitments</option>
                         </select></div>
-                            <div style="float: right;">How Many? <input type='text' name="taskform[{{task.id}}][howmanylikes]" /></div>
+                            <div style="float: right;">How Many? <input type='text' name="taskform[{{<?php echo $addTask;?> + task.id}}][howmanylikes]" /></div>
                         <br /><br />
                         <div class="control-group"><div class="control-label control-group">Skills Required:
-                                <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{task.id}}_{{chosenSK.id}}' name="taskform[{{task.id}}][SkillInput][]" />
+                                <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]" />
                     <ul class="token-input-list">
-             
- <li class="token-input-token" ng-repeat='chosenSK in skillChosen[task.id]'><p>{{chosenSK.skill}}</p> <span class="token-input-delete-token" ng-click='deleteSKill(task.id, chosenSK.id)'>×</span></li>
+             <?php
+              if (is_array($this->tasks))
+              {
+                  
+              }
+             ?>
+ <li class="token-input-token" ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]'><p>{{chosenSK.skill}}</p> <span class="token-input-delete-token" ng-click='deleteSKill(<?php echo $addTask;?> + task.id, chosenSK.id)'>×</span></li>
     
-     <li class="token-input-input-token" ng-click='focusOnInput(task.id)'>
- <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='width: 100%' ng-keyup="skillPress($event.altKey, task.id)" />
+     <li class="token-input-input-token" ng-click='focusOnInput(<?php echo $addTask;?> + task.id)'>
+ <input type='text' id='skillInput{{<?php echo $addTask;?> + task.id}}' class="SkillInput" style='width: 100%' ng-keyup="skillPress($event.altKey, <?php echo $addTask;?> + task.id)" />
                 
   
-     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{task.id}}'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li></ul></div>
+     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
                </div></div>
                        
 		</div><br /><br />
@@ -111,7 +119,11 @@ Joomla.submitbutton = function(task)
          <div id="addtask" ng-click="addTask()">Add Another Task</div>
          
           
-        </div></div>
+        </div>
+            <script>
+
+    </script>
+    </div>
       <hr />
 
     <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?>
