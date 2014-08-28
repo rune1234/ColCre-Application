@@ -391,55 +391,35 @@ class PFprojectsControllerForm extends JControllerForm
      *
      * @return    void
      */
-    private function projectSkills($id, $taskid, $skills)
+    private function projectSkills($id, $taskid, $skills, $check = true)
     {
             
-        /*
-         * Array ( [jform] => Array ( [title] => Quesadilla! [description] =>
-
-Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla!
-[project_brief] => Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! Quesadilla! 
-         * [catid] => 0 
-         * [labels] => Array ( [0] => [1] => [2] => [3] => [4] => [5] => [6] => ) 
-         * [attribs] => Array ( [repo_dir] => [website] => [email] => [phone] => ) 
-         * [alias] => 
-         * [created] => 
-         * [id] => 
-         * [asset_id] => 
-         * [elements] => ) 
-         * 
-         * [taskform] => Array ( 
-         * [1] => Array ( [title] => Task #1 for this [measure] => 1 [howmanylikes] => 45 
-         * [SkillInput] => Array ( [0] => 157 [1] => 129 [2] => 142 ) ) 
-         * [0] => Array ( [description] => zinco de mayo! ) 
-         * 
-         * [2] => Array ( [title] => grrrr 
-         * [measure] => 2 
-         * [howmanylikes] => 66 
-         * [SkillInput] => Array ( [0] => 165 [1] => 379 [2] => 587 [3] => 455 ) ) ) 
-         * 
-         * [task] => form.save [return] => L2NvbGNyZS9pbmRleC5waHAvcHJvamVjdHM= [view] => form [3d1871929a137f1560970ed130eb6795] => 1 ) 
-         */
-        //$skills = $_POST['projskills'];
         $db =& JFactory::getDBO();  
         if (is_array($skills)) {
             foreach($skills as $sk)
             {
                 if (!is_numeric($sk)) continue;
+                if ($check === true) { if ($this->projTaskAlrd($id, $taskid, $sk, $db)) continue; }
                 $query = "INSERT INTO #__pf_project_skills (project_id,task_id, skill_id) VALUES ($id, $taskid, $sk)"; 
-                //echo $query; echo "<br /><br />";
                 $db->setQuery($query); $db->Query();  
-            
             }
         }
             
     }
+    private function projTaskAlrd($id, $taskid, $skid, & $db)
+    {
+        $query = "SELECT * FROM #__pf_project_skills WHERE project_id = '$id' AND task_id = '$taskid' AND skill_id = '$skid' LIMIT 1";
+        $db->setQuery($query);
+        $row = $db->loadObject();
+        return ($row) ? true : false;
+    } 
     private function projectTasks($id)
     { 
         $db =& JFactory::getDBO(); 
         $tasks = $_POST['taskform'];
         foreach($tasks as $tsk)
         {
+            if (is_numeric($tsk['idedit']) && $tsk['idedit'] > 0) { $this->editTask($tsk, $id, $tsk['SkillInput'], $db); continue; }//user editing a task instead of adding it
              $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,category_id, list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
 VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
             $db->setQuery($query);
@@ -448,6 +428,21 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
             $this->projectSkills($id, $taskid, $tsk['SkillInput']);
         }
             
+    }
+    private function editTask($task, $project_id, $skills, & $db)
+    {
+        $this->deleteSkills($task['idedit'], $project_id, $db);
+        $this->projectSkills($project_id, $task['idedit'], $skills, false);//set to false, no need to check. We deleted the skills
+        $query = "UPDATE #__pf_tasks SET title='".$db->escape($task['title'])."', description='".$db->escape($task['description'])."' WHERE id = ".$task['idedit']." LIMIT 1";
+        $db->setQuery($query);
+        $db->Query();
+    }
+    private function deleteSkills($task_id, $project_id, & $db)
+    {
+        if (!is_numeric($task_id) || !is_numeric($project_id)) return;
+        $query = "DELETE FROM #__pf_project_skills WHERE task_id = $task_id AND project_id = $project_id LIMIT 50";
+        $db->setQuery($query);
+        $db->Query();
     }
     protected function postSaveHook($model, $data = array())//function override for a native Joomla function in JControllerForm
     {
