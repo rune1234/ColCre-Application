@@ -66,7 +66,8 @@ class PFprojectsModelForm extends PFprojectsModelProject
             // Check edit state permission.
             $item->params->set('access-change', $access->get('core.edit.state'));
         }
-
+         
+         $item->argh = "bravo";
         return $item;
     }
 
