@@ -60,23 +60,23 @@ Joomla.submitbutton = function(task)
 			</div>
 		</div>
             
-            
+           <!--
             <div class="control-group">
                     <div class="control-label"><?php echo $this->form->getLabel('project_brief'); ?>:</div>
                     <div class="controls"><textarea name='jform[project_brief]' wrap="off" cols="90" rows="4" style='overflow: auto;'></textarea>
 				<?php// echo $this->form->getInput('project_brief'); ?>
 			</div>
 		</div>
-            
+            -->
 	</fieldset>
-<div id="task_1"><?php echo json_encode($this->tasks);?></div>
+<div id="task_1" style='display: none;'><?php echo json_encode($this->tasks); // this is a way to send data to Angular.JS without relying on Ajax; ?></div>
     <hr /><div ng-app="myProj"><div id="projTasks" ng-controller="taskControl" data-ng-init="editTask()">
              
     <h2>Add Tasks</h2>
     <p>Here you can divide your project into the different tasks and goals required for the project to be completed.</p>
-    <?php $addTask = 4; ?> 
+    <?php $addTask = 0; ?> 
         <div class="task-group" ng-repeat="task in tasks">
-                    <div class="control-label">Task {{<?php echo $addTask;?> + task.id}}:</div><br />
+                    <div class="control-label">Task {{task.id}}:</div><br />
                     <div class="controls">Title: <input type='text' name='taskform[{{<?php echo $addTask;?> + task.id}}][title]' value="{{task.title}}" /></div><br />
                     <div class="controls">Task Category: <select name="taskform[{{<?php echo $addTask;?> + task.id}}][category]">
                             
@@ -87,7 +87,7 @@ Joomla.submitbutton = function(task)
                     }
                      ?>
                         </select></div><br />
-                    <div class="controls">Description: <textarea name='taskform[{{<?php echo $addTask;?> + task.id}}][description]' wrap="off" cols="90" rows="4" style='overflow: auto;'>{{task.description}}</textarea>
+                    <div class="controls">Description: <textarea name='taskform[{{<?php echo $addTask;?> + task.id}}][description]' wrap="off" cols="90" rows="4" style='width: 600px; overflow: auto;'>{{task.description}}</textarea>
                         <br /><br />Choose how you will measure the success of this task<br /><br />
                         <div style='float: left;'><select name='taskform[{{<?php echo $addTask;?> + task.id}}][measure]'>
                             <option value='1'>Likes</option>
@@ -98,7 +98,7 @@ Joomla.submitbutton = function(task)
                         <br /><br />
                         <div class="control-group"><div class="control-label control-group">Skills Required:
                                 <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]" />
-                    <ul class="token-input-list">
+                    <ul class="token-input-list" style="height: auto;">
              <?php
               if (is_array($this->tasks))
               {
@@ -115,17 +115,16 @@ Joomla.submitbutton = function(task)
                </div></div>
                        
 		</div><br /><br />
+                 <input type='hidden' name="taskform[{{<?php echo $addTask;?> + task.id}}][idedit]" value='{{task.idedit}}' />    
         </div>
          <div id="addtask" ng-click="addTask()">Add Another Task</div>
          
           
         </div>
-            <script>
-
-    </script>
+       
     </div>
       <hr />
-
+      <div id='projectTabs'>
     <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?>
     <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_PUBLISHING'), 'project-publishing') ;?>
     <fieldset>
@@ -228,7 +227,7 @@ Joomla.submitbutton = function(task)
     <?php endif; ?>
 
     <?php echo JHtml::_('tabs.end') ;?>
-
+ </div>
     <?php
         echo $this->form->getInput('alias');
         echo $this->form->getInput('created');
@@ -244,5 +243,7 @@ Joomla.submitbutton = function(task)
     <div class="formelm-buttons btn-toolbar">
 		    <?php echo $this->toolbar; ?>
 		</div>
+    
+     
 </form>
 </div>
