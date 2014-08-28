@@ -54,25 +54,53 @@ class PFprojectsController extends JControllerLegacy
     }
     public function addUserKill()
     {
-        //print_r($_POST);
+        
         $response = array();
         $response['status'] = 0;
-        $response['error'] = "There was an error adding data to the database";
-        echo  json_encode($response);
-        exit;/*
-         * Array
-(
-    [option] => com_pfprojects
-    [task] => addUserKill
-    [skilltoAdd] => ariel
-    [skillDesc] => European, Asian, this woman had the whole world in her. 
-    [skillTags] => divination, murder
-         * skillCatg => skillCatg
-)
-         */
+         
+       
+        
         $db = JFactory::getDbo();
-        $query = "INSERT INTO #__";
+        $user_id = $_POST['userid'];
+        if (!is_numeric($user_id) || $user_id == 0) return;
+        $query = "INSERT INTO #__pf_project_skills_added (userid, skillDesc, skill, skillTags, skillCatg) VALUES ($user_id, '".$db->escape($_POST['skillDesc'])."', '".$db->escape($_POST['skilltoAdd'])."', '".$db->escape($_POST['skillTags'])."', '".$db->escape($_POST['skillCatg'])."');";
+        $taskIds = $_POST['taskIds'];
+        
+        $db->setQuery($query);
+        $r = $db->Query();
+        if (!$r) {
+                $response['status'] = 0;
+                 $response['result'] = "There was an error adding data to the database";
+        } 
+        else
+        {
+            $response['status'] = 1;
+              $response['result'] = "Data successfully added";
+        }
+        if ($taskIds)
+        {
+            $taskIds = json_decode($taskIds);
+            if (is_array($taskIds))
+            {
+                foreach ($taskIds as $tsk)
+                {
+                    if (!is_numeric($tsk) || $tsk == 0) continue;
+                    $query = "SELECT skill_id FROM #__pf_user_skills WHERE user_id = $user_id AND skill_id = $tsk LIMIT 1";
+                    $db->setQuery($query);
+                    $taskid = $db->loadResult();
+                   if (is_numeric($taskid)) continue;
+                    else {
+                         $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added) VALUES ('$user_id', '$tsk', CURRENT_TIMESTAMP)";
+                         $db->setQuery($query);
+                         $db->Query();
+                    }
+                }
+            }
+        }
+         echo  json_encode($response);
+        exit;
     }
+    
     public function display($cachable = false, $urlparams = false)
     {
         // Load CSS and JS assets
@@ -117,7 +145,7 @@ class PFprojectsController extends JControllerLegacy
         if (empty($view)) {
             JRequest::setVar('view', $this->default_view);
         }
-
+         
         // Check for edit form.
 		if ($view == 'form' && !$this->checkEditId('com_pfprojects.edit.form', $id)) {
 			// Somehow the person just went to the form - we don't allow that.
