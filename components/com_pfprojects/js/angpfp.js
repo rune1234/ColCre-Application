@@ -179,23 +179,41 @@ projectModule.controller('taskControl',
          }
          $scope.editTask = function()
          {
+             
              var task = jQuery('#task_1').html();
              task = angular.fromJson(task);
-             var id = $scope.tasks.length + 1;
-             // var task = {};
-             task.id = id;
-             task.title= task[0].title;
-             task.description = task[0].description;
+             var id, getSkills;
+             var noTasks = false;
+             for (i in task)
+             {
+                 if (typeof task[i].title == 'undefined') continue;
+                 noTasks = true;
+                 var task2Add = {};
+                 id = $scope.tasks.length + 1;
+                 task2Add.id = id;
+                 task2Add.idedit = task[i].id;
+                 task2Add.title= task[i].title;
+                 task2Add.description = task[i].description;
+                 getSkills = angular.fromJson(task[i].taskSkills);
+                 for (q in getSkills)
+                 {
+                     if (typeof getSkills[q].skill == 'undefined') continue;
+                     theService.skillHandler.setChosenSKill(task2Add.id, getSkills[q].skill_id, getSkills[q].skill);
+                     //alert(getSkills[q].skill);
+                 }
+                 theService.theTasks.addTask(task2Add);
+             }
+             if (noTasks === false) $scope.addTask();
              jQuery(".resultsList").css("display", "none");
-             theService.theTasks.addTask(task);
+             
          }
          $scope.focusOnInput = function(taskid)
          { jQuery('#skillInput' + taskid).focus(); }
-         $scope.chooseSkill = function(id, skillid, skill)
+         $scope.chooseSkill = function(taskid, skillid, skill)
          {
              jQuery(".resultsList").css("display", "none");
-             jQuery("#skillInput" + id).val('');
-             $scope.skillChosen = theService.skillHandler.setChosenSKill(id, skillid, skill);
+             jQuery("#skillInput" + taskid).val('');
+             $scope.skillChosen = theService.skillHandler.setChosenSKill(taskid, skillid, skill);
              $scope.skillChosen = theService.skillHandler.chosenSkill;
          }
          $scope.deleteSKill = function(taskid, skillid)
