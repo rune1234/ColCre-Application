@@ -13,11 +13,6 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-
-/**
- * Project Form View Class for Projectfork component
- *
- */
 class PFprojectsViewForm extends JViewLegacy
 {
     protected $form;
@@ -28,14 +23,43 @@ class PFprojectsViewForm extends JViewLegacy
     protected $params;
     protected $pageclass_sfx;
 
-
+   private function _gtProjTsks($id)//get project tasks for editing
+   {
+       $db =& JFactory::getDBO();
+       if (!is_numeric($id)) return false;
+       $query = "SELECT * FROM #__pf_tasks WHERE project_id = $id";
+       $db->setQuery($query);
+       $rows = $db->loadObjectList();
+       if (is_array($rows) && isset($rows[0]->project_id))
+       {
+           $n = 0;
+           foreach ($rows as $rw)
+           {
+               $taskSkills = $this->_getTaskSkills($rw->id, $db);
+               $rows[$n]->taskSkills = $taskSkills;
+               $n++;
+           }
+       }
+       return $rows;
+   }
+   private function _getTaskSkills($id, & $db)
+   {
+       if (!is_numeric($id)) return false;
+       $query = "SELECT a.skill_id, b.skill,b.category FROM #__pf_project_skills as a INNER JOIN #__pf_skills as b ON a.skill_id = b.id WHERE task_id = $id LIMIT 50";
+       $db->setQuery($query);
+       $rows = $db->loadObjectList();
+       return json_encode($rows);
+   }
     public function display($tpl = null)
     {
         $this->state  = $this->get('State');
         $this->item   = $this->get('Item');
+        $tasks = $this->_gtProjTsks($this->item->id);
+        $this->tasks = $tasks;
         $this->form   = $this->get('Form');
         $this->params = $this->state->params;
-
+        $categories = $this->getCategories();
+        $this->assignRef('categories', $categories);
         $this->return_page = $this->get('ReturnPage');
         $this->toolbar     = $this->getToolbar();
 
@@ -47,7 +71,7 @@ class PFprojectsViewForm extends JViewLegacy
         else {
             $authorised = $this->item->params->get('access-edit');
         }
- 
+         
         if ($authorised !== true) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
@@ -67,12 +91,19 @@ class PFprojectsViewForm extends JViewLegacy
 
         // Prepare the document
         $this->_prepareDocument();
-
+ 
         // Display the view
         parent::display($tpl);
     }
 
-
+     public function getCategories()
+    {
+          $db =& JFactory::getDBO();
+          $query = "SELECT id, title, alias FROM #__categories WHERE extension='com_pfprojects' AND published = 1 ORDER BY id ASC";
+          $db->setQuery($query);
+          $rows = $db->loadObjectList();
+          return $rows;
+    }
     /**
      * Prepares the document
      *
