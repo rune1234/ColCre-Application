@@ -169,6 +169,14 @@ projectModule.controller('taskControl',
              var skillInput = jQuery('#skillInput' + taskid).val();
              theService.skillHandler.skillSearch(skillInput);
          }
+         $scope.addUserSkills = function()
+         {
+             
+             $scope.addTask();
+             alert(jQuery("#addusersk").data('addskill') );
+             //$scope.skillChosen = theService.skillHandler.setChosenSKill(1, skillid, skill);
+             //$scope.skillChosen = theService.skillHandler.chosenSkill;
+         }
          $scope.addTask = function()
          {
              var id = $scope.tasks.length + 1;
@@ -209,7 +217,7 @@ projectModule.controller('taskControl',
          }
          $scope.focusOnInput = function(taskid)
          { jQuery('#skillInput' + taskid).focus(); }
-         $scope.chooseSkill = function(taskid, skillid, skill)
+         $scope.chooseSkill = function(taskid, skillid, skill)//also used for the user to add skills to his profile
          {
              jQuery(".resultsList").css("display", "none");
              jQuery("#skillInput" + taskid).val('');
