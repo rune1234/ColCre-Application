@@ -42,6 +42,7 @@ defined('_JEXEC') or die();
                 echo '<div class="span9 pull-left" style="background: #fff;">';
                 echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->project_id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
                 echo "<p>".$match->description."</p>";
+                echo "<p>Task: <b>".$match->task_title."</b></p>";
                 echo "<p>Skill Needed: ".$match->skill."</p>";
                 echo "<p>Task Match Percentage: ".$match->TaskMatchPercentage."%";
                 echo "<p>Project Match Percentage: ".$match->ProjectMatchPercentage."%";
