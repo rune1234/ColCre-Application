@@ -16,17 +16,14 @@ class CommunityModelColcre extends JCCModel
     }
     function getUserSkills($userid)
     {
-        if (!is_numeric($userid))
-        {
-            return false;
-        }
+        if (!is_numeric($userid)) { return false; }
         else
         {
              $db = JFactory::getDbo();
              $query = "SELECT b.* FROM #__pf_user_skills as a INNER JOIN #__pf_skills as b ON a.skill_id = b.id WHERE a.user_id = $userid ORDER BY b.skill";
              $db->setQuery($query);
              $rows = $db->loadObjectList();
-             return $rows;
+             return ($rows) ? $rows : false;
         }
     }
 }
