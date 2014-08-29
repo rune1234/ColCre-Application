@@ -30,8 +30,8 @@ $user = JFactory::getUser();
      
     <div class='maincatgbox'>
         <?php
-        //print_r($_POST);
-        foreach ($skillCategories as $skctg)
+        //print_r($userSkills);
+         foreach ($skillCategories as $skctg)
         {
              echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".$skctg->category."</div></div>\n";
         }
@@ -49,7 +49,7 @@ $user = JFactory::getUser();
             <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
-                  <div ng-app="myProj"><div ng-controller="taskControl">
+                  <div ng-app="myProj"><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
      <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
                <div class="task-group" ng-repeat="task in tasks">
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
