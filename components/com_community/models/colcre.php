@@ -26,4 +26,17 @@ class CommunityModelColcre extends JCCModel
              return ($rows) ? $rows : false;
         }
     }
+    function getSkillsAdded($userid)//this is a different database table than the one getUserSkills fetches
+    {
+        if (!is_numeric($userid)) { return false; }
+        else
+        {
+             $db = JFactory::getDbo();
+             $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = $userid LIMIT 1";
+             $db->setQuery($query);
+             $row = $db->loadObject();
+             return ($row) ? $row : false;
+        }
+    }
+    
 }
