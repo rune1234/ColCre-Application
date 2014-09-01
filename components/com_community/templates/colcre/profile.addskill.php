@@ -11,6 +11,11 @@ defined('_JEXEC') or die();
 $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', true ), JText::_( 'Password', true ), 4 );
 $user = JFactory::getUser();
 //redacron file ******************
+
+if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill))
+{
+    $useSkillAdd = true;
+} else $useSkillAdd = false;
 ?>
 <script><!--
     jQuery(document).ready(function($) {  
@@ -44,9 +49,9 @@ $user = JFactory::getUser();
 </div>
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
     <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=skills&Itemid=103');?>"><table>
-            <tr><td valign='top'>Skill: </td><td><input style='width: 520px;' type='text' name='skill2dd' /><br /></td></tr>
+            <tr><td valign='top'>Skill: </td><td><input style='width: 520px;' type='text' name='skill2dd' value="<?php echo ($useSkillAdd) ? $getSkiAdded->skill : ''; ?>" /><br /></td></tr>
             <tr><td valign='top'>Category: </td><td><div id="categoryPan" style="font-weight: bold;">None</div><br /></td></tr>
-            <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'></textarea></td></tr>
+            <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
                   <div ng-app="myProj"><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
@@ -70,8 +75,8 @@ $user = JFactory::getUser();
                </td></tr>
         </table> 
     <input type='hidden' name='skillcatg' value='' />
-    
-    <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
+    <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
+     <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
     <input type='submit' value='Submit' /> 
     <span id="skillboxWarn">One of the fields is empty</span>
     </form>    
