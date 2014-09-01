@@ -2248,6 +2248,8 @@ class CommunityProfileController extends CommunityBaseController {
         $model = $this->getModel('colcre');
         $data->skillCategories = $model->getSkillsList();
         $data->userSkills = $model->getUserSkills($user->id);
+        $data->getSkiAdded = $model->getSkillsAdded($user->id);
+                            
         //$data->skillCategories = $model->getSkillsList();
         $view = $this->getView($viewName, '', $viewType);
                             
