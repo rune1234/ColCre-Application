@@ -57,12 +57,12 @@ class PFprojectsController extends JControllerLegacy
         
         $response = array();
         $response['status'] = 0;
-         
-       
-        
         $db = JFactory::getDbo();
         $user_id = $_POST['userid'];
         if (!is_numeric($user_id) || $user_id == 0) return;
+        $query = "DELETE FROM #__pf_user_skills WHERE user_id = $user_id LIMIT 50";
+        $db->setQuery($query);
+        $db->Query();
         $query = "INSERT INTO #__pf_project_skills_added (userid, skillDesc, skill, skillTags, skillCatg) VALUES ($user_id, '".$db->escape($_POST['skillDesc'])."', '".$db->escape($_POST['skilltoAdd'])."', '".$db->escape($_POST['skillTags'])."', '".$db->escape($_POST['skillCatg'])."');";
         $taskIds = $_POST['taskIds'];
         
