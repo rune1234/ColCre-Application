@@ -885,6 +885,7 @@ if (!class_exists('CommunityViewProfile')) {
                     ->set('user', $my)
                      ->set('skillCategories', $data->skillCategories)
                     ->set('userSkills', $data->userSkills)
+                    ->set('getSkiAdded', $data->getSkiAdded)
                     ->set('fbHtml', $fbHtml)
                     ->set('fbPostStatus', $userParams->get('postFacebookStatus'))
                     ->set('jConfig', $jConfig)
