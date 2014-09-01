@@ -173,9 +173,13 @@ projectModule.controller('taskControl',
          {
              
              $scope.addTask();
-             alert(jQuery("#addusersk").data('addskill') );
-             //$scope.skillChosen = theService.skillHandler.setChosenSKill(1, skillid, skill);
-             //$scope.skillChosen = theService.skillHandler.chosenSkill;
+             var alrSkills = jQuery("#addusersk").data('addskill');
+             for (a in alrSkills)
+             { 
+                 if (typeof alrSkills[a].id === 'undefined') continue;
+                 $scope.skillChosen = theService.skillHandler.setChosenSKill(1, alrSkills[a].id, alrSkills[a].skill); 
+             }
+             $scope.skillChosen = theService.skillHandler.chosenSkill;
          }
          $scope.addTask = function()
          {
