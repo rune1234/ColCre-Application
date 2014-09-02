@@ -43,6 +43,7 @@ function addUserSkill()
     var skilltoAdd = jQuery("input[name=skill2dd]").val();
     var skillDesc = jQuery("textarea[name=skilldesc]").val();
     var userid = jQuery("input[name=userid]").val();
+    var editInstead = jQuery("input[name=editInstead]").val();
     //var skillTags = jQuery("textarea[name=skilltags]").val();
     var taskNames = [];
     var taskIds = [];
@@ -64,7 +65,7 @@ function addUserSkill()
     $fragment_refresh = {
 		url: tasksURL,
 		type: 'POST',
-		data: { option: 'com_pfprojects', taskIds: taskIds, task:'addUserKill', userid:userid, skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
+		data: { editInstead: editInstead, option: 'com_pfprojects', taskIds: taskIds, task:'addUserKill', userid:userid, skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
 		success: function( data ) {  
                      data = JSON.parse(data);
                      if (!data.status)
