@@ -63,9 +63,11 @@ class PFprojectsController extends JControllerLegacy
         $query = "DELETE FROM #__pf_user_skills WHERE user_id = $user_id LIMIT 50";
         $db->setQuery($query);
         $db->Query();
-        $query = "INSERT INTO #__pf_project_skills_added (userid, skillDesc, skill, skillTags, skillCatg) VALUES ($user_id, '".$db->escape($_POST['skillDesc'])."', '".$db->escape($_POST['skilltoAdd'])."', '".$db->escape($_POST['skillTags'])."', '".$db->escape($_POST['skillCatg'])."');";
+        if ($_POST['editInstead'] == 1)
+        { $query = "UPDATE #__pf_project_skills_added SET skillCatg='".$db->escape($_POST['skillCatg'])."', skillTags='".$db->escape($_POST['skillTags'])."', skillDesc='".$db->escape($_POST['skillDesc'])."', skill='".$db->escape($_POST['skilltoAdd'])."' WHERE userid= $user_id LIMIT 1"; }
+        else { $query = "INSERT INTO #__pf_project_skills_added (userid, skillDesc, skill, skillTags, skillCatg) VALUES ($user_id, '".$db->escape($_POST['skillDesc'])."', '".$db->escape($_POST['skilltoAdd'])."', '".$db->escape($_POST['skillTags'])."', '".$db->escape($_POST['skillCatg'])."');"; }
         $taskIds = $_POST['taskIds'];
-        
+         
         $db->setQuery($query);
         $r = $db->Query();
         if (!$r) {
