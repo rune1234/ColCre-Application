@@ -74,7 +74,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
                 
                </td></tr>
         </table> 
-    <input type='hidden' name='skillcatg' value='' />
+    <input type='hidden' name='skillcatg' value='<?php echo $getSkiAdded->skillCatg; ?>' />
     <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
      <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
     <input type='submit' value='Submit' /> 
