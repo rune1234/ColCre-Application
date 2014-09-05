@@ -1,0 +1,214 @@
+<?php
+/**
+ * @package      pkg_projectfork
+ * @subpackage   com_pftasks
+ *
+ * @author       Tobias Kuhn (eaxs)
+ * @copyright    Copyright (C) 2006-2013 Tobias Kuhn. All rights reserved.
+ * @license      http://www.gnu.org/licenses/gpl.html GNU/GPL, see LICENSE.txt
+ */
+
+defined('_JEXEC') or die();
+
+
+class PFtasksHelper
+{
+    /**
+     * The component name
+     *
+     * @var    string
+     */
+    public static $extension = 'com_pftasks';
+
+    /**
+     * Indicates whether this component uses a project asset or not
+     *
+     * @var    boolean
+     */
+    public static $project_asset = true;
+
+
+    /**
+     * Configure the Linkbar.
+     *
+     * @param     string    $view    The name of the active view.
+     *
+     * @return    void
+     */
+    public static function addSubmenu($view)
+    {
+        $is_j3 = version_compare(JVERSION, '3.0.0', 'ge');
+        $forms = array('task', 'tasklist');
+
+        if (in_array($view, $forms) && $is_j3) return;
+
+        $components = PFApplicationHelper::getComponents();
+        $option     = JFactory::getApplication()->input->get('option');
+        $class      = ($is_j3 ? 'JHtmlSidebar' : 'JSubMenuHelper');
+
+        foreach ($components AS $component)
+        {
+            if ($component->enabled == '0') continue;
+
+            $title = JText::_($component->element);
+            $parts = explode('-', $title, 2);
+
+            if (count($parts) == 2) $title = trim($parts[1]);
+
+            call_user_func(
+                array($class, 'addEntry'),
+                $title,
+                'index.php?option=' . $component->element,
+                ($option == $component->element && $view == 'tasks')
+            );
+
+            if ($option == $component->element) {
+                call_user_func(
+                    array($class, 'addEntry'),
+                    JText::_('COM_PROJECTFORK_SUBMENU_TASKLISTS'),
+                    'index.php?option=' . $component->element . '&view=tasklists',
+                    ($option == $component->element && $view == 'tasklists')
+                );
+            }
+        }
+    }
+
+
+    /**
+     * Gets a list of actions that can be performed.
+     *
+     * @param     integer    $id      The item id
+     * @param     integer    $list    The list id
+     *
+     * @return    jobject
+     */
+    public static function projectPerm($project_id, $userid)//redacron alteration
+    {
+        if (!is_numeric($userid) || $userid == 0) return false;
+        if (!is_numeric($project_id) || $project_id == 0) return false;
+        $query = "SELECT created_by FROM #__pf_projects WHERE id = $project_id LIMIT 1";
+        $db = JFactory::getDbo();
+        $db->setQuery($query);
+        $creator = $db->loadResult();
+        if ($creator == $userid) return true;
+        else return false;
+    }
+    public static function getTaskData($id)
+    {
+         if (!is_numeric($id)) return false;
+         $db = JFactory::getDbo();
+         $query = "SELECT created_by, project_id FROM #__pf_tasks WHERE id = $id LIMIT 1";
+         $db->setQuery($query);
+         $row = $db->loadObject();
+         return $row;
+    }
+    public static function taskPermission($id, $userid)//redacron alteration
+    {
+        if (!is_numeric($id) || !is_numeric($userid) || $userid == 0) return false;
+        $db = JFactory::getDbo();
+        $row = self::getTaskData($id);    
+        if (!is_numeric($row->project_id) || $row->project_id == 0) return false;
+        $query = "SELECT created_by FROM #__pf_projects WHERE id = $row->project_id LIMIT 1";
+        $db->setQuery($query);
+        $creator = $db->loadResult();
+        if ($creator == $userid) return true;
+        elseif ($row->created_by != $userid) return false;
+        else return true;
+    }
+    public static function getActions($id = 0, $list = 0)
+    {
+        $user   = JFactory::getUser();
+        $result = new JObject;
+
+        if (!empty($id)) {
+            $asset = 'com_pftasks.task.' . (int) $id;
+        }
+        elseif (!empty($list)) {
+            $asset = 'com_pftasks.tasklist.' . (int) $list;
+        }
+        else {
+            $pid   = PFApplicationHelper::getActiveProjectId();
+            $asset = (empty($pid) ? self::$extension : 'com_pftasks.project.' . $pid);
+        }
+
+        $actions = array(
+            'core.admin', 'core.manage',
+            'core.create', 'core.edit',
+            'core.edit.own', 'core.edit.state',
+            'core.delete'
+        );
+
+        foreach ($actions as $action)
+        {
+            $result->set($action, $user->authorise($action, $asset));
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * Gets a list of actions that can be performed on a task list.
+     *
+     * @param     integer    $id    The item id
+     *
+     * @return    jobject
+     */
+    public static function getListActions($id = 0)
+    {
+        $user   = JFactory::getUser();
+        $result = new JObject;
+
+        if (empty($id)) {
+            $pid   = PFApplicationHelper::getActiveProjectId();
+            $asset = (empty($pid) ? self::$extension : 'com_pftasks.project.' . $pid);
+        }
+        else {
+            $asset = 'com_pftasks.tasklist.' . (int) $id;
+        }
+
+        $actions = array(
+            'core.admin', 'core.manage',
+            'core.create', 'core.edit',
+            'core.edit.own', 'core.edit.state',
+            'core.delete'
+        );
+
+        foreach ($actions as $action)
+        {
+            $result->set($action, $user->authorise($action, $asset));
+        }
+
+        return $result;
+    }
+
+
+    static public function priority2string($value = null)
+    {
+        switch((int) $value)
+        {
+            case 2:
+                $text  = JText::_('COM_PROJECTFORK_PRIORITY_LOW');
+                break;
+
+            case 3:
+                $text  = JText::_('COM_PROJECTFORK_PRIORITY_MEDIUM');
+                break;
+
+            case 4:
+                $text  = JText::_('COM_PROJECTFORK_PRIORITY_HIGH');
+                break;
+
+            case 5:
+                $text  = JText::_('COM_PROJECTFORK_PRIORITY_VERY_HIGH');
+                break;
+
+            default:
+            case 1:
+                $text  = JText::_('COM_PROJECTFORK_PRIORITY_VERY_LOW');
+                break;
+        }
+
+        return $text;
+    }
+}
