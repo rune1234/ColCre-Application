@@ -29,7 +29,7 @@ class PFtasksViewTaskForm extends JViewLegacy
 
 
     public function display($tpl = null)
-    {
+    {  
         // Initialise variables.
         $app    = JFactory::getApplication();
         $user   = JFactory::getUser();
@@ -46,20 +46,32 @@ class PFtasksViewTaskForm extends JViewLegacy
             JError::raiseWarning(500, implode("\n", $errors));
             return false;
         }
-
+         //$access = PFtasksHelper::getActions();
+         if (is_numeric($this->item->id) && $this->item->id > 0) {  $authorised = PFtasksHelper::taskPermission($this->item->id, $user->id); }//get('core.create');
+         else
+         {
+              $project_id = $this->form->getValue('project_id');
+              $authorised = PFtasksHelper::projectPerm($project_id, $user->id); 
+         }
+        // $authorised = true;
+         //echo "reerer---->: ".$this->item->id;
+        
+       //print_r($user);
+        
         // Permission check.
-        if ($this->item->id <= 0) {
+       /* if ($this->item->id <= 0) {
             $access = PFtasksHelper::getActions();
             $authorised = $access->get('core.create');
         }
         else {
             $authorised = $this->item->params->get('access-edit');
-        }
-/*
-        if ($authorised !== true) {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
         }*/
+
+        if ($authorised !== true) {
+            //JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            echo "<h2>ERROR - YOU ARE NOT AUTHORIZED TO EDIT THIS TASK</h2>";
+            return false;
+        }
 //echo "view is $ddview"; exit;
         //Escape strings for HTML output
         $this->pageclass_sfx = htmlspecialchars($this->state->params->get('pageclass_sfx'));
