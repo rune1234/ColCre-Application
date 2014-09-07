@@ -25,6 +25,7 @@ $canEdit	= ($user->authorise('core.edit', $asset_name));
 $canEditOwn	= ($user->authorise('core.edit.own', $asset_name) && $this->item->created_by == $uid);
 $projerized = PFtasksHelper::projectPerm($item->project_id, $user->id);//redacron
 $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
+//print_r($this->skillsNeeded);
 ?> 
 <div id="projectfork" class="item-page view-task projectFrame" style="padding: 10px;">
 	<?php if ($this->params->get('show_page_heading', 1)) : ?>
@@ -43,7 +44,16 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
 
 	<div class="item-description">
 		<?php echo $item->text; ?>
-
+<?php if($this->skillsNeeded && is_numeric($this->skillsNeeded[0]->task_id) && $this->skillsNeeded[0]->task_id > 0) : ?>
+        		<div style="margin: 10px 0;"> 
+                            <dt>Skills Needed:</dt>
+        		 
+                            <dd><?php 
+                            $skillComm = array();
+                            foreach ($this->skillsNeeded  as $tskl) { $skillComm[] = $tskl->skill; }
+                            echo implode(', ', $skillComm);
+                            ?></dd></div> 
+            <?php endif; ?>
         <dl class="article-info dl-horizontal pull-right">
     		<dt class="project-title">
     			<?php echo JText::_('JGRID_HEADING_PROJECT');?>:
@@ -51,7 +61,8 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
     		<dd class="project-data">
     			<a href="<?php echo JRoute::_(PFprojectsHelperRoute::getDashboardRoute($item->project_slug));?>"><?php echo $item->project_title;?></a>
     		</dd>
-            <?php if($item->milestone_id) : ?>
+                
+                <?php if($item->milestone_id) : ?>
         		<dt class="milestone-title">
         			<?php echo JText::_('JGRID_HEADING_MILESTONE');?>:
         		</dt>
@@ -59,6 +70,8 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
         			<a href="<?php echo JRoute::_(PFmilestonesHelperRoute::getMilestoneRoute($item->project_slug, $item->milestone_slug));?>"><?php echo $item->milestone_title;?></a>
         		</dd>
             <?php endif; ?>
+                
+            
             <?php if($item->list_id) : ?>
         		<dt class="list-title">
         			<?php echo JText::_('JGRID_HEADING_TASKLIST');?>:
