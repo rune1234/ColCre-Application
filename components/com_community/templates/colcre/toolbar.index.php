@@ -126,6 +126,8 @@ $taskName = JRequest::getCmd( 'task');
  if (1 == 1){?>
 								<li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=matches'); ?>">Matches</a>
 								</li>
+                                                                <li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=projects'); ?>">My Projects</a>
+								</li>
 								 
 							<?php }?>
 
@@ -147,7 +149,7 @@ $taskName = JRequest::getCmd( 'task');
         </ul>
       </div><!-- /.nav-collapse -->
   </div><!-- /navbar-inner -->
-</div><br /><br /><br /><br />
+</div><br />
 
 <?php endif; ?>
 
