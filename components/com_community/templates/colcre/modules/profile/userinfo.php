@@ -114,11 +114,14 @@ CAssets::attach($js, 'js');
 									</a>
 								</li> <?php
                                                                    
-                                                                  if ($isMine || 1==1)
+                                                                  if ($isMine)
                                                                   {
                                                                       ?>
                                                                         <li>
 									<a href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=matches'); ?>">Matches</a>
+								</li>
+                                                                  <li>
+									<a href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=projects'); ?>">My Projects</a>
 								</li>
                                                                         <?php
                                                                   }
