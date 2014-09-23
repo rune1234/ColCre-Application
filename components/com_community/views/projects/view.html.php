@@ -28,8 +28,7 @@ class CommunityViewProjects extends CommunityView
            
             $matchModel 	= CFactory::getModel( 'projects' );
              
-			echo $tmpl	->set('totalMatches'	, $matchModel->getTotalNotifications( $projects->user->id ) )
-						->set('matches'	, $projects->matches )
+			echo $tmpl	 ->set('matches'	, $projects->matches )
 						->set('pagination'	, $projects->pagination->getPagesLinks())
 						->fetch('projects.list');
 		
