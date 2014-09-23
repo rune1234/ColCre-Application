@@ -38,8 +38,15 @@ defined('_JEXEC') or die();
 		 
 		</td>
 		<td><?php //print_r($match);
-                $match->created_by;
+                 require_once( JPATH_ROOT .'/libraries/projectfork/colcre/project.php' ); 
+                 $projectData =  new projectData(); 
                 echo '<div class="span9 pull-left" style="background: #fff;">';
+              //  print_r($match);
+                $category = $projectData->getCategory($match->catid);
+                $project = new stdClass();
+                $project->id = $match->project_id;
+                $project->category_alias = $category->alias;
+                echo "<div style='float: left; margin: 10px;'><img alt='".$match->task_title."' src='".$projectData->lookupIcon($project)."' /></div>";
                 echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->project_id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
                 echo "<p>".$match->description."</p>";
                 echo "<p>Task: <b>".$match->task_title."</b></p>";
