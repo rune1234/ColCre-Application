@@ -22,6 +22,7 @@ function dump(arr,level) {
 	}
 	return dumped_text;
 }
+ 
 function addSkillLayer($this)
 {
     var centerHeight = (( jQuery($this).outerHeight()) /1);
@@ -79,10 +80,43 @@ function addUserSkill()
                 } };
     jQuery.ajax( $fragment_refresh );
     return false;
-} 
+}
+
+
+
+//******************************************************************
 var projectModule = angular.module('myProj', []);
 projectModule.factory('theMenus', function() { return });
-projectModule.factory('theService', function(theMenus, $http) {
+projectModule.factory('skillService', function($http) 
+{
+    var $tasks = [];
+    var skillInputs = [{id: 0}];
+    var $chosenSkill = [];
+    return {
+        skillInputs: skillInputs,
+        addSkillInputs: function()
+        {
+            var k = {};
+            k.id = skillInputs.length;
+            skillInputs.push(k);
+        },
+        skillHandler:{
+           xArray: 0,
+           chosenSkill: $chosenSkill,
+          SkillInput: function()
+           {
+               
+           },
+           
+       },
+       addTag: function()
+       {}
+       
+   }
+
+});
+projectModule.factory('theService', function(theMenus, $http) 
+{
     
     var $tasks = [];
     var $inputs = [];
@@ -102,7 +136,7 @@ projectModule.factory('theService', function(theMenus, $http) {
                this.x = $inputs;
            },
            setChosenSKill: function(taskid, skillid, skill)
-           {
+           {  
               if(typeof(jQuery("#skiinp_" + taskid + "_" + skillid).val()) != 'undefined') return;//don't add a skill that has already been added
               var s = {}
               s.skill = skill;
@@ -157,6 +191,23 @@ projectModule.factory('theService', function(theMenus, $http) {
     };
 });
 
+projectModule.controller('addSkillTag', function($scope, skillService)
+{
+      $scope.skillTitle = skillService.skillHandler;
+      $scope.skillTags = skillService.skillInputs;
+      
+      $scope.addTagForm = function()
+      {
+          if ($scope.skillTags.length > 4) return;
+          skillService.addSkillInputs();
+      }
+      $scope.addTagShow = function()
+      {
+          if ($scope.skillTags.length > 4) return true;
+          else return false;
+      }
+          
+});
 
 projectModule.controller('taskControl', 
     function($scope, theService) {
@@ -194,7 +245,9 @@ projectModule.controller('taskControl',
          {
              
              var task = jQuery('#task_1').html();
+              
              task = angular.fromJson(task);
+             
              var id, getSkills;
              var noTasks = false;
              for (i in task)
@@ -209,8 +262,9 @@ projectModule.controller('taskControl',
                  task2Add.description = task[i].description;
                  getSkills = angular.fromJson(task[i].taskSkills);
                  for (q in getSkills)
-                 {
+                 { 
                      if (typeof getSkills[q].skill == 'undefined') continue;
+                     
                      theService.skillHandler.setChosenSKill(task2Add.id, getSkills[q].skill_id, getSkills[q].skill);
                      //alert(getSkills[q].skill);
                  }
@@ -230,5 +284,5 @@ projectModule.controller('taskControl',
              $scope.skillChosen = theService.skillHandler.chosenSkill;
          }
          $scope.deleteSKill = function(taskid, skillid)
-         { theService.skillHandler.delChosenSkill(taskid, skillid); }
+         {   theService.skillHandler.delChosenSkill(taskid, skillid); }
     });
