@@ -48,6 +48,36 @@ function addUserSkill()
     //var skillTags = jQuery("textarea[name=skilltags]").val();
     var taskNames = [];
     var taskIds = [];
+    
+    
+    var $t = 0;
+    var newTagsCatg = [];
+    jQuery(".newSkillTagCag").each(function()
+    {
+        
+        var nTaCg = $("option:selected", this).attr('name');
+        if(typeof(nTaCg) !== 'undefined' && nTaCg != '') newTagsCatg.push(nTaCg);
+    });
+    var newTags = [];
+    jQuery(".newSkillTag").each(function() //male sure t is here, since there will always be a category, but not necessarily a tag
+    {
+       
+       var nTa = $(this).val();
+       if(typeof(nTa) !== 'undefined' && nTa != '') { newTags.push(nTa); $t++; }
+       
+    });
+    var JNewTags = '';
+    var JNewTagsCag = '';
+    if ($t > 0)
+    {
+         JNewTags = JSON.stringify(newTags);
+         JNewTagsCag = JSON.stringify(newTagsCatg);
+    }
+    
+    
+   
+    
+    
     jQuery(".taskNfNam").each(function() { var aValue = $(this).val();   taskNames.push(aValue); });
     jQuery(".taskfID").each(function() { var aValue = $(this).val();   taskIds.push(aValue); });
     var taskIds = JSON.stringify(taskIds);
@@ -66,7 +96,7 @@ function addUserSkill()
     $fragment_refresh = {
 		url: tasksURL,
 		type: 'POST',
-		data: { editInstead: editInstead, option: 'com_pfprojects', taskIds: taskIds, task:'addUserKill', userid:userid, skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
+		data: { editInstead: editInstead, JNewTagsCag: JNewTagsCag, JNewTags: JNewTags, option: 'com_pfprojects', taskIds: taskIds, task:'addUserKill', userid:userid, skilltoAdd: skilltoAdd, skillDesc: skillDesc, skillTags: skillTags, skillCatg: skillCatg},
 		success: function( data ) {  
                      data = JSON.parse(data);
                      if (!data.status)
@@ -79,6 +109,7 @@ function addUserSkill()
                      }
                 } };
     jQuery.ajax( $fragment_refresh );
+     
     return false;
 }
 
