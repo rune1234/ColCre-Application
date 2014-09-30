@@ -47,14 +47,15 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 	 
 		
 </div>
+<div ng-app="myProj">
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
-    <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=skills&Itemid=103');?>"><table>
+    <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>"><table>
             <tr><td valign='top'>Skill: </td><td><input style='width: 520px;' type='text' name='skill2dd' value="<?php echo ($useSkillAdd) ? $getSkiAdded->skill : ''; ?>" /><br /></td></tr>
             <tr><td valign='top'>Category: </td><td><div id="categoryPan" style="font-weight: bold;">None</div><br /></td></tr>
             <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
-                  <div ng-app="myProj"><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
+                  <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
      <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
                <div class="task-group" ng-repeat="task in tasks">
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
@@ -77,8 +78,32 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
     <input type='hidden' name='skillcatg' value='<?php echo $getSkiAdded->skillCatg; ?>' />
     <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
      <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
-    <input type='submit' value='Submit' /> 
-    <span id="skillboxWarn">One of the fields is empty</span>
-    </form>    
     
+    <span id="skillboxWarn">One of the fields is empty</span>
+    <br /><div ng-controller="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
+            
+            <div ng-repeat='skillTag in skillTags'> 
+            
+            <br ng-if="skillTag.id > 0" /> 
+            <b>Skill {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" value="" />
+            <br /><b>Skill Category:</b> 
+         <select class="newSkillTagCag"><?php foreach ($skillCategories as $skctg)
+        {
+             echo "<option name='$skctg->id'>".$skctg->category."</option>\n";
+             }?></select>
+             
+            </div>
+            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Skill</a></div>
+        
+        
+    
+    </div>
+    <br /><input type='submit' value='Submit' /> 
+    </form>    
+   
 </div> 
+
+    
+
+
+</div>
