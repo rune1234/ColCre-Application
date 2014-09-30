@@ -99,10 +99,30 @@ class PFprojectsController extends JControllerLegacy
                 }
             }
         }
+         $JNewTagsCag = $_POST['JNewTagsCag'];
+         $JNewTags = $_POST['JNewTags'];
+         if ($JNewTags)
+         {
+             $JNewTags = json_decode($JNewTags);
+             $JNewTagsCag = json_decode($JNewTagsCag);
+             $this->_insertNewTags($JNewTags, $JNewTagsCag, $user_id, $db);
+         }
          echo  json_encode($response);
         exit;
     }
-    
+    private function _insertNewTags($tags, $tagCatg, $userid, &$db)//new tags are added but not published
+    {
+        $a = 0;
+        foreach ($tags as $tag)
+        {
+             
+             $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '0')";
+             $db->setQuery($query);
+             $db->Query();
+             $a++;
+        }
+    }
+      
     public function display($cachable = false, $urlparams = false)
     {
         // Load CSS and JS assets
