@@ -8,7 +8,7 @@ if ($showleft == 0)
 { 
 	$showno = 0;
 } else $showno = 1;
-
+$user = JFactory::getUser();
 JHtml::_('behavior.framework', true);
 
 // Get params
@@ -30,9 +30,8 @@ if (in_array($option, $bootstrap))
 }
 
 $doc->addStyleSheet(JUri::base() . 'templates/system/css/system.css');
-$doc->addStyleSheet(JUri::base() . 'templates/' . $this->template . '/css/styles_2.css', $type = 'text/css', $media = 'screen,projection');
 $doc->addStyleSheet(JUri::base() . 'templates/' . $this->template . '/css/bootstrap.css', $type = 'text/css', $media = 'screen,projection');
-
+$doc->addStyleSheet(JUri::base() . 'templates/' . $this->template . '/css/styles_2.css', $type = 'text/css', $media = 'screen,projection');
 
 if ($this->direction == 'rtl')
 {
@@ -67,13 +66,13 @@ $doc->addScript($this->baseurl . '/templates/' . $this->template . '/javascript/
 		<![endif]-->
 	</head>
 	<body>
-		
+		 
 
 		<div id="all" class="media">
 			<div id="back">
 				<header id="header">
 					<div class="logoheader">
-						<h1 id="logo">
+						<h1 id="logo"> 
 						<?php if ($logo) : ?>
 							<img src="<?php echo $this->baseurl ?>/<?php echo htmlspecialchars($logo); ?>"  alt="<?php echo htmlspecialchars($templateparams->get('sitetitle'));?>" />
 						<?php endif;?>
@@ -87,8 +86,13 @@ $doc->addScript($this->baseurl . '/templates/' . $this->template . '/javascript/
 						</span></h1>
 					</div><!-- end logoheader -->
 					 <jdoc:include type="modules" name="position-1" />
-					 
-					 
+                                         
+                                         <?php if ($user->id > 0) { ?>
+                                         <script>
+                                             jQuery('header ul.menu').append('<li class="item-101"><a href="<?php echo "index.php?option=com_users&view=login" ?>">Logout</a></li>');
+                                                     
+					</script>
+                                         <?php } ?>
 				</header> 
                             <?php
                             if (isset($_GET['option']) && isset($_GET['view']))
