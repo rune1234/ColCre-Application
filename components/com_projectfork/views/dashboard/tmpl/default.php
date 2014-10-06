@@ -9,6 +9,37 @@
  */
 
 defined('_JEXEC') or die();
+function lookupIcon($task)
+        {
+            $key = (int) $task->id;
+            //print_r($task);
+
+            // Default - Projectfork avatar
+            $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
+            $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
+            $img_path  = NULL;
+//echo $base_path; echo $id; exit;
+            if (JFile::exists($base_path . '/' . $key . '.jpg')) {
+                $img_path = $base_url . '/' . $key . '.jpg';
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.jpeg')) {
+                $img_path = $base_url . '/' . $key . '.jpeg';
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.png')) {
+                $img_path = $base_url . '/' . $key . '.png';  
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.gif')) {
+                $img_path = $base_url . '/' . $key . '.gif';
+            }
+            else {  //echo JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"; 
+                if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".png";       
+               else return false;
+            }
+
+            return $img_path;
+ 
+        }
 function showMatches($matches, $item, $bla, $task = '')
 {
     $userMatches = array();
@@ -20,9 +51,12 @@ function showMatches($matches, $item, $bla, $task = '')
              else $shownMatches = true;
              $userMatches[$match->user_id][] = $match->SkillName;
          }
+         $avoidRepeat = array();
          foreach ($matches as $match)
          {
              if ($task != '') { if ($match->MatchingTaskId != $task->id) continue; }
+             //if (isset($avoidRepeat[$match->MatchingTaskId])) continue;
+             $avoidRepeat[$match->MatchingTaskId] = true;
              if (isset($userMatches[$match->user_id]) && is_array($userMatches[$match->user_id]))
              {
                  $matchesImplode = implode(', ', $userMatches[$match->user_id]);
@@ -35,14 +69,14 @@ function showMatches($matches, $item, $bla, $task = '')
              //print_r($spec);
              if (is_array($spec))
              {
-                 print_r($spec);
+                 //print_r($spec);
              }
              $avatar = getAvatarThumb($match->user_id);
              if ($avatar)
              {
                  echo "<img src='$avatar' alt='user avatar' style='float: left; margin-right: 5px;' />";
              }
-             echo "<p><b>Name:</b> ".ucwords($match->DeveloperName);
+             echo "<p><b>Name:</b> <a href='".JRoute::_('index.php?option=com_community&view=profile&userid='.$match->user_id.'&Itemid=103')."'>".ucwords($match->DeveloperName)."</a>";
              echo "<br /><b>SkillName:</b> ".ucwords($matchesImplode);//ucwords($match->SkillName);
              echo "<br /><b>Task Percentage:</b> ".$match->TaskMatchPercentage."%";
              echo "<br /><b>Project Match Percentage:</b> ".$match->ProjectMatchPercentage."%";
@@ -99,8 +133,11 @@ $details_active = ($state->get('project.request') ? ' active' : '');
                 <?php echo $this->toolbar;?> 
                 <?php  echo JHtml::_('pfhtml.project.filter');?>
             </div> 
-
-            <?php if($item) echo $item->event->afterDisplayTitle; ?>
+ 
+            <?php 
+            $proj_logo = lookupIcon($item) ? lookupIcon($item) : "images/foldered.jpg";
+                                        
+            if($item) echo $item->event->afterDisplayTitle; ?>
 
             <input type="hidden" name="task" value="" />
 	        <?php echo JHtml::_('form.token'); ?>
@@ -111,10 +148,12 @@ $details_active = ($state->get('project.request') ? ' active' : '');
 
             <?php if($state->get('filter.project') && !empty($item)) : ?>
                 <div  id="project-details"><?php // I got rid of this: class="<(?)php echo $details_in;(?)> collapse"?>
-                    <div class="well">
+                    <div>
                         <div class="item-description">
 
-                            <?php echo $item->text; ?>
+                            <?php 
+                            echo "<img src='$proj_logo' style='min-height: 150px; max-height: 250px; float: left; margin: 5px 10px 5px 5px;' alt='project $item->title'></a>";
+                            echo $item->text."<br /><br />"; ?>
 
                             <dl class="article-info dl-horizontal pull-right">
                         		<?php if($item->start_date != $nulldate): ?>
@@ -201,17 +240,19 @@ $details_active = ($state->get('project.request') ? ' active' : '');
          echo "<p><b>Title:</b> <a href=".JRoute::_('index.php?option=com_pftasks&view=task&id='.$task->id.'&Itemid=130').">".ucwords($task->title)."</a>";
          echo "<br />".$task->description;
          $shownMatches = showMatches($this->matches, $item, $this, $task);
-         if ($shownMatches) { $MTCFound = true; }
+         //if ($this->matches) { $MTCFound = true; }
          echo "</div><div style='clear: both;'></div></div>";
          
      }
      echo "<div style='clear: both;'></div>";
+     
  } 
-
+/*
  if (! $MTCFound )
  {
       showMatches($this->matches, $item, $this);
- }
+ }*/
+ 
  ?>
         <!-- Begin Dashboard Modules -->
         <?php if(count(JModuleHelper::getModules('pf-dashboard-top'))) : ?>
