@@ -22,7 +22,7 @@ class ProjectforkViewDashboard extends JViewLegacy
     protected $item;
     protected $pageclass_sfx;
     protected $toolbar;
-    protected $commonQuery = "SELECT users.name DeveloperName, users.id user_id,
+   /* protected $commonQuery = "SELECT users.name DeveloperName, users.id user_id,
 	projects.title ProjectTitle, 
 	project_skills.task_id  MatchingTaskId, 
 	skills.skill SkillName, 
@@ -55,7 +55,7 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
 		WHERE user_skills_2.user_id = users.id
 	)
 )";
-
+/*
 private function getCandidates($userid)
 {
     $query = "SELECT users.name DeveloperName, users.id user_id,
@@ -96,19 +96,21 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
       $db->setQuery($query);
       $rows = $db->loadObjectList();
       return $rows;
-}
+}*/
+/*
 private function getProjectCandidates($userid, $projectId)
 {
     //$projectId = isset($_GET['id']) ? $_GET['id'] : '';
     if (!is_numeric($projectId)) return;
     
-    $query = $this->commonQuery." AND projects.id = $projectId AND users.id != $userid";
+    $query = $this->commonQuery." AND projects.id = $projectId AND users.id != projects.created_by";
    // echo $query
       $db = JFactory::getDbo();
       $db->setQuery($query);
       $rows = $db->loadObjectList();
+       
       return $rows;
-}
+} 
 private function getPrjTskCandidates($userid, $taskid)
 {
     $projectId = isset($_GET['id']) ? $_GET['id'] : '';
@@ -130,28 +132,14 @@ private function getMatchDesc($userId)
      $rows = $db->loadObject();
      //print_r($rows);
      return ($rows) ? $rows : false;
-}
-public function specifyMatch($description, $taskId, $projectId, $userId, $matchid)
-{
-     $skill = $this->getMatchDesc($userId);
-     $desc = $skill->skillDesc;
-     if (!$desc) return;
-     $query = "SELECT projects.title ProjectTitle,
-MATCH (project_tasks.description) AGAINST ('$desc' IN NATURAL LANGUAGE MODE)
-FROM #__pf_tasks AS project_tasks JOIN #__pf_projects AS projects ON projects.id = project_tasks.project_id
-WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId'";
-    /* $query = "SELECT users.name DeveloperName, projects.title ProjectTitle, MATCH (project_tasks.description) "
-            . "AGAINST ('$desc' IN NATURAL LANGUAGE MODE) FROM #__users users, "
-            . "#__pf_project_skills_added user_skills_added, #__pf_tasks AS project_tasks "
-            . "JOIN #__pf_projects AS projects ON projects.id = project_tasks.project_id WHERE "
-            . "project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId' AND "
-            . "user_skills_added.userid = users.id AND users.id = '$userId'";*/
-     //echo "<br /><p style='font-size: 10px;'>".$query."</p><br />";
-     $db = JFactory::getDbo();
-     $db->setQuery($query);
-     $rows = $db->loadObjectList();
-     return $rows;
-}
+}*/
+   public function specifyMatch($description, $taskId, $projectId, $userId, $matchId)
+   {
+         require_once( JPATH_ROOT .'/libraries/projectfork/colcre/matches.php' );
+         $pm = new projectMatches();
+         $rows = $pm->specifyMatch($description, $taskId, $projectId, $userId, $matchId);//why are we using matchID yet?
+         return $rows;
+   }
    private function getProjectTasks($id)
    {
        if (!is_numeric($id) || $id == 0) return false;
@@ -161,11 +149,11 @@ WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId'";
        $rows = $db->loadObjectList();
        return $rows;
    }
-	function display($tpl = null)
-	{
+   function display($tpl = null)
+   {
 	    $this->state   = $this->get('State');
-        $this->item    = $this->get('Item');
-        
+            $this->item    = $this->get('Item');
+        require_once( JPATH_ROOT .'/libraries/projectfork/colcre/matches.php' );
         $this->tasks = $this->getProjectTasks($this->item->id);
          
         $this->params  = $this->state->params;
@@ -176,7 +164,11 @@ WHERE project_tasks.id = '$taskId' AND project_tasks.project_id = '$projectId'";
         $myUser = JFactory::getUser();
         $this->user = $myUser;
           
-        if (1 ==1 || ($this->item->created_by && $this->user->id)) { $this->matches = $this->getProjectCandidates($this->user->id, $this->item->id);   }
+        if (1 ==1 || ($this->item->created_by && $this->user->id)) 
+        { 
+            $pm = new projectMatches();
+            $this->matches = $pm->getProjectCandidates($this->user->id, $this->item->id);
+        }
         else $this->matches = false;
         $dispatcher	   = JDispatcher::getInstance();
 
