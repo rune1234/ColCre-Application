@@ -2,12 +2,45 @@
 defined('_JEXEC') or die();
 class projectMatches
 {
+      protected $commonQuery = "SELECT users.name DeveloperName, users.id user_id,
+	projects.title ProjectTitle, 
+	project_skills.task_id  MatchingTaskId, 
+	skills.skill SkillName, 
+	round(1 / (
+		SELECT count(user_skills.user_id)
+		FROM #__pf_user_skills user_skills
+		WHERE user_skills.user_id = users.id
+	) * 100, 0) AS TaskMatchPercentage,
+	round(
+		1 / (
+			SELECT count(user_skills.user_id)
+			FROM #__pf_user_skills user_skills
+			WHERE user_skills.user_id = users.id
+		) * (1 / (
+			SELECT count(project_skills.task_id)
+			FROM #__pf_project_skills project_skills
+			WHERE project_skills.project_id = projects.id
+		)) * 100, 0
+	) AS ProjectMatchPercentage
+FROM #__users users, 	
+	#__pf_project_skills project_skills
+JOIN #__pf_projects AS projects ON projects.id = project_skills.project_id
+JOIN #__pf_skills AS skills ON skills.id = project_skills.skill_id
+WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_id) IN (
+	SELECT project_skills_2.project_id, project_skills_2.task_id, project_skills_2.skill_id
+	FROM #__pf_project_skills project_skills_2
+	WHERE project_skills_2.skill_id IN (
+		SELECT user_skills_2.skill_id
+		FROM #__pf_user_skills user_skills_2
+		WHERE user_skills_2.user_id = users.id
+	)
+)";
       function getDBO()
       {
           return JFactory::getDbo();
       }
       
-      public function specifyMatch($description, $taskId, $projectId, $userId)
+      public function specifyMatch($description, $taskId, $projectId, $userId, $matchId)
        {
              $db = $this->getDBO();
              if (!is_numeric($taskId)) return false;
@@ -52,5 +85,20 @@ class projectMatches
          $rows = $db->loadObject();
          return ($rows) ? $rows : false;
      }
+     public function getProjectCandidates($userid, $projectId)
+     {
+        //$projectId = isset($_GET['id']) ? $_GET['id'] : '';
+        if (!is_numeric($projectId)) return;
+
+        $query = $this->commonQuery." AND projects.id = $projectId AND users.id != projects.created_by";
+       // echo $query
+          $db = JFactory::getDbo();
+          $db->setQuery($query);
+          $rows = $db->loadObjectList();
+
+          return $rows;
+     }
+     
+ 
 }
 ?>
