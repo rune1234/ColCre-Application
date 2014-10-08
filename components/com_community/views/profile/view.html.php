@@ -25,7 +25,7 @@ if (!class_exists('CommunityViewProfile')) {
 
             $this->addSubmenuItem('index.php?option=com_community&view=profile&task=edit', JText::_('COM_COMMUNITY_PROFILE_EDIT'));
             
-            $this->addSubmenuItem('index.php?option=com_community&view=profile&task=skills',"Add Skills");//redacron alteration
+            $this->addSubmenuItem('index.php?option=com_community&view=profile&task=addskill',"Add Skills");//redacron alteration
             $this->addSubmenuItem('index.php?option=com_community&view=profile&task=preferences', JText::_('COM_COMMUNITY_EDIT_PREFERENCES'));
             $this->addSubmenuItem('index.php?option=com_community&view=profile&task=notifications', JText::_('COM_COMMUNITY_PROFILE_NOTIFICATIONS'));
 
@@ -1557,7 +1557,15 @@ if (!class_exists('CommunityViewProfile')) {
                     ->set('notifications', $notifications)
                     ->fetch('profile.notification');
         }
-
+        private function _getUserSKills($userid)//redacron function. Get user's skills
+        {
+            $db = JFactory::getDbo();
+            $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = $userid LIMIT 10";
+                        
+            $db->setQuery($query);
+            $row = $db->loadObjectList();
+            return $row;
+        }
         /* Jomsocial 3.0 - Modules */
 
         // User info
@@ -1578,8 +1586,9 @@ if (!class_exists('CommunityViewProfile')) {
             $data->user = $user;
             $data->profile = $profileModel->getViewableProfile($userid, $user->getProfileType());
             $data->videoid = $params->get('profileVideo', 0);
-
-
+             
+            $data->skills = $this->_getUserSKills($userid);//redacron alteration
+ 
             CFactory::load('libraries', 'messaging');
 
             $isMine = COwnerHelper::isMine($my->id, $user->id);
@@ -1749,6 +1758,7 @@ if (!class_exists('CommunityViewProfile')) {
                     ->set('eventEnabled', $eventEnabled)
                     ->set('groupEnabled', $groupEnabled)
                     ->set('videoEnabled', $videoEnabled)
+                    ->set('userSkills', $data->skills)//redacron alteration
                     ->set('about', $this->_getProfileHTML($data->profile))
                     ->set('isSEFEnabled', $isSEFEnabled)
                     ->set('blocked', $user->isBlocked())
