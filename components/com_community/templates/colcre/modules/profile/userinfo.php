@@ -135,7 +135,18 @@ CAssets::attach($js, 'js');
 						</div>
 					</div>
 				</div>
-				<div class="collapse js-collapse-about">
+                                <?php 
+                                foreach ($userSkills as $uSk)
+                                {
+                                    ?>
+                                <div class="app-box">
+                                    
+                                    <p><b><?php echo $uSk->skill;?></b></p><p><?php echo $uSk->skillDesc;?></p><p><b>Skills: </b><?php echo $uSk->skillTags; ?></p>
+                                
+                                
+                                </div>
+                                <?php } ?>
+				<div class="js-collapse-about collapse">
 					<div class="row-fluid">
 						<div class="span12">
 							<div><?php echo $about; ?></div>
@@ -152,6 +163,7 @@ CAssets::attach($js, 'js');
 						</div>
 					</div>
 				</div>
+                                 
 			</div>
 		</div>
 	</div> <!-- end js-focus-content -->
