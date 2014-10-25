@@ -1,12 +1,12 @@
 <?php
 defined('_JEXEC') or die();
-class tabPermits
+class tabPermits //redacron class
 {
    var $user = '';
    var $db = ''; 
    var $userSession = array();
    var $projUser = array();
-   private function _getUserMap($user, & $db)
+   private function _getUserMap($user, & $db) //redacron method
    {
        if (!is_numeric($user) || $user == 0) return false;
        if (isset($this->userSession[$user])) { return $this->userSession[$user]; } 
@@ -16,14 +16,14 @@ class tabPermits
        if ($level > 5 && $level != 9) { $this->userSession[$user] = true; return true;}
        else { $this->userSession[$user] = false; return false;}
    }
-   private function _getCreator($id, & $db)//let's find out who created this project
+   private function _getCreator($id, & $db)//let's find out who created this project, redacron method
    {
        $query = "SELECT created_by FROM #__pf_projects WHERE id = $id LIMIT 1";
        $db->setQuery($query);
        $created = $db->loadResult();
        return (is_numeric($created)) ? $created : 0;
    }
-   function checkPermissions($class)
+   function checkPermissions($class) //redacron method
    {
        $case = str_replace(array('PF', 'HelperDashboard'), '', $class);
        if (!isset($this->user->id) || $this->user->id == 0) return false;
