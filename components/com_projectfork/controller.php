@@ -70,7 +70,7 @@ class ProjectforkController extends JControllerLegacy
         $insertId = $db->insertid();
         if (is_numeric($insertId))
         {
-            $query = "INSERT INTO #__community_msg_recepient (`msg_id`,`msg_parent`,`msg_from`,`to`,`bcc`,`is_read`,`deleted`) VALUES ($insertId, 1, ".$post['created_by'].",".$post['user_id'].", 0, 0, 0)";
+            $query = "INSERT INTO #__community_msg_recepient (`msg_id`,`msg_parent`,`msg_from`,`to`,`bcc`,`is_read`,`deleted`) VALUES ($insertId, 1, ".$post['user_id'].",".$post['created_by'].", 0, 0, 0)";
             $db->setQuery($query);
             $db->Query();
         }
