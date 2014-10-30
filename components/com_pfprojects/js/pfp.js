@@ -3,6 +3,27 @@ jQuery(document).ready(function($) {
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
          
 });
+function msgOwner()//user must be able to message a project's owner
+{
+    var project_id = jQuery("#project_id").val();
+    var created_by = jQuery("#created_by").val();
+    var user_id = jQuery("#user_id").val();
+    var proposal = jQuery("#proposal").val();
+    var howWould = jQuery("#howwould").val();
+    $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_projectfork', task:'msgOwner', project_id:project_id, created_by: created_by, user_id: user_id, proposal:proposal, howwould: howWould},
+		success: function( data ) {   data = JSON.parse(data);
+                     
+                    jQuery('#propoDIV').html(data.proposal).css({'padding' : '5px', 'border' : '1px solid #bbb', 'margin' : '5px', 'background': '#fff'});
+                    jQuery('#howwDIV').html(data.howwould).css({'padding' : '5px', 'border' : '1px solid #bbb', 'margin' : '5px', 'background': '#fff'});
+                    jQuery('#submitPropos').remove();
+        }
+    };
+    jQuery.ajax( $fragment_refresh );
+}
+
 function getSkills(skill)
 {
     jQuery(".resultsList").html('');
