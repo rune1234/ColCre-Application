@@ -153,7 +153,7 @@ $details_active = ($state->get('project.request') ? ' active' : '');
 
                             <?php 
                             echo "<img src='$proj_logo' style='min-height: 150px; max-height: 250px; float: left; margin: 5px 10px 5px 5px;' alt='project $item->title'></a>";
-                            echo $item->text."<br /><br />"; ?>
+                            echo nl2br($item->text)."<br /><br />"; ?>
 
                             <dl class="article-info dl-horizontal pull-right">
                         		<?php if($item->start_date != $nulldate): ?>
@@ -219,7 +219,31 @@ $details_active = ($state->get('project.request') ? ' active' : '');
                             <div class="clearfix"></div>
 
                             <hr />
-
+                           
+<?php
+ 
+$user = JFactory::getUser();
+if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
+{
+    ?>
+                            <form> <div class="alert" style="color: #555;">
+                            <h3>Create a Proposal for <?php echo $item->title; ?></h3>
+                            <div style="margin: 25px 0 5px;">Describe your relevant experience and qualifications.</div>
+                            <div id="propoDIV"><textarea style="width: 60%;" id="proposal"></textarea></div>
+                            <div style="margin: 25px 0 5px;">Outline your approach to the job, or ask for more information.</div>
+                            <div id="howwDIV"><textarea style="width: 60%;" id="howwould"></textarea></div>
+                            <input type="hidden" id="project_id" value="<?php echo $item->id;?>" />
+                            <input type="hidden" id="created_by" value="<?php echo $item->created_by;?>" />
+                            <input type="hidden" id="user_id" value="<?php echo $user->id;?>" />
+                            <p id="submitPropos"><a href="javascript:void(0)" class="btn btn-mini btn-info" onClick="msgOwner()">Submit</a></p>
+                                </div>
+                            
+                            </form>
+    <?php
+}
+?>
+                           
+<hr />
                     	</div>
                     </div>
                 </div>
