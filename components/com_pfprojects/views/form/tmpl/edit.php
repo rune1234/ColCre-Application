@@ -88,18 +88,18 @@ Joomla.submitbutton = function(task)
                      ?>
                         </select></div><br />
                     <div class="controls">Description: <textarea name='taskform[{{<?php echo $addTask;?> + task.id}}][description]' wrap="off" cols="90" rows="4" style='width: 600px; overflow: auto;'>{{task.description}}</textarea>
-                        <br /><br />Choose how you will measure the success of this task<br /><br />
+                        <!--<br /><br />Choose how you will measure the success of this task<br /><br />
                         <div style='float: left;'><select name='taskform[{{<?php echo $addTask;?> + task.id}}][measure]'>
-                            <option value='1'>Likes</option>
-                            <option value='2'>Comments</option>
+                             <option value='2'>Comments</option>
                             <option value='3'>Commitments</option>
                         </select></div>
-                            <div style="float: right;">How Many? <input type='text' name="taskform[{{<?php echo $addTask;?> + task.id}}][howmanylikes]" /></div>
+                            <div style="float: right;">How Many? <input type='text' name="taskform[{{<?php echo $addTask;?> + task.id}}][howmanylikes]" /></div>-->
                         <br /><br />
                         <div class="control-group"><div class="control-label control-group">Skills Required:
                                 <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]" />
                     <ul class="token-input-list" style="height: auto;">
              <?php
+              
               if (is_array($this->tasks))
               {
                   
@@ -149,7 +149,10 @@ Joomla.submitbutton = function(task)
 		    	<?php echo $this->form->getLabel('start_date'); ?>
 		    </div>
 		    <div class="controls">
-				<?php echo $this->form->getInput('start_date'); ?>
+				<?php 
+                                
+                                
+                                echo $this->form->getInput('start_date'); ?>
 			</div>
 		</div>
         <div class="formelm control-group">
@@ -234,6 +237,7 @@ Joomla.submitbutton = function(task)
         echo $this->form->getInput('id');
         echo $this->form->getInput('asset_id');
         echo $this->form->getInput('elements');
+        
     ?>
 
 	<input type="hidden" name="task" value="" />
