@@ -71,7 +71,7 @@ CAssets::attach($js, 'js');
 							<a href="javascript:void(0)" onclick="joms.photos.uploadAvatar('profile','<?php echo $profile->id?>')"><?php echo JText::_('COM_COMMUNITY_CHANGE_AVATAR')?></a>
 						</b>
 					<?php endif; ?>
-				</div>
+                                </div>
 			</div>
 			<div class="span9">
 				<!-- Focus Menu -->
@@ -137,16 +137,66 @@ CAssets::attach($js, 'js');
 				</div>
                                 <?php 
                                 foreach ($userSkills as $uSk)
-                                {
+                                { 
                                     ?>
                                 <div class="app-box">
                                     
-                                    <p><b><?php echo $uSk->skill;?></b></p><p><?php echo $uSk->skillDesc;?></p><p><b>Skills: </b><?php echo $uSk->skillTags; ?></p>
+                                    <p><b><?php echo $uSk->skill;?></b></p>
+                                    <p><?php echo $uSk->skillDesc;?></p>
+                                    <p><b>Skills: </b><?php echo $uSk->skillTags; ?></p>
                                 
                                 
                                 </div>
-                                <?php } ?>
-				<div class="js-collapse-about collapse">
+                                <?php } 
+                                 
+                                 if (JRequest::getInt('userid') != (int)$my->id) {
+                                ?>
+                                <div ng-app="myProj">
+                                    <div style="margin: 20px 0px;" ng-controller="projctInvite">
+										   <a id="projectInvite" href="javascript:void(0)" ng-click="inviteUser()">Invite to Project(s)</a>
+										   <div class='app-box' style='margin-top: 20px; display: none;' id="myProjt" >
+											   <form ng-submit="submitInvite()">
+											   <div ng-repeat="project in projects"  style='background: #fff; padding: 5px; margin-bottom: 2px; border-bottom: 1px solid #bbb;'>
+												   
+												  <p><input type="checkbox" class='invcheck' id="project_{{project.id}}" /> <b>{{project.title}}</b><br />
+												  <span ng-bind-html="project.description"></span></p>
+												  </div>
+										       <br /><input type="submit" value="Invite <?php echo $user->getDisplayName(); ?>" style='padding: 5px 10px; background: #fff;' />
+										       <input type='hidden' id="invitedUser" value="<?php echo JRequest::getInt('userid'); ?>" />
+										     </form>
+                                                                                       <div id="invitewarn"></div>
+										   </div>
+                                                                                   
+                                                                                    
+                                                                                   
+                                                                                   <div style="margin-top: 20px;">
+					<!-- Send message button -->
+					<?php if( !$isMine && $config->get('enablepm')){ ?>
+							<a href="javascript:void(0);" class="btn" onclick="<?php echo $sendMsg; ?>">
+								<span><?php echo JText::_('COM_COMMUNITY_INBOX_SEND_MESSAGE')?></span></a>
+					<?php }?>
+					<!-- Add as friend button -->
+					<?php if( !$isMine ): ?>
+						<?php if(!$isFriend && !$isMine && !$isBlocked): ?>
+							<?php if(!$isWaitingApproval):?>
+								<div class="btn btn-primary" onclick="joms.friends.connect('<?php echo $profile->id;?>')">
+										<span><?php echo JText::_('COM_COMMUNITY_PROFILE_ADD_AS_FRIEND'); ?></span>
+								</div>
+							<?php else : ?>
+								<div class="btn" onclick="joms.friends.connect('<?php echo $profile->id;?>')">
+									<span><?php echo JText::_('COM_COMMUNITY_PROFILE_PENDING_FRIEND_REQUEST'); ?></span>
+								</div>
+							<?php endif ?>
+						<?php endif; ?>
+					<?php endif ?>
+				</div>
+                                                                                   
+                                                                                   
+										</div>
+                                    
+                                    
+                                </div><?php } ?>
+				<div class="js-collapse-about">
 					<div class="row-fluid">
 						<div class="span12">
 							<div><?php echo $about; ?></div>
