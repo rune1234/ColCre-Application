@@ -41,7 +41,12 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
 	</div>
 
     <?php echo $item->event->beforeDisplayContent;?>
-
+<div ng-app="myLikes">
+            <div ng-controller="taskLike">
+                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span></div>
+                <div style="clear: both"></div>
+            </div>
+        </div><br />
 	<div class="item-description">
 		<?php echo $item->text; ?>
 <?php if($this->skillsNeeded && is_numeric($this->skillsNeeded[0]->task_id) && $this->skillsNeeded[0]->task_id > 0) : ?>
@@ -102,7 +107,8 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
     			<?php echo JText::_('JGRID_HEADING_CREATED_BY');?>:
     		</dt>
     		<dd class="owner-data">
-    			 <?php  echo JHtml::_('pfhtml.label.author', $item->author, $item->created); ?>
+    			 <?php  
+                          echo JHtml::_('pfhtml.label.author', $item->author, $item->created); ?>
     		</dd>
             <?php if (PFApplicationHelper::enabled('com_pfrepo') && count($item->attachments)) : ?>
                 <dt class="attachment-title">
