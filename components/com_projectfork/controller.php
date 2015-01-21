@@ -30,16 +30,35 @@ class ProjectforkController extends JControllerLegacy
     {
         parent::__construct($config);
     }
-
-
-    /**
-     * Displays the current view
-     *
-     * @param     boolean    $cachable    If true, the view output will be cached  (Not Used!)
-     * @param     array      $urlparams   An array of safe url parameters and their variable types (Not Used!)
-     *
-     * @return    JController             A JController object to support chaining.
-     */
+    public function like()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        jimport('projectfork.colcre.likes');
+        $prl = new projectLikes();
+        $prl->likeProject($data->user_id, $data->type_id, $data->type);
+        exit;
+    }
+    public function prmatch()
+    {
+        jimport('projectfork.colcre.project');
+        jimport('projectfork.colcre.matches');
+        $pd = new projectData();
+        $pd->projectInfo();
+        $owner = $pd->projectOwner();
+        if (!$owner) { echo "<p style='color: #a00;'>ERROR - you are not authorized to see the matches. Please log in.</p>"; return; }
+        $pm = new projectMatches();
+        $user = JFactory::getUser();
+        $userid = $user->id;
+        //$projectId = isset($_GET['id']) ? $_GET['id'] : '';
+        $projectId = JRequest::getInt('id');
+        if (is_numeric($projectId) && $projectId > 0) $matches = $pm->getProjectCandidates($userid, $projectId, $pagination);
+        $view      = $this->getView('prmatch', 'html');
+        $view->set('matches', $matches);
+        $view->set('pm', $pm);
+         $view->set('pd', $pd);
+        $view->display();
+        //<div class="span3 pull-left projectBox"
+    }
     public function msgOwner()//redacron function, message a project Owner
     {
         $post = $_POST;
@@ -93,13 +112,15 @@ class ProjectforkController extends JControllerLegacy
         JHtml::_('pfhtml.script.projectfork');
 
         JHtml::_('behavior.tooltip');
-
+        
         // Override method arguments
         $urlparams = array('id'               => 'INT',
                            'filter_project'   => 'CMD'
                            );
         $document = JFactory::getDocument();
+        $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
         $document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
+        $document->addScript(JURI::root() . 'libraries/projectfork/js/like.js');
         $js = "var projectURL = '".JURI::root()."';";
         $document->addScriptDeclaration($js);
         // Display the view
