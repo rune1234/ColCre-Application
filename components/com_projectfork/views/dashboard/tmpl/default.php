@@ -110,13 +110,25 @@ $nulldate = JFactory::getDbo()->getNullDate();
 
 $details_in     = ($state->get('project.request') ? 'in ' : '');
 $details_active = ($state->get('project.request') ? ' active' : '');
+$user = JFactory::getUser();
+ 
 ?>
 <div id="projectfork" class="category-list<?php echo $this->pageclass_sfx;?> view-dashboard projectFrame" style="padding: 10px; margin: 10px;">
  
     <?php if ($params->get('show_page_heading', 1)) : ?>
         <h1><?php echo $this->escape($params->get('page_heading')); ?></h1>
-    <?php endif; ?>
-
+    <?php endif; 
+    $likedata = array();
+                $likedata['userid'] = 45;
+                $likedata['typeid'] = 666;
+                
+    ?>
+        <div ng-app="myLikes">
+            <div ng-controller="projectLike">
+                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span></div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
     <div class="cat-items">
 
         <form id="adminForm" name="adminForm" method="post" action="<?php echo JRoute::_(PFprojectsHelperRoute::getDashboardRoute($state->get('filter.project'))); ?>">
@@ -135,8 +147,8 @@ $details_active = ($state->get('project.request') ? ' active' : '');
             </div> 
  
             <?php 
-            $proj_logo = lookupIcon($item) ? lookupIcon($item) : "images/foldered.jpg";
-                                        
+            $proj_logo = lookupIcon($item) ? lookupIcon($item) : JUri::base()."images/foldered.jpg";
+                         
             if($item) echo $item->event->afterDisplayTitle; ?>
 
             <input type="hidden" name="task" value="" />
@@ -152,9 +164,11 @@ $details_active = ($state->get('project.request') ? ' active' : '');
                         <div class="item-description">
 
                             <?php 
-                            echo "<img src='$proj_logo' style='min-height: 150px; max-height: 250px; float: left; margin: 5px 10px 5px 5px;' alt='project $item->title'></a>";
-                            echo nl2br($item->text)."<br /><br />"; ?>
-
+                           echo "<img src='$proj_logo' alt='$item->title' style='float: right;' />";  
+                            echo nl2br($item->text)."<br /><br />"; 
+                                 
+                            ?>
+<div class="clearfix"></div><br />
                             <dl class="article-info dl-horizontal pull-right">
                         		<?php if($item->start_date != $nulldate): ?>
                         			<dt class="start-title">
@@ -217,12 +231,14 @@ $details_active = ($state->get('project.request') ? ' active' : '');
                         	</dl>
 
                             <div class="clearfix"></div>
-
+                            <?php if ($this->owner) { ?>
+                            <div style="padding: 5px;"><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="<?php JUri::base(true);?>/images/survey_icon.gif"/><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Matches</a>') ; ?></div>
+                            <?php } ?>
                             <hr />
                            
 <?php
  
-$user = JFactory::getUser();
+
 if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
 {
     ?>
@@ -246,6 +262,7 @@ if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
 <hr />
                     	</div>
                     </div>
+                    
                 </div>
                 <div class="clearfix"></div>
             <?php endif; ?>
