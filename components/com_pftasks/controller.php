@@ -85,7 +85,9 @@ class PFtasksController extends JControllerLegacy
 			// Somehow the person just went to the form - we don't allow that.
 			return JError::raiseError(403, JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 		}
-
+          $document = JFactory::getDocument();
+           $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+         $document->addScript(JURI::root() . 'libraries/projectfork/js/like.js');
         // Display the view
         parent::display($cachable, $urlparams);
 
