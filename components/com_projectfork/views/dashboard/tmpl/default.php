@@ -114,7 +114,7 @@ $user = JFactory::getUser();
  
 ?>
 <div id="projectfork" class="category-list<?php echo $this->pageclass_sfx;?> view-dashboard projectFrame" style="padding: 10px; margin: 10px;">
- 
+
     <?php if ($params->get('show_page_heading', 1)) : ?>
         <h1><?php echo $this->escape($params->get('page_heading')); ?></h1>
     <?php endif; 
@@ -123,9 +123,9 @@ $user = JFactory::getUser();
                 $likedata['typeid'] = 666;
                 
     ?>
-        <div ng-app="myLikes">
-            <div ng-controller="projectLike">
-                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span></div>
+        <div ng-app="myLikes" >
+            <div ng-controller="projectLike" data-ng-init="getLikes(<?php echo $item->id; ?>)">
+                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span> | <span style="color: #000; font-size: 12px;"><span ng-bind="likes"></span> Likes</span></div>
                 <div style="clear: both"></div>
             </div>
         </div>
@@ -169,6 +169,7 @@ $user = JFactory::getUser();
                                  
                             ?>
 <div class="clearfix"></div><br />
+
                             <dl class="article-info dl-horizontal pull-right">
                         		<?php if($item->start_date != $nulldate): ?>
                         			<dt class="start-title">
@@ -231,9 +232,12 @@ $user = JFactory::getUser();
                         	</dl>
 
                             <div class="clearfix"></div>
+                             
                             <?php if ($this->owner) { ?>
-                            <div style="padding: 5px;"><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="<?php JUri::base(true);?>/images/survey_icon.gif"/><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Matches</a>') ; ?></div>
-                            <?php } ?>
+                            <div style="padding: 5px; float: left;"><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="project matches" /><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Matches</a>') ; ?></div>
+                             <div style="padding: 5px; float: left;"><img style="height: 70px;" src="<?php JUri::base();?>images/notepad-icon.png" alt="proposals"/><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=proposals&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Proposals</a>') ; ?></div>
+                            <div class="clearfix"></div>
+                                <?php } ?>
                             <hr />
                            
 <?php
@@ -321,7 +325,7 @@ if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
         </div>
         <?php endif; ?>
         <!-- End Dashboard Modules -->
-
+ 
         <?php if ($item) echo $item->event->afterDisplayContent; ?>
 
 	</div>
