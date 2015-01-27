@@ -38,6 +38,37 @@ class ProjectforkController extends JControllerLegacy
         $prl->likeProject($data->user_id, $data->type_id, $data->type);
         exit;
     }
+    public function getlikes()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        jimport('projectfork.colcre.likes');
+        $prl = new projectLikes();
+        $prl->getLikes($data->type_id, $data->type);
+        exit;
+    }
+    public function proposals()
+    {
+        $db = JFactory::getDbo();
+        $user = JFactory::getUser();
+        $pid = JRequest::getInt('id'); 
+        if ($pid == 0) return;
+        if (!$user || !isset($user->id) || $user->id == 0) return;
+        $limitstart = JRequest::getInt('limitstart');
+        $limit = JRequest::getVar( "viewlistlimit", '10', 'get', 'int');
+        
+        $total = $db->setQuery("SELECT count(id) FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid)->loadResult();
+        $pagination = new JPagination($total, $limitstart, $limit);
+          $rows = $db->loadObjectList();
+          $query = "SELECT * FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid." ORDER BY id DESC LIMIT $limitstart, $limit";
+          
+          $rows = $db->setQuery($query)->loadObjectList();
+         // $pagination = $pagination->getPagesLinks();
+        $view = $this->getView('proposals', 'html');
+        $view->set('proposals', $rows);
+        $view->set('db', $db);
+        $view->set('pagination', $pagination);
+        $view->display();
+    }
     public function prmatch()
     {
         jimport('projectfork.colcre.project');
