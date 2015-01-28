@@ -36,6 +36,8 @@ class PFprojectsViewForm extends JViewLegacy
            foreach ($rows as $rw)
            {
                $taskSkills = $this->_getTaskSkills($rw->id, $db);
+               $rows[$n]->description = strip_tags($rows[$n]->description);
+               $rows[$n]->title = strip_tags($rows[$n]->title);
                $rows[$n]->taskSkills = $taskSkills;
                $n++;
            }
@@ -54,6 +56,8 @@ class PFprojectsViewForm extends JViewLegacy
     {
         $this->state  = $this->get('State');
         $this->item   = $this->get('Item');
+       // print_r($this->item);
+        //echo $this->item->commentsettings; exit;
         $tasks = $this->_gtProjTsks($this->item->id);
         $this->tasks = $tasks;
         $this->form   = $this->get('Form');
@@ -62,7 +66,8 @@ class PFprojectsViewForm extends JViewLegacy
         $this->assignRef('categories', $categories);
         $this->return_page = $this->get('ReturnPage');
         $this->toolbar     = $this->getToolbar();
-
+        $this->skillCategories = $this->getSkillsList();
+       
         // Permission check.
         if ($this->item->id <= 0) {
             $access     = PFprojectsHelper::getActions();
@@ -76,7 +81,7 @@ class PFprojectsViewForm extends JViewLegacy
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
-
+        //$authorised = true;
         // Bind form data.
         if (!empty($this->item)) $this->form->bind($this->item);
 
@@ -99,10 +104,19 @@ class PFprojectsViewForm extends JViewLegacy
      public function getCategories()
     {
           $db =& JFactory::getDBO();
-          $query = "SELECT id, title, alias FROM #__categories WHERE extension='com_pfprojects' AND published = 1 ORDER BY id ASC";
+          $query = "SELECT id, title, alias FROM #__categories WHERE extension='com_pfprojects' AND published = 1 ORDER BY id, title ASC";
           $db->setQuery($query);
           $rows = $db->loadObjectList();
           return $rows;
+    }
+    function getSkillsList()//almost the same as the above function
+    {
+        $db = JFactory::getDbo();
+       // $query = "SELECT * FROM #__pf_skill_category ORDER BY category";
+        $query = "SELECT id, LOWER(title) as category FROM #__categories WHERE extension='com_pfprojects' ORDER BY LOWER(title)";
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+        return $rows;
     }
     /**
      * Prepares the document
@@ -165,7 +179,7 @@ class PFprojectsViewForm extends JViewLegacy
      * @return    string    Toolbar with buttons
      */
     protected function getToolbar()
-    {
+    { 
         $options = array();
         $user    = JFactory::getUser();
 

@@ -28,13 +28,13 @@ li {
 {
     background: #fff;
     padding: 10px;
-    width: 500px;
+    width: 90%;
 }
 .task-group:nth-child(odd)
 {
     background: #ddd;
     padding: 10px;
-    width: 100%;
+    width: 90%;
 }/*
 li.token-input-token {
    
@@ -214,8 +214,8 @@ ul.token-input-list {
     cursor: text;
     min-height: 1px;
     z-index: 999;
-    background: none repeat scroll 0% 0% rgb(252, 252, 252);
-        background-color: rgb(252, 252, 252);
+    background: none repeat scroll 0% 0% rgb(202, 202, 202);
+        background-color: rgb(202, 202, 202);
         background-image: none;
         background-repeat: repeat;
         background-attachment: scroll;
@@ -466,4 +466,15 @@ ul.resultsList {
 {
     height: 32px;
     
+}
+
+#projectTabs
+{
+   padding: 10px;   
+}
+
+#projectTabs h3 
+{
+    font-size: 14px;
+    font-weight: bold;
 }

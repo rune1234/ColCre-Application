@@ -46,7 +46,12 @@ $is_ssl = JFactory::getURI()->isSSL();
             </div>
 
             <div class="clearfix"></div>
-
+            <?php
+            if (is_numeric($user->id) && $user->id > 0) {
+            ?><div><a id="projectInvite" href="<?php echo JRoute::_("index.php?option=com_community&view=matches&Itemid=158");?>">My Matches</a></div>
+            <?php
+            }
+            ?>
             <div class="<?php echo $filter_in;?>collapse" id="filters">
                 <div class="btn-toolbar clearfix">
                     <div class="filter-search btn-group pull-left">
@@ -88,7 +93,7 @@ $is_ssl = JFactory::getURI()->isSSL();
             </div>
 <div id='userProfileDiv' style="width: 65%;">
             <ul id='userProfUl'><li>Most Popular</li><li>New this Week</li><li>Most Awarded</li><li>Most Funded</li></ul></div>
-            <div class="clearfix"></div>
+            <div class="clearfix"></div> 
             <div class="row-striped" style="margin: auto; margin-top: 15px; width: 98%;">
                 <div>
                 <?php
@@ -132,13 +137,14 @@ $is_ssl = JFactory::getURI()->isSSL();
                 <?php $current_cat = $item->category_title; endif;*/ ?>
                 	
     	    	    	<div class="span3 pull-left projectBox"> 
-    	    	    		<a href="<?php echo JRoute::_($link);?>">
+                            <div style='width: 100%; margin: auto; text-align: center;'><a href="<?php echo JRoute::_($link);?>">
 	    	    	    		<?php if (!empty($item->logo_img)) : ?>
-	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100%" alt="<?php echo $this->escape($item->title);?>" />
-	    	    	    		<?php else : ?>
-	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".png"; ?>" width="100%" alt="<?php echo $this->escape($item->category_alias);?>" />
-	    	    	    		<?php endif ; ?>
-                                </a><div class="projcatg"><?php echo $item->category_title;?></div><div style='padding: 10px;'>
+	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
+	    	    	    		<?php elseif (is_file(JPATH_ROOT."/templates/colcre/images/".$this->escape($item->category_alias).".png")) : ?>
+	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".png"; ?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
+	    	    	    		<?php else: echo "<img src='".JUri::base()."images/foldered.jpg' alt='project $item->title logo' style='margin: auto; width: 120px; height: 120px;' />"; ?>
+                                                    <?php endif ; ?>
+                                </a></div><div class="projcatg"><?php echo $item->category_title;?></div><div style='padding: 10px;'>
     	    	    		<h2 class="item-title">
                                 <?php if ($can_change || $uid) : ?>
                                     <label for="cb<?php echo $i; ?>" class="checkbox pull-left">
@@ -279,9 +285,9 @@ $is_ssl = JFactory::getURI()->isSSL();
                 ?>
                         </div>
                 </div>
-
+<div style='clear: both; width: 90%;'>
         	<?php if ($this->pagination->get('pages.total') > 1) : ?>
-        	    <div class="pagination center">
+    <br /><div class="pagination center">
         	        <?php echo $this->pagination->getPagesLinks(); ?>
         	    </div>
         	    <p class="counter center"><?php echo $this->pagination->getPagesCounter(); ?></p>
@@ -291,7 +297,7 @@ $is_ssl = JFactory::getURI()->isSSL();
             	    <?php echo $this->pagination->getLimitBox(); ?>
             	</span>
             </div>
-
+</div>
             <input type="hidden" id="boxchecked" name="boxchecked" value="0" />
             <input type="hidden" name="task" value="" />
             <?php echo JHtml::_('form.token'); ?>

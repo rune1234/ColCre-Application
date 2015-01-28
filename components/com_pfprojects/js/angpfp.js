@@ -130,6 +130,7 @@ projectModule.factory('skillService', function($http)
             var k = {};
             k.id = skillInputs.length;
             skillInputs.push(k);
+            
         },
         skillHandler:{
            xArray: 0,
@@ -146,6 +147,66 @@ projectModule.factory('skillService', function($http)
    }
 
 });
+projectModule.factory('projInvite', function($http, $sce) 
+{
+   var projectList1 = [];
+   
+   return {
+	   projectlist: projectList1,
+	   projectSearch: function()
+           {    var skinput = 'bla';
+			  
+             $http({method: 'POST', url: "index.php?option=com_community&view=profile&task=myProjects", 
+                data: { skill: skinput}}).
+                    success(function(data, status, headers, config) {  
+                        if (data.msg == '')
+                        {   
+							 
+                            var  projects = JSON.parse(data.projects);
+                            for (id in projects)
+                            {
+                                var oneSKill = {};
+                                //alert(projects[id].title);
+                                if (typeof projects[id].title === 'undefined') continue;
+                                oneSKill.title = projects[id].title;
+                                oneSKill.description = $sce.trustAsHtml(projects[id].description);
+                                oneSKill.id = projects[id].id;
+                                projectList1[id] = oneSKill;
+                            }
+							 
+                        }
+                        else {   }
+                    }).error(function(data, status) {  alert(status);
+                    });
+          },
+          projectInvite: function(user_id, project_id)
+          {
+              $http({method: 'POST', url: "index.php?option=com_pfprojects&task=inviteuser", 
+                data: { user_id: user_id, project_id: project_id}}).
+                    success(function(data, status, headers, config) {  alert(data);
+                        if (data.msg == '')
+                        {   
+							 
+                            //var  projects = JSON.parse(data.projects);
+                            /*for (id in projects)
+                            {
+                                var oneSKill = {};
+                                //alert(projects[id].title);
+                                if (typeof projects[id].title === 'undefined') continue;
+                                oneSKill.title = projects[id].title;
+                                oneSKill.description = $sce.trustAsHtml(projects[id].description);
+                                oneSKill.id = projects[id].id;
+                                projectList1[id] = oneSKill;
+                            }*/
+							 
+                        }
+                        else {   }
+                    }).error(function(data, status) {  alert(status);
+                    });
+          }
+   }
+});
+
 projectModule.factory('theService', function(theMenus, $http) 
 {
     
@@ -199,9 +260,15 @@ projectModule.factory('theService', function(theMenus, $http)
                             jQuery("#resultsList" + xArray).css("display", "block");
                             var dataSkill = JSON.parse(data.skills);
                             var skillFormat = [];
+                            if (dataSkill[0].id == 0)
+                            {
+                                jQuery('.addSkillTag').css({'border': '1px solid #f00', 'padding' : '10px'});
+                            }
+                            else jQuery('.addSkillTag').css({'border': 'none'});
                             for (id in dataSkill)
                             {
                                 var oneSKill = {};
+                                 
                                 oneSKill.id = dataSkill[id].id;
                                 oneSKill.skill = dataSkill[id].skill;
                                 skillFormat.push(oneSKill);
@@ -222,7 +289,9 @@ projectModule.factory('theService', function(theMenus, $http)
     };
 });
 
-projectModule.controller('addSkillTag', function($scope, skillService)
+
+
+projectModule.controller('addSkillTag', function($scope, $timeout, skillService)
 {
       $scope.skillTitle = skillService.skillHandler;
       $scope.skillTags = skillService.skillInputs;
@@ -231,6 +300,18 @@ projectModule.controller('addSkillTag', function($scope, skillService)
       {
           if ($scope.skillTags.length > 4) return;
           skillService.addSkillInputs();
+          $timeout(function() {
+              jQuery('.newSkillTagCag:last option').each(function()
+           { 
+               if (jQuery("input[name=skillcatg]").val() == jQuery(this).attr('name'))
+               {
+                   jQuery('.newSkillTagCag:last').val(jQuery(this).val());
+               }
+           });
+    }, 300);
+         
+         
+              
       }
       $scope.addTagShow = function()
       {
@@ -239,7 +320,24 @@ projectModule.controller('addSkillTag', function($scope, skillService)
       }
           
 });
-
+projectModule.controller('projctInvite', function($scope, projInvite, $timeout)
+{
+	$scope.projects = projInvite.projectlist;
+    $scope.inviteUser = function()
+    {
+		projInvite.projectSearch();
+        $timeout(function() { jQuery('#myProjt').slideDown(); }, 1000);
+    }
+    $scope.submitInvite = function()
+    {
+		jQuery('.invcheck').each(function()
+		{
+			if (jQuery(this).is(':checked')) {  
+			    projInvite.projectInvite(jQuery('#invitedUser').val(), jQuery(this).attr('id').replace('project_', ''));
+                       }
+                });
+	}
+});
 projectModule.controller('taskControl', 
     function($scope, theService) {
          var $tasks = theService.theTasks.getTasks();
@@ -271,6 +369,10 @@ projectModule.controller('taskControl',
              task.id = id;
              jQuery(".resultsList").css("display", "none");
              theService.theTasks.addTask(task);
+         }
+         $scope.roddy = function()
+         {
+             alert('arr');
          }
          $scope.editTask = function()
          {
@@ -309,8 +411,10 @@ projectModule.controller('taskControl',
          { jQuery('#skillInput' + taskid).focus(); }
          $scope.chooseSkill = function(taskid, skillid, skill)//also used for the user to add skills to his profile
          {
+             if (skillid == 0) return;//skillid is present when no matching skill has been found
              jQuery(".resultsList").css("display", "none");
              jQuery("#skillInput" + taskid).val('');
+             
              $scope.skillChosen = theService.skillHandler.setChosenSKill(taskid, skillid, skill);
              $scope.skillChosen = theService.skillHandler.chosenSkill;
          }

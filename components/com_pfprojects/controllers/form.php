@@ -105,7 +105,7 @@ class PFprojectsControllerForm extends JControllerForm
 
             $data['component_rules'] = $rules;
         }
-
+            
         // Reset the repo dir when saving as copy
         if ($task == 'save2copy') {
             // Reset the repo dir when saving as copy
@@ -246,7 +246,7 @@ class PFprojectsControllerForm extends JControllerForm
                 }
             }
         }
-
+            
         if (version_compare(JVERSION, '3.0.0', 'ge')) {
             $this->input->post->set('jform', $data);
         }
@@ -254,7 +254,7 @@ class PFprojectsControllerForm extends JControllerForm
             JRequest::setVar('jform', $data, 'post');
         }
             
-        /*return*/ $newstate = parent::save($key, $urlVar);
+        /*return*/ $newstate = parent::save($key, $urlVar);//redacron alteration: function postSaveHook( will activate after parent::save
             
         return $newstate;
     }
@@ -401,6 +401,7 @@ class PFprojectsControllerForm extends JControllerForm
                 if (!is_numeric($sk)) continue;
                 if ($check === true) { if ($this->projTaskAlrd($id, $taskid, $sk, $db)) continue; }
                 $query = "INSERT INTO #__pf_project_skills (project_id,task_id, skill_id) VALUES ($id, $taskid, $sk)"; 
+                echo $query;
                 $db->setQuery($query); $db->Query();  
             }
         }
@@ -419,16 +420,75 @@ class PFprojectsControllerForm extends JControllerForm
         $tasks = $_POST['taskform'];
         foreach($tasks as $tsk)
         {
-            if (is_numeric($tsk['idedit']) && $tsk['idedit'] > 0) { $this->editTask($tsk, $id, $tsk['SkillInput'], $db); continue; }//user editing a task instead of adding it
+            if (is_numeric($tsk['idedit']) && $tsk['idedit'] > 0) //user editing a task instead of adding it
+             { 
+                  $this->editTask($tsk, $id, $tsk['SkillInput'], $db); 
+                  continue; 
+             }
              $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,category_id, list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
 VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
             $db->setQuery($query);
             $db->Query();
             $taskid = $db->insertid();
             $this->projectSkills($id, $taskid, $tsk['SkillInput']);
+            
+            if (isset($tsk[newSkillTag]) && is_array($tsk[newSkillTag])) 
+            {  $this->_insertNewTags($tsk[newSkillTag], $tsk[newSkillTagCag], $id, $taskid, $db); }
         }
             
     }
+     private function _insertNewTags($tags, $tagCatg, $profiID, $taskid, &$db)//new tags are added but not published, this function is also in the pfprojects controller
+    {
+        $a = 0;
+        $userid = JFactory::getUser();
+        $userid = $userid->id;
+        if (is_numeric($profiID))
+        {
+            $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = '$userid' LIMIT 1";
+            echo $query;
+            $db->setQuery($query);
+            $rowSkills = $db->loadObject();
+            
+        }
+        $newTags = array();
+        //print_r($newTags);
+        foreach ($tags as $tag)
+        {
+             if (trim($tag) == '') continue;
+             $query = "SELECT id FROM #__pf_skills WHERE skill = '$tag' AND category = '".$tagCatg[$a]."' LIMIT 1";
+             $db->setQuery($query);
+             $oldID = $db->loadResult();
+             if (!is_numeric($oldID) || $oldID < 1)
+             {
+                 $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '0')";
+                // echo "<br />".$query;
+                 $db->setQuery($query);
+                 $db->Query();
+             }
+             if ($tag) $newTags[] = $tag;
+             $id = $db->insertid();
+             $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added) VALUES ('$userid', '$id', CURRENT_TIMESTAMP)";
+             
+             $db->setQuery($query);
+             $db->Query();
+             $query = "INSERT INTO #__pf_project_skills (project_id, skill_id, task_id) VALUES ($profiID, $id, $taskid)";
+           //  echo "<br />****************<br />".$query;
+             $db->setQuery($query);
+             $db->Query();
+             $a++;
+        }
+        if ($a > 0)
+        {
+            $tags = implode(',', $newTags);
+        }
+        $rowSkills->skillTags = $rowSkills->skillTags.",".$tags;
+        $query = "UPDATE #__pf_project_skills_added SET skillTags='".$rowSkills->skillTags."' WHERE userid = $userid LIMIT 1";
+       //echo "<br />".$query;
+        $db->setQuery($query);
+        $db->Query();
+      //  exit;
+    }
+    
     private function editTask($task, $project_id, $skills, & $db)
     {
         $this->deleteSkills($task['idedit'], $project_id, $db);
@@ -436,6 +496,9 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
         $query = "UPDATE #__pf_tasks SET title='".$db->escape($task['title'])."', description='".$db->escape($task['description'])."' WHERE id = ".$task['idedit']." LIMIT 1";
         $db->setQuery($query);
         $db->Query();
+        //sometimes a user may add new tags to a task that already exists:
+        if (isset($task[newSkillTag]) && is_array($task[newSkillTag])) 
+        {  $this->_insertNewTags($task[newSkillTag], $task[newSkillTagCag], $project_id, $task['idedit'], $db); }
     }
     private function deleteSkills($task_id, $project_id, & $db)
     {
@@ -449,7 +512,10 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
         $task = $this->getTask();
         $item = $model->getItem();
         $id = $item->get('id');
-        if (is_numeric($id)) { $this->projectTasks($id); }
+            
+        if (is_numeric($id)) { 
+            $this->commentSetting($id);
+            $this->projectTasks($id); }
         switch($task)
         {
             case 'save2copy':
@@ -472,9 +538,19 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
                 $this->setRedirect($link);
                 break;
 
-            default:
-                $this->setRedirect($this->getReturnPage());
+            default://redacron alteration. It is better to redirect back to the project:
+                $this->setRedirect(JRoute::_('index.php?option=com_projectfork&view=dashboard&id='.$id.'&Itemid=124'));
+              //  $this->setRedirect($this->getReturnPage());
                 break;
         }
+    }
+    private function commentSetting($id)
+    {
+        if ($id <= 0) return;
+        $commentsetting = JRequest::getInt('commentsetting');
+            $query = "UPDATE #__pf_projects SET commentsetting = $commentsetting WHERE id = $id LIMIT 1";
+            $db = JFactory::getDbo();
+            $db->setQuery($query);
+            $db->Query();
     }
 }

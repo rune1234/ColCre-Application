@@ -33,7 +33,9 @@ function getSkills(skill)
 		data: { option: 'com_pfprojects', task:'getskills', skill: skill},
 		success: function( data ) { jQuery("ul.resultsList").html(''); trade = JSON.parse(data); 
                     for (tr in trade) 
-                    { jQuery("ul.resultsList").css("display", "block").append(jQuery('<li data-skill="' +trade[tr].id +'"></li>').append(trade[tr].skill) ); }
+                    { 
+                        
+                        jQuery("ul.resultsList").css("display", "block").append(jQuery('<li data-skill="' +trade[tr].id +'"></li>').append(trade[tr].skill) ); }
                         jQuery(".resultsList li").click(function () 
                         {   
                            if(typeof (jQuery("#projskills_"+ jQuery(this).attr('data-skill')).val() ) !=='string' ) {

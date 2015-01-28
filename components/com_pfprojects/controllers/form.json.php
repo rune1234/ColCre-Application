@@ -42,7 +42,7 @@ class PFprojectsControllerForm extends PFprojectsControllerProject
      * @return    boolean
      */
     protected function allowEdit($data = array(), $key = 'id')
-    {
+    {  
         // Get form input
         $id = (int) isset($data[$key]) ? $data[$key] : 0;
 
