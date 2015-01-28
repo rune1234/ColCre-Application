@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 //the idea here is overriding the defficient permission system used by ProjectFork
 include_once('project.php');
-class colcrePermissions extends projectData
+class colcrePermissions extends projectData 
 {
     var $db;
     var $user;
@@ -18,9 +18,17 @@ class colcrePermissions extends projectData
         if (!is_numeric($item_id)) return false;
         if ($type == 'project')
         {
-           $query = "SELECT commentsetting FROM #__pf_projects WHERE id = $item_id LIMIT 1";
-           $row = $db->setQuery($query)->loadResult();
-           echo "permissions.php is in the projectfork library. My own creation";
+            $query = "SELECT commentsetting, created_by FROM #__pf_projects WHERE id = $item_id LIMIT 1";
+            $row = $db->setQuery($query)->loadObject();
+            $access = $row->commentsettings;
+            $owner = $row->created_by;
+            
+            if ($this->user->id == $owner) return true;
+            if ($access == 3) return false;
+            if ($access == 0) return true;
+            $prjDat = new projectData();
+            if ($access == 1) return $prjDat->invitedORmember($item_id);
+            if ($access == 2) return ( $prjDat->userMember($item_id) == 1) ? true : false;
         }
         else return true;//for now
     }
@@ -77,7 +85,7 @@ class colcrePermissions extends projectData
     }
     private function _projectSettings($id, & $db)//let's find out who created this project
     {
-       if (!is_numeric($id) || $id == 0) { echo "ERROR - unable to get project ID, exiting"; return false; }
+       if (!is_numeric($id) || $id == 0) { /*echo "ERROR - unable to get project ID, exiting"; */ return false; }
        $query = "SELECT * FROM #__pf_projects WHERE id = $id LIMIT 1";
        $db->setQuery($query);
        $project = $db->loadObject();

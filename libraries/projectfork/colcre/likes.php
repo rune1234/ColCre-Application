@@ -58,5 +58,12 @@ class projectLikes
         $this->db->setQuery($query);
         $this->db->Query();
     }
+    public function getLikes($type_id, $type)
+    {
+        $query = "SELECT quantity FROM #__pf_likescount WHERE type_id = $type_id AND type = $type LIMIT 1";
+        $this->db->setQuery($query);
+        $result = $this->db->loadResult();
+        echo ($result) ? $result : 0;
+    }
 }
 

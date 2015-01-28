@@ -3,7 +3,7 @@ defined('_JEXEC') or die();
 class projectMatches
 {
       protected $commonQuery = "SELECT users.name DeveloperName, users.id user_id,
-	projects.title ProjectTitle, 
+	projects.title ProjectTitle, projects.id Project_Id, 
 	project_skills.task_id  MatchingTaskId, 
 	skills.skill SkillName, 
 	round(1 / (
@@ -40,8 +40,8 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
           return JFactory::getDbo();
       }
       
-      public function specifyMatch($description, $taskId, $projectId, $userId, $matchId)
-       {
+      public function specifyMatch($description, $taskId, $projectId, $userId, $matchId = '')// used by /var/www/html/colcre/components/com_projectfork/views/dashboard/view.html.php
+       {  //also used by /var/www/html/colcre/components/com_community/models/matches.php
              $db = $this->getDBO();
              if (!is_numeric($taskId)) return false;
              if (!is_numeric($projectId)) return false;
@@ -58,7 +58,7 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
              $rows = $db->loadObjectList();
              return $rows;
      }
-     public function getUserMatches($userid)
+     public function getUserMatches($userid)//used by /var/www/html/colcre/components/com_community/models/matches.php
      {
          if (!is_numeric($userid)) return;
          $db = $this->getDBO();
@@ -85,16 +85,16 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
          $rows = $db->loadObject();
          return ($rows) ? $rows : false;
      }
-     public function getProjectCandidates($userid, $projectId)
+     public function getProjectCandidates($userid, $projectId, $pagination = false)//used by /var/www/html/colcre/components/com_projectfork/views/dashboard/view.html.php
      {
         //$projectId = isset($_GET['id']) ? $_GET['id'] : '';
         if (!is_numeric($projectId)) return;
 
         $query = $this->commonQuery." AND projects.id = $projectId AND users.id != projects.created_by";
-       // echo $query
-          $db = JFactory::getDbo();
-          $db->setQuery($query);
-          $rows = $db->loadObjectList();
+       //
+        $db = JFactory::getDbo();
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
 
           return $rows;
      }
