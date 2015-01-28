@@ -12,6 +12,19 @@ defined('_JEXEC') or die();
 
 
 $state = $this->state;
+jimport('projectfork.colcre.project');
+jimport('projectfork.colcre.likes');
+$cp = new colcrePermissions();
+$context = JRequest::getCmd('filter_context');
+
+if ($context)
+{
+    $context = explode('.', $context);
+    $context = $context[1];
+}
+$item_id = JRequest::getUint('filter_item_id');
+$access = $cp->projectAccess($item_id, $context);
+if ($access) {
 ?>
 <form class="form-validate" id="commentForm" name="commentForm" method="post" action="<?php echo JRoute::_('index.php?option=com_pfcomments&view=comments'); ?>">
     <h4><span id="comment_count"><?php echo count($this->items); ?></span><?php echo ' ' . JText::_('COM_PROJECTFORK_COMMENTS'); ?></h4>
@@ -42,3 +55,6 @@ $state = $this->state;
     <input type="hidden" name="format" value="json" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
+<?php
+}
+?>

@@ -61,12 +61,12 @@ class PFcommentsViewComments extends JViewLegacy
             $item_id = 0;
         }
 
-                
+         /*       
         if (strtolower($asset) == 'project')
         {
             $this->access->projectAccess($item_id, 'project');
-        }
-        
+        }*/
+                
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
