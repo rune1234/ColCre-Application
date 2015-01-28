@@ -41,6 +41,7 @@ var PFcomments =
             dataType: 'html',
             success: function(resp)
             {
+                resp = resp.trim();//redacron alteration. trim() is needed here
                 if (Projectfork.isJsonString(resp) == false) {
                     Projectfork.displayException(resp);
                 }
@@ -76,15 +77,15 @@ var PFcomments =
     },
 
     add: function(event)
-    {
+    {  
         var i = event.data.i;
         var editor  = jQuery('#comment-editor').detach();
         var item    = jQuery('#comment-item-' + i);
         var content = jQuery('.comment-content', item);
-        var cb      = jQuery('#cb' + i).val();
-
+        var cb      = jQuery('#cb' + i).val();//this comes from the grid.id
+ 
         content.append(editor);
-
+ 
         jQuery('#jform_parent_id').val(cb);
     },
 
@@ -93,16 +94,16 @@ var PFcomments =
         var i = event.data.i;
         var f = jQuery('#commentForm');
         var t = jQuery('input[name|="task"]', f);
-
+ 
         // Check the box
-        jQuery('#cb' + i).attr('checked', true);
+        jQuery('#cb' + i).attr('checked', true);//this comes from the grid.id
 
         // Override the task value
         t.val('comments.trash');
 
         // Serialize the form
         var d = f.serializeArray();
-
+ 
         // Do the ajax request
         jQuery.ajax(
         {
@@ -114,7 +115,8 @@ var PFcomments =
             dataType: 'html',
             success: function(resp)
             {
-                if (Projectfork.isJsonString(resp) == false) {
+                 resp = resp.trim();//redacron alteration. For some reason, there is a space in front of the JSON data
+                if (Projectfork.isJsonString(resp) == false) {  
                     Projectfork.displayException(resp);
                 }
                 else {
@@ -172,6 +174,7 @@ var PFcomments =
         for(var it = 0; it < btns_trash.length; it++)
         {
             var btn = jQuery(btns_trash[it]);
+            
             btn.bind('click', {i: it}, function(event){PFcomments.trash(event);});
         }
     },
