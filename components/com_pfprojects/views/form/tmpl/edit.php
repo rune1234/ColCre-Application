@@ -40,7 +40,7 @@ Joomla.submitbutton = function(task)
 <?php if ($params->get('show_page_heading', 0)) : ?>
 <h1><?php echo $this->escape($params->get('page_heading')); ?></h1>
 <?php endif; ?>
-
+ 
 <form action="<?php echo JRoute::_('index.php?option=com_pfprojects&view=form&id=' . (int) $this->item->id . '&layout=edit'); ?>" method="post" name="adminForm" id="item-form" class="form-inline" enctype="multipart/form-data">
 	<fieldset>
 		
@@ -69,6 +69,36 @@ Joomla.submitbutton = function(task)
 		</div>
             -->
 	</fieldset>
+      <hr /> 
+      <div style="background: #777; color: #fff; padding: 10px; border-radius: 5px; width: 90%;">
+      <?php
+    $fieldsets = $this->form->getFieldsets('attribs');
+    if (count($fieldsets)) :
+        echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_DETAILS_FIELDSET'), 'project-options');
+		foreach ($fieldsets as $name => $fieldset) :
+            ?>
+			<fieldset>
+                <?php foreach ($this->form->getFieldset($name) as $field) : ?>
+                    <div class="formelm control-group">
+                        <div class="control-label"><?php echo $field->label; ?></div>
+            		    <div class="controls"><?php echo $field->input; ?></div>
+            		</div>
+                <?php endforeach; ?>
+            </fieldset>
+        <?php endforeach; ?>
+    <?php endif;
+    ?>
+    
+       <div class="formelm control-group">
+                        <div class="control-label">Project Comments:</div>
+                                <div class="controls"><select name="commentsetting">
+                                        <option value="0">All Users</option>
+                                        <option value="1"<?php echo ($this->item->commentsetting == 1) ? 'selected="selected"' : '';?>>Only Invited Users and Project Members</option>
+                                         <option value="2"<?php echo ($this->item->commentsetting == 2) ? 'selected="selected"' : '';?>>Only Project Members</option>
+                                          <option value="3"<?php echo ($this->item->commentsetting == 3) ? 'selected="selected"' : '';?>>Comments are not Allowed</option>
+                            </select></div>
+            		</div>  
+      </div>
 <div id="task_1" style='display: none;'><?php echo json_encode($this->tasks); // this is a way to send data to Angular.JS without relying on Ajax; ?></div>
     <hr /><div ng-app="myProj"><div id="projTasks" ng-controller="taskControl" data-ng-init="editTask()">
              
@@ -112,7 +142,26 @@ Joomla.submitbutton = function(task)
                 
   
      </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
-               </div></div>
+               </div>
+                         <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
+            
+            <div ng-repeat='skillTag in skillTags'> 
+            
+            <br ng-if="skillTag.id > 0" /> 
+            <b>Skill {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTag][{{skillTag.id}}]" value="" />
+            <br /><b>Skill Category:</b> 
+         <select class="newSkillTagCag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTagCag][{{skillTag.id}}]"><?php foreach ($this->skillCategories as $skctg)
+        {
+             echo "<option value='$skctg->id'>".$skctg->category."</option>\n";
+             }?></select>
+             
+            </div>
+            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Skill</a></div>
+        
+        
+    
+      </div> 
+                        </div>
                        
 		</div><br /><br />
                  <input type='hidden' name="taskform[{{<?php echo $addTask;?> + task.id}}][idedit]" value='{{task.idedit}}' />    
@@ -123,10 +172,10 @@ Joomla.submitbutton = function(task)
         </div>
        
     </div>
-      <hr />
-      <div id='projectTabs'>
-    <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?>
-    <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_PUBLISHING'), 'project-publishing') ;?>
+    
+      <div id='projectTabs'> 
+    <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?> 
+    <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_PUBLISHING'), 'project-publishing') ;?> 
     <fieldset>
         <div class="formelm control-group">
         	<div class="control-label">
@@ -199,22 +248,7 @@ Joomla.submitbutton = function(task)
     </fieldset>
     <?php endif; ?>
 
-    <?php
-    $fieldsets = $this->form->getFieldsets('attribs');
-    if (count($fieldsets)) :
-        echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_DETAILS_FIELDSET'), 'project-options');
-		foreach ($fieldsets as $name => $fieldset) :
-            ?>
-			<fieldset>
-                <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                    <div class="formelm control-group">
-                    	<div class="control-label"> <?php echo $field->label; ?></div>
-            		    <div class="controls"><?php echo $field->input; ?></div>
-            		</div>
-                <?php endforeach; ?>
-            </fieldset>
-        <?php endforeach; ?>
-    <?php endif; ?>
+    
 
     <?php if ($user->authorise('core.admin', 'com_pfprojects') || $user->authorise('core.manage', 'com_pfprojects')) : ?>
         <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_RULES'), 'project-permissions') ;?>
