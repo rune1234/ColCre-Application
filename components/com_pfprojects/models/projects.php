@@ -244,17 +244,27 @@ class PFprojectsModelProjects extends JModelList
           $value = $db->Quote('%' . $db->escape($value, true) . '%');
           $qr = "SELECT id FROM #__pf_skills WHERE skill LIKE $value LIMIT 5";
           $rows = $db->setQuery($qr)->loadObjectList();
-           
-          $skillid = array();
-          foreach ($rows as $rr)
-          {
-              if (is_numeric($rr->id)) $skillid[] = $rr->id;
+          $second = '';
+          if ($rows) 
+          { 
+              $skillid = array();
+              $skillExists = false;
+              foreach ($rows as $rr)
+              {
+                  if (is_numeric($rr->id)) 
+                  { 
+                       $skillid[] = $rr->id; 
+                       $skillExists = true; 
+                  }
+              }
+              $skillid = implode(',', $skillid);
+              if ($skillExists) 
+              {
+                  $qr = "SELECT project_id FROM #__pf_project_skills WHERE skill_id IN ($skillid) ";
+                  $second = 'OR (a.id IN ('.$qr.'))';
+              }
           }
-          $skillid = implode(',', $skillid);
-          //echo "skillid is $skillid";
-          $qr = "SELECT project_id FROM #__pf_project_skills WHERE skill_id IN ($skillid) ";
-          //echo $qr; exit;
-        $query->where('((' . $field . '.title LIKE ' . $value . ' OR ' . $field . '.alias LIKE ' . $value . ') OR (a.id IN ('.$qr.')) )');
+        $query->where('((' . $field . '.title LIKE ' . $value . ' OR ' . $field . '.alias LIKE ' . $value . ') '.$second.' )');
         
              // Apply Filter
         PFQueryHelper::buildFilter($query, $filters);
