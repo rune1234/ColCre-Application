@@ -90,7 +90,7 @@ WHERE (project_skills.project_id, project_skills.task_id, project_skills.skill_i
         //$projectId = isset($_GET['id']) ? $_GET['id'] : '';
         if (!is_numeric($projectId)) return;
 
-        $query = $this->commonQuery." AND projects.id = $projectId AND users.id != projects.created_by";
+        $query = $this->commonQuery." AND projects.id = $projectId AND users.id != projects.created_by ORDER BY TaskMatchPercentage DESC";
        //
         $db = JFactory::getDbo();
         $db->setQuery($query);
