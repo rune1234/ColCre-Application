@@ -63,7 +63,7 @@ function showMatches($matches, $item, $bla, $task = '')
                  unset($userMatches[$match->user_id]);//let's get rid of the array, so we don't show the same users over and over again
              }
              else continue;
-             echo "<div class='row-fluid'><div class='span10 userMatch'>";
+             echo "<div class='row-fluid'><div class='span10 userMatch' style='font-size: 10px; margin-left: 12px;'>";
 //print_r($match);
              $spec = $bla->specifyMatch($item->text, $match->MatchingTaskId, $item->id, $match->user_id, $match->MatchingTaskId);
              //print_r($spec);
