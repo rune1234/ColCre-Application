@@ -237,17 +237,34 @@ class PFprojectsModelProjects extends JModelList
         $filters = array();
         $filters['a.state']      = array('STATE',       $this->getState('filter.published'));
         $filters['a.created_by'] = array('INT-NOTZERO', $this->getState('filter.author'));
-        $filters['a']            = array('SEARCH',      $this->getState('filter.search'));
-
-        // Apply Filter
+      //  $filters['a']            = array('SEARCH',      $this->getState('filter.search'));
+          $field = 'a';
+          $db = JFactory::getDbo();
+          $value  = $this->getState('filter.search');
+          $value = $db->Quote('%' . $db->escape($value, true) . '%');
+          $qr = "SELECT id FROM #__pf_skills WHERE skill LIKE $value LIMIT 5";
+          $rows = $db->setQuery($qr)->loadObjectList();
+           
+          $skillid = array();
+          foreach ($rows as $rr)
+          {
+              if (is_numeric($rr->id)) $skillid[] = $rr->id;
+          }
+          $skillid = implode(',', $skillid);
+          //echo "skillid is $skillid";
+          $qr = "SELECT project_id FROM #__pf_project_skills WHERE skill_id IN ($skillid) ";
+          //echo $qr; exit;
+        $query->where('((' . $field . '.title LIKE ' . $value . ' OR ' . $field . '.alias LIKE ' . $value . ') OR (a.id IN ('.$qr.')) )');
+        
+             // Apply Filter
         PFQueryHelper::buildFilter($query, $filters);
 
         // Group by ID
         $query->group('a.id');
-
+ 
         // Add the list ordering clause.
         $query->order($this->getState('list.ordering', 'category_title, a.title') . ' ' . $this->getState('list.direction', 'ASC'));
- 
+  
         return $query;
     }
 
