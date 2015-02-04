@@ -13,7 +13,9 @@ $user = JFactory::getUser();
 //redacron file ******************
 ?>
  <script><!--
-    jQuery(document).ready(function($) { jQuery('.catgbox').click(function(e) { window.location.href = '<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>&catgid='+ jQuery(this).data('catg'); });
+      
+    jQuery(document).ready(function($) {    jQuery('.catgbox').click(function(e) {  
+            window.location.href = '<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>&catgid='+ jQuery(this).data('catg'); });
 });
      
 --></script>
