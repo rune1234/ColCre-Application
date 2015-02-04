@@ -10,7 +10,7 @@
 defined('_JEXEC') or die();
 ?>
 <div class="cLayout cMail Inbox">
-    <?php echo "<div style='margin: 5px;'><b>Matching Tasks: ".$totalMatches."</b></div>";?>
+     
     <!--
 <ul class="cMailBar cResetList cFloatedList clearfix">
 	<li>
@@ -32,13 +32,41 @@ defined('_JEXEC') or die();
 </ul>
 --->
 <table id="inbox-listing" class="table table-hover" >
-	<?php foreach ( $matches as $match ) : ?>
+	<?php
+         $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
+         $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
+         
+                 require_once( JPATH_ROOT .'/libraries/projectfork/colcre/project.php' ); 
+                 $projectData =  new projectData(); 
+                 
+         
+        foreach ( $matches as $match ) : ?>
 	<tr>
-		<td class="js-mail-checkbox">
-		 <?php  ?>
+		<td class="js-mail-checkbox" style="background: #fff;">
+		 <?php  
+                 $projectInfo = new stdClass();
+                 $projectInfo->id = $match->project_id;
+                 $category = $projectData->getCategory($match->catid);
+                 $projectInfo->category_alias = isset($category->alias) ? $category->alias : '';
+                  $match->logo_img = null;
+     
+            if (JFile::exists($base_path . '/' . $match->id . '.jpg')) {
+                $match->logo_img = $base_url . '/' . $match->id . '.jpg';
+            }
+            elseif (JFile::exists($base_path . '/' . $match->id . '.jpeg')) {
+                $match->logo_img = $base_url . '/' . $match->id . '.jpeg';
+            }
+            elseif (JFile::exists($base_path . '/' . $match->id . '.png')) {
+                $match->logo_img = $base_url . '/' . $match->id . '.png';
+            }
+            elseif (JFile::exists($base_path . '/' . $match->id . '.gif')) {
+                $match->logo_img = $base_url . '/' . $match->id . '.gif';
+            }
+                 echo "<img src='".$projectData->lookupIcon($projectInfo)."' alt='project $match->title logo' style='width: 150px;' />";// : "<img src='images/foldered.jpg' alt='project $match->title logo' style='width: 150px; height: 150px;' />";
+                 ?>
 		</td>
-		<td><?php //print_r($match);
-                echo '<div class="span9 pull-left" style="background: #fff;">';
+		<td style="background: #fff;"><?php //print_r($match);
+                echo '<div class="span8 pull-left">';
                 echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
                 echo "<p>".substr($match->description, 0, 300)."...</p>";
                 
