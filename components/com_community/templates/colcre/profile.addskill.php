@@ -18,11 +18,22 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 } else $useSkillAdd = false;
 ?>
 <script><!--
+    
     jQuery(document).ready(function($) {  
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
        jQuery('.catgbox').click(function(e) { jQuery('#addskillbox').slideDown();
-           jQuery("input[name=skillcatg]").val(jQuery(this).data('catg')); 
-           var categName = jQuery(this).children('.catgtitle').html(); 
+           jQuery('html, body').animate({ scrollTop:  jQuery('#addskillbox').offset().top - 50 }, 'slow');
+           
+           if (jQuery(this).data('catg') != jQuery("input[name=skillcatg]").val()) { angular.element(jQuery('#addusersk')).scope().changeTags(jQuery(this).data('catg')); }
+           jQuery("input[name=skillcatg]").val(  jQuery(this).data('catg') ); 
+           if (jQuery('.newSkillTagCag').length == 1) {
+           jQuery('.newSkillTagCag option').each(function()
+           {
+               if (jQuery("input[name=skillcatg]").val() == jQuery(this).attr('name')) { jQuery('.newSkillTagCag').val(jQuery(this).val()); }
+           })
+           }
+           var categName = jQuery(this).children('.catgtitle').html();
+           
            jQuery('#categoryPan').html(categName).css({'color' : '#000'}); } );
 });
     function removeLayer() { jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } ); return false; }
@@ -38,7 +49,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
         //print_r($userSkills);
          foreach ($skillCategories as $skctg)
         {
-             echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".$skctg->category."</div></div>\n";
+             echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".ucwords($skctg->category)."</div></div>\n";
         }
         ?>
         <div style='clear: both;'></div>
@@ -50,9 +61,11 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 <div ng-app="myProj">
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
     <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>"><table>
-            <tr><td valign='top'>Skill: </td><td><input style='width: 520px;' type='text' name='skill2dd' value="<?php echo ($useSkillAdd) ? $getSkiAdded->skill : ''; ?>" /><br /></td></tr>
+            <tr><td valign='top'>Skill: </td>
+                <td><input style='width: 520px;' type='text' name='skill2dd' value="<?php echo ($useSkillAdd) ? $getSkiAdded->skill : ''; ?>" /><br /></td></tr>
             <tr><td valign='top'>Category: </td><td><div id="categoryPan" style="font-weight: bold;">None</div><br /></td></tr>
-            <tr><td valign='top'>Description:&nbsp;</td><td><textarea name='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
+            <tr><td valign='top'>Description:&nbsp;</td>
+                <td><textarea name='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
                   <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
@@ -69,18 +82,17 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
          <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='border: 0 none !important;' ng-keyup="skillPress($event.altKey, task.id)" />
                 
   
-     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{task.id}}'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li></ul></div>
+     </li>
+                                
+                                
+   
+                                </ul><div style='position: relative; margin-left: 50px;'>
+         <ul class='resultsList' id='resultsList{{task.id}}'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li>
+         </ul>
+     </div>
                </div></div></div>
-    </div></div>
-                
-               </td></tr>
-        </table> 
-    <input type='hidden' name='skillcatg' value='<?php echo $getSkiAdded->skillCatg; ?>' />
-    <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
-     <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
-    
-    <span id="skillboxWarn">One of the fields is empty</span>
-    <br /><div ng-controller="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
+    </div>
+                      <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
             
             <div ng-repeat='skillTag in skillTags'> 
             
@@ -97,7 +109,17 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
         
         
     
-    </div>
+      </div> 
+                  </div>
+                
+               </td></tr>
+        </table> 
+    <input type='hidden' name='skillcatg' value='<?php echo $getSkiAdded->skillCatg; ?>' />
+    <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
+     <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
+    
+    <span id="skillboxWarn">One of the fields is empty</span>
+   
     <br /><input type='submit' value='Submit' /> 
     </form>    
    
