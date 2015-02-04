@@ -1247,7 +1247,31 @@ class CommunityProfileController extends CommunityBaseController {
      * @param	none
      * @return  none
      */
-    public function profile() {
+    public function myProjects()
+    {
+		 $my = CFactory::getUser();
+		 $db = JFactory::getDBO();
+		 $query = "SELECT * FROM #__pf_projects WHERE created_by = ".$my->id." AND state = 1 ORDER BY created DESC LIMIT 50";
+		 $db->setQuery($query);
+		 $rows = $db->loadObjectList();
+		 $fr = new stdClass();
+		 $a = 0;
+		 foreach ($rows as $row)
+		 {
+		     $rows[$a]->description = substr(strip_tags($row->description), 0, 100)."...";
+		     $a++;
+		 }
+         $fr->projects = json_encode($rows);
+         $fr->msg = '';
+         echo json_encode($fr);
+		 exit;
+		 die();
+	} 
+    public function profile() { 
+        $document = JFactory::getDocument();
+        
+        $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+        $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
         $jinput = JFactory::getApplication()->input;
         $userid = $jinput->get('userid', 0, 'INT');
 
@@ -2246,15 +2270,17 @@ class CommunityProfileController extends CommunityBaseController {
         $data->offsetList = $offSetLists;
          //let's get the redacron model:
         $model = $this->getModel('colcre');
+         $data->getSkiAdded = $model->getSkillsAdded($user->id);
         $data->skillCategories = $model->getSkillsList();
-        $data->userSkills = $model->getUserSkills($user->id);
-        $data->getSkiAdded = $model->getSkillsAdded($user->id);
+       // print_r($data->getSkiAdded);
+        $data->userSkills = $model->getUserSkills($user->id, $data->getSkiAdded->skillCatg);//let's get the user's skills for angular to use
+       
                             
         //$data->skillCategories = $model->getSkillsList();
         $view = $this->getView($viewName, '', $viewType);
                             
         $this->_icon = 'edit';
-
+                            
         if (!$data->profile) {
             echo $view->get('error', JText::_('COM_COMMUNITY_USER_NOT_FOUND'));
         } else {
