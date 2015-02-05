@@ -2156,8 +2156,9 @@ class CommunityProfileController extends CommunityBaseController {
     }
     public function addSkill()//redacron function
     {
-                      CFactory::setActiveProfile();
-
+        CFactory::setActiveProfile();
+        $document = JFactory::getDocument();
+        $document->addScriptDeclaration("var tasksURL='".JUri::base()."'");             
         $user = CFactory::getUser();
         $mainframe = JFactory::getApplication();
         $jinput = $mainframe->input;
