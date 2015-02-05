@@ -231,10 +231,16 @@ projectModule.factory('theService', function(theMenus, $http)
            {  
               if(typeof(jQuery("#skiinp_" + taskid + "_" + skillid).val()) != 'undefined') return;//don't add a skill that has already been added
               var s = {}
-              s.skill = skill;
+              s.skill =  skill;
               s.id = skillid;
               if (typeof($chosenSkill[taskid]) == 'undefined') { $chosenSkill[taskid] = []; }
               $chosenSkill[taskid].push(s);
+              
+           },
+           clearSkills: function(taskid)
+           {
+               var changeSkillsList = [];
+               $chosenSkill[taskid] = changeSkillsList;
            },
            delChosenSkill: function(taskid, skillid)
            {
@@ -251,6 +257,7 @@ projectModule.factory('theService', function(theMenus, $http)
             var xArray = this.xArray;
             var skillHan = this.outputChange;
             skillHan(xArray, '');
+             
             jQuery(".resultsList").css("display", "none");
             $http({method: 'POST', url: tasksURL + "?option=com_pfprojects&task=getskills", 
                 data: { skill: skinput}}).
@@ -350,17 +357,31 @@ projectModule.controller('taskControl',
              var skillInput = jQuery('#skillInput' + taskid).val();
              theService.skillHandler.skillSearch(skillInput);
          }
-         $scope.addUserSkills = function()
+         $scope.clearTags = function()
          {
-             
-             $scope.addTask();
+             theService.skillHandler.clearSkills(1);
+             $scope.skillChosen = '';
+              $scope.addUserSkills(false);
+         }
+         $scope.changeTags = function(changeTags)
+         {
+             if (isNaN(changeTags)) return;
+             angular.element('#cleartags').trigger('click');
+            // $scope.addUserSkills(false);
+         }
+         $scope.addUserSkills = function(addTask)
+         {
+              
+             if (typeof addTask == 'undefined' || addTask !== false) { $scope.addTask(); }
              var alrSkills = jQuery("#addusersk").data('addskill');
              for (a in alrSkills)
              { 
                  if (typeof alrSkills[a].id === 'undefined') continue;
+                  
                  $scope.skillChosen = theService.skillHandler.setChosenSKill(1, alrSkills[a].id, alrSkills[a].skill); 
              }
              $scope.skillChosen = theService.skillHandler.chosenSkill;
+             
          }
          $scope.addTask = function()
          {
