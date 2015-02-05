@@ -24,7 +24,38 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
        jQuery('.catgbox').click(function(e) { jQuery('#addskillbox').slideDown();
            jQuery('html, body').animate({ scrollTop:  jQuery('#addskillbox').offset().top - 50 }, 'slow');
            
-           if (jQuery(this).data('catg') != jQuery("input[name=skillcatg]").val()) { angular.element(jQuery('#addusersk')).scope().changeTags(jQuery(this).data('catg')); }
+           if (jQuery(this).data('catg') != jQuery("input[name=skillcatg]").val()) 
+           { 
+               var $this = this;
+               jQuery("input[name=skillcatg]").val( jQuery(this).data('catg') );
+               
+               $fragment_refresh = {
+		url: tasksURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task: 'getUserSkilAj', 'catg' : jQuery($this).data('catg') },
+		success: function( data ) { // alert(data);
+                    
+                     data = JSON.parse(data);
+                     jQuery("#addusersk").data('addskill', data);
+                     angular.element(jQuery('#addusersk')).scope().changeTags(jQuery($this).data('catg')); 
+                } };
+                jQuery.ajax( $fragment_refresh );
+                //*********************************************************
+                $fragment_refresh = {
+		url: tasksURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task: 'getUserMainSkilAj', 'catg' : jQuery($this).data('catg') },
+		success: function( data ) {  //alert(data);
+                    
+                     data = JSON.parse(data);
+                      
+                     jQuery("input[name=skill2dd]").val(data.skill);
+                     jQuery("#skilldesc").val(data.skillDesc);
+                      
+                } };
+                  jQuery.ajax( $fragment_refresh );
+               
+           }
            jQuery("input[name=skillcatg]").val(  jQuery(this).data('catg') ); 
            if (jQuery('.newSkillTagCag').length == 1) {
            jQuery('.newSkillTagCag option').each(function()
@@ -58,6 +89,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 	 
 		
 </div>
+
 <div ng-app="myProj">
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
     <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>"><table>
@@ -65,10 +97,11 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
                 <td><input style='width: 520px;' type='text' name='skill2dd' value="<?php echo ($useSkillAdd) ? $getSkiAdded->skill : ''; ?>" /><br /></td></tr>
             <tr><td valign='top'>Category: </td><td><div id="categoryPan" style="font-weight: bold;">None</div><br /></td></tr>
             <tr><td valign='top'>Description:&nbsp;</td>
-                <td><textarea name='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
+                <td><textarea name='skilldesc' id='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
                 
                   <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
+                          <div style="display: none;" ng-click="clearTags()" id="cleartags">click this</div>
      <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
                <div class="task-group" ng-repeat="task in tasks">
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
