@@ -70,6 +70,65 @@ class PFprojectsController extends JControllerLegacy
              exit;
           die();
     }
+    function getUserMainSkilAj()
+    {
+        
+         $user = JFactory::getUser();
+        if ((int)$user->id == 0)
+        {
+            echo 'false';
+            exit;
+        }
+        else
+        {
+             $db = JFactory::getDbo();
+             $catg = JRequest::getVar('catg');
+             
+        if (is_numeric($catg) && $catg > 0)
+        {
+            //$catg = " AND a.skillCatg = $catg";
+        }
+        else {
+            echo "ERROR - no category";
+            exit;
+        }
+            $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = ".$user->id." AND skillCatg = '".$catg."' LIMIT 1";
+            ///echo $query;
+            $db->setQuery($query);
+            $row = $db->loadObject();
+            echo ($row) ? json_encode($row) : 0;
+            exit;
+        }
+    }
+    function getUserSkilAj()
+    {
+        $user = JFactory::getUser();
+        if ((int)$user->id == 0)
+        {
+            echo 'false';
+            exit;
+        }
+        else
+        {
+             $db = JFactory::getDbo();
+             $catg = JRequest::getVar('catg');
+             
+        if (is_numeric($catg) && $catg > 0)
+        {
+            $catg = " AND a.skillCatg = $catg";
+        }
+        else {
+            echo "ERROR - no category";
+            exit;
+        }
+             $query = "SELECT b.* FROM #__pf_user_skills as a INNER JOIN #__pf_skills as b ON a.skill_id = b.id WHERE a.user_id = ".$user->id." $catg ORDER BY b.skill";
+            // echo $query;
+             $db->setQuery($query);
+             $rows = $db->loadObjectList();
+             echo json_encode($rows);
+             exit;
+        }
+    }
     public function inviteUser()
     {
         $db =& JFactory::getDBO();
@@ -112,6 +171,15 @@ the Colcre staff</p>";
         
         exit;
     }
+    private function editInstead($user_id, $skillCatg, & $db)
+    {
+        if (!is_numeric($skillCatg)) return false;
+        $query = "SELECT id FROM #__pf_project_skills_added WHERE userid= $user_id AND skillCatg='$skillCatg' LIMIT 1";
+        
+        $db->setQuery($query);
+        $id = $db->loadResult();
+        return (is_numeric($id)) ? true : false;
+    }   
     public function addUserKill()
     {
         
@@ -120,11 +188,17 @@ the Colcre staff</p>";
         $db = JFactory::getDbo();
         $user_id = $_POST['userid'];
         if (!is_numeric($user_id) || $user_id == 0) return;
-        $query = "DELETE FROM #__pf_user_skills WHERE user_id = $user_id LIMIT 50";
+        
+        $query = "DELETE FROM #__pf_user_skills WHERE user_id = $user_id AND skillCatg='".$db->escape($_POST['skillCatg'])."' LIMIT 50";
         $db->setQuery($query);
         $db->Query();
         if ($_POST['editInstead'] == 1)
-        { $query = "UPDATE #__pf_project_skills_added SET skillCatg='".$db->escape($_POST['skillCatg'])."', skillTags='".$db->escape($_POST['skillTags'])."', skillDesc='".$db->escape($_POST['skillDesc'])."', skill='".$db->escape($_POST['skilltoAdd'])."' WHERE userid= $user_id LIMIT 1"; }
+        {
+            $editInstead = $this->editInstead($user_id, $_POST['skillCatg'], $db);
+        }
+        else $editInstead = 0;
+        if ($editInstead)
+        { $query = "UPDATE #__pf_project_skills_added SET skillCatg='".$db->escape($_POST['skillCatg'])."', skillTags='".$db->escape($_POST['skillTags'])."', skillDesc='".$db->escape($_POST['skillDesc'])."', skill='".$db->escape($_POST['skilltoAdd'])."' WHERE userid= $user_id AND skillCatg='".$db->escape($_POST['skillCatg'])."' LIMIT 1"; }
         else { $query = "INSERT INTO #__pf_project_skills_added (userid, skillDesc, skill, skillTags, skillCatg) VALUES ($user_id, '".$db->escape($_POST['skillDesc'])."', '".$db->escape($_POST['skilltoAdd'])."', '".$db->escape($_POST['skillTags'])."', '".$db->escape($_POST['skillCatg'])."');"; }
         $taskIds = $_POST['taskIds'];
          
@@ -155,12 +229,12 @@ the Colcre staff</p>";
                 foreach ($taskIds as $tsk)
                 {
                     if (!is_numeric($tsk) || $tsk == 0) continue;
-                    $query = "SELECT skill_id FROM #__pf_user_skills WHERE user_id = $user_id AND skill_id = $tsk LIMIT 1";
+                    $query = "SELECT skill_id FROM #__pf_user_skills WHERE user_id = $user_id AND skill_id = $tsk AND skillCatg='".$db->escape($_POST['skillCatg'])."' LIMIT 1";
                     $db->setQuery($query);
                     $taskid = $db->loadResult();
                    if (is_numeric($taskid)) continue;
                     else {
-                         $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added) VALUES ('$user_id', '$tsk', CURRENT_TIMESTAMP)";
+                         $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, skillCatg, date_added) VALUES ('$user_id', '$tsk', '".$db->escape($_POST['skillCatg'])."', CURRENT_TIMESTAMP)";
                          $db->setQuery($query);
                          $db->Query();
                     }
@@ -181,7 +255,8 @@ the Colcre staff</p>";
     private function _insertNewTags($tags, $tagCatg, $userid, $profiID, &$db)//new tags are added but not published
     {
         $a = 0;
-        echo "we do get here";
+        $id = '';
+      //  echo "we do get here";
         if (is_numeric($profiID))
         {
             $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = '$userid' LIMIT 1";
@@ -200,16 +275,18 @@ the Colcre staff</p>";
              if (!is_numeric($oldID) || $oldID < 1)
              {
                  $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '0')";
-                 echo $query;
                  $db->setQuery($query);
                  $db->Query();
+                 $id = $db->insertid();
              }
              if ($tag) $newTags[] = $tag;
-             $id = $db->insertid();
-             $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added) VALUES ('$userid', '$id', CURRENT_TIMESTAMP)";
              
-             $db->setQuery($query);
-             $db->Query();
+             if (is_numeric($id) && $id > 0) 
+             { 
+                  $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added, skillCatg) VALUES ('$userid', '$id', CURRENT_TIMESTAMP, '".$tagCatg[$a]."')";
+                  $db->setQuery($query);
+                  $db->Query(); 
+             }
              $a++;
         }
         if ($a > 0)
