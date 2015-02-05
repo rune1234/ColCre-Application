@@ -467,7 +467,7 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
              }
              if ($tag) $newTags[] = $tag;
              $id = $db->insertid();
-             $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added) VALUES ('$userid', '$id', CURRENT_TIMESTAMP)";
+             $query = "INSERT INTO #__pf_user_skills (user_id, skill_id, date_added, skillCatg) VALUES ('$userid', '$id', CURRENT_TIMESTAMP, '".$tagCatg[$a]."')";
              
              $db->setQuery($query);
              $db->Query();
