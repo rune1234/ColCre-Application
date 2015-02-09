@@ -22,7 +22,61 @@ function dump(arr,level) {
 	}
 	return dumped_text;
 }
- 
+function selectCatg($catg)
+{
+           jQuery('#addskillbox').slideDown();
+           
+           jQuery('html, body').animate({ scrollTop:  jQuery('#addskillbox').offset().top - 50 }, 'slow');
+           if ($catg != jQuery("input[name=skillcatg]").val()) 
+           { 
+                
+               jQuery("input[name=skillcatg]").val( $catg );
+               
+               $fragment_refresh = {
+		url: tasksURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task: 'getUserSkilAj', 'catg' : $catg },
+		success: function( data ) { // alert(data);
+                    
+                     data = JSON.parse(data);
+                     jQuery("#addusersk").data('addskill', data);
+                     angular.element(jQuery('#addusersk')).scope().changeTags($catg); 
+                } };
+                jQuery.ajax( $fragment_refresh );
+                //*********************************************************
+                $fragment_refresh = {
+		url: tasksURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task: 'getUserMainSkilAj', 'catg' : $catg },
+		success: function( data ) {  //alert(data);
+                    
+                     data = JSON.parse(data);
+                      
+                     jQuery("input[name=skill2dd]").val(data.skill);
+                     jQuery("#skilldesc").val(data.skillDesc);
+                      
+                } };
+                  jQuery.ajax( $fragment_refresh );
+               
+           }
+           
+           jQuery("input[name=skillcatg]").val(  $catg ); 
+           if (jQuery('.newSkillTagCag').length == 1) 
+           {
+               jQuery('.newSkillTagCag option').each(function()
+               {
+                   alert(jQuery("input[name=skillcatg]").val());
+                   alert(jQuery(this).attr('name'));
+                   if (jQuery("input[name=skillcatg]").val() == jQuery(this).attr('name')) 
+                   { 
+                       jQuery('.newSkillTagCag').val( jQuery(this).val() );
+                       
+                   }
+               });
+           }
+           jQuery('.newSkillTagCag_2').val($catg);
+          /* jQuery('#categoryPan').html( $catTitle ).css({'color' : '#000'});*/
+}
 function addSkillLayer($this)
 {
     var centerHeight = (( jQuery($this).outerHeight()) /1);
@@ -86,7 +140,7 @@ function addUserSkill()
      
     var skillCatg = jQuery("input[name=skillcatg]").val();
     
-    if (isNaN(skillCatg) || skillCatg == 0) { jQuery('#categoryPan').css({'color' : '#a00'}); jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
+    if (isNaN(skillCatg) || skillCatg == 0) { /* jQuery('#categoryPan').css({'color' : '#a00'}); */ jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
      
     if (isNaN(userid)) { jQuery('#skillboxWarn').fadeIn().html('ERROR - user id is not valid. You may need to log in'); return false; }
     if (skilltoAdd.trim() == '') { jQuery('#skillboxWarn').fadeIn().html('Your skill must have a name'); return false; }
