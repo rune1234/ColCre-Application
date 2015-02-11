@@ -12,6 +12,9 @@ $validPassword = JText::sprintf( JText::_( 'JLIB_DATABASE_ERROR_VALID_AZ09', tru
 $user = JFactory::getUser();
 //redacron file ******************
 
+$SkillsAdded = $getSkiAdded;
+
+$getSkiAdded = $getSkiAdded[0];
 if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill))
 {
     $useSkillAdd = true;
@@ -46,7 +49,22 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 	 
 		
 </div>
-
+  <?php
+                if ($SkillsAdded)
+                {
+                    ?>
+<div class="span9" style="padding: 5px; background: #fff;"><h4>Skills already added:</h4><ul id="skilalraded">
+                <?php
+                foreach ($SkillsAdded as $skdd)
+                {
+                    echo "<li><a onClick='selectCatg(".$skdd->skillCatg.")' href='javascript:void(0)'>".$skdd->skill."</a></li>";
+                }
+                ?>
+        </ul>
+                </div> <div style="clear: both;"></div>
+                <?php
+                }
+                ?> 
 <div ng-app="myProj">
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
     <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>">
@@ -63,7 +81,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
             <tr><td valign='top'>Description:&nbsp;</td>
                 <td><textarea name='skilldesc' id='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
         <tr><td valign='top'>Skill Tags: </td><td>
-                
+                  
                   <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
                           <div style="display: none;" ng-click="clearTags()" id="cleartags">click this</div>
      <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
