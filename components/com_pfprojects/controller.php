@@ -219,6 +219,11 @@ the Colcre staff</p>";
         else
         {
             $response['status'] = 1;
+            if ($editInstead)
+            {
+                $response['edited'] = 1;   
+            }
+            else $response['edited'] = 0;
               $response['result'] = "Data successfully added";
         }
         if ($taskIds)
@@ -274,7 +279,7 @@ the Colcre staff</p>";
              $oldID = $db->loadResult();
              if (!is_numeric($oldID) || $oldID < 1)
              {
-                 $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '0')";
+                 $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '1')";
                  $db->setQuery($query);
                  $db->Query();
                  $id = $db->insertid();
