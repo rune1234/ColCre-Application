@@ -65,8 +65,8 @@ function selectCatg($catg)
            {
                jQuery('.newSkillTagCag option').each(function()
                {
-                   alert(jQuery("input[name=skillcatg]").val());
-                   alert(jQuery(this).attr('name'));
+                  // alert(jQuery("input[name=skillcatg]").val());
+                  //alert(jQuery(this).attr('name'));
                    if (jQuery("input[name=skillcatg]").val() == jQuery(this).attr('name')) 
                    { 
                        jQuery('.newSkillTagCag').val( jQuery(this).val() );
@@ -102,8 +102,7 @@ function addUserSkill()
     //var skillTags = jQuery("textarea[name=skilltags]").val();
     var taskNames = [];
     var taskIds = [];
-    
-    
+   
     var $t = 0;
     var newTagsCatg = [];
     jQuery(".newSkillTagCag").each(function()
@@ -136,9 +135,10 @@ function addUserSkill()
     jQuery(".taskfID").each(function() { var aValue = $(this).val();   taskIds.push(aValue); });
     var taskIds = JSON.stringify(taskIds);
     var skillTags = taskNames.join();
-    
+   
      
     var skillCatg = jQuery("input[name=skillcatg]").val();
+    
     
     if (isNaN(skillCatg) || skillCatg == 0) { /* jQuery('#categoryPan').css({'color' : '#a00'}); */ jQuery('#skillboxWarn').fadeIn().html('ERROR - category ID is not valid'); return false; }
      
@@ -156,9 +156,14 @@ function addUserSkill()
                      if (!data.status)
                      {
                          alert(data.error);
+                         
                      }
                      else
                      {
+                         if (! data.edited)
+                         {
+                             jQuery('#skilalraded').append("<li><a onClick='selectCatg(" + skillCatg +")' href='javascript:void(0)'>" + skilltoAdd  + "</a></li>") ;
+                         }
                          jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } );
                      }
                 } };
