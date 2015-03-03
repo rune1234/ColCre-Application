@@ -193,7 +193,7 @@ function addUserSkill()
                          jQuery('#noskillsadded').remove();
                          if (! data.edited)
                          {
-                             jQuery('#skilalraded').append("<li><a onClick='selectCatg(" + skillCatg +")' href='javascript:void(0)'>" + skilltoAdd  + "</a></li>") ;
+                             jQuery('#skilalraded').append("<li id='skillnk_" + data.id + "'><a onClick='selectCatg(" + skillCatg +")' href='javascript:void(0)'>" + skilltoAdd  + "</a></li>") ;
                          }
                          jQuery('#addskillbox').fadeOut(function() { jQuery('#fade, a.close2').remove(); } );
                      }
@@ -390,7 +390,7 @@ projectModule.factory('theService', function(theMenus, $http)
           {
               if (userid == 0) 
               {
-                  alert(userid);
+                 // alert(userid);
                   return;
               }
               $http({method: 'POST', url: tasksURL + "?option=com_pfprojects&task=delskills", 
@@ -498,7 +498,6 @@ projectModule.controller('taskControl',
          }
          $scope.SkillYNYes = function()
          {
-             alert('erer ' + $scope.Skillset);
              theService.skillHandler.SkillDelete($scope.Skillset);
          }
          $scope.deletethisSet = function()
