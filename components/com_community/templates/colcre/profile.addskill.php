@@ -50,21 +50,22 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 		
 </div>
   <?php
+                    ?>
+<div class="span9" style="padding: 5px; background: #fff;"><h4>Skills Added:</h4>
+    <ul id="skilalraded">
+        <?php if (!$SkillsAdded) { ?><li id="noskillsadded">No Skills has been added So Far</li><?php } ?>
+                <?php 
                 if ($SkillsAdded)
                 {
-                    ?>
-<div class="span9" style="padding: 5px; background: #fff;"><h4>Skills already added:</h4><ul id="skilalraded">
-                <?php
                 foreach ($SkillsAdded as $skdd)
                 {
-                    echo "<li><a onClick='selectCatg(".$skdd->skillCatg.")' href='javascript:void(0)'>".$skdd->skill."</a></li>";
+                    echo "<li id='skillnk_".$skdd->id."'><a onClick='selectCatg(".$skdd->skillCatg.")' href='javascript:void(0)'>".$skdd->skill."</a></li>";
+                }
                 }
                 ?>
         </ul>
                 </div> <div style="clear: both;"></div>
-                <?php
-                }
-                ?> 
+                
 <div ng-app="myProj">
 <div id="addskillbox" style="display: none;"><h1>Define Your Skills</h1>
     <form onSubmit='return addUserSkill()' method="post" action="<?php echo JRoute::_('index.php?option=com_community&view=profile&task=addskill&Itemid=103');?>">
@@ -94,7 +95,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
      <span class="token-input-delete-token" ng-click='deleteSKill(task.id, chosenSK.id)'>×</span></li>
     
      <li class="token-input-input-token" ng-click='focusOnInput(task.id)'>
-         <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='border: 0 none !important;' ng-keyup="skillPress($event.altKey, task.id)" />
+         <input type='text' id='skillInput{{task.id}}' class="SkillInput" style='border: 0 none !important;' ng-blur="hideBox(task.id)" ng-keyup="skillPress($event.altKey, task.id)" />
                 
   
      </li>
@@ -106,6 +107,11 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
          </ul>
      </div>
                </div></div></div>
+                          
+                          <div ng-hide='deleteTask' ng-click='deletethisSet()'><img src="<?php echo JURI::base()."images/Delete-icon.png";?>" style="height: 40px;" alt="delete skill set"/>Delete this set of Skills</div>
+                          
+                <div ng-hide='delTYesNo' style="margin-top: 20px; ">Do you really want to delete this set of skills?
+                    <div class='delSkillYN'><span2 ng-click='SkillYNYes()'>YES</span2> | <span2 ng-click='SkillYNHide()'>NO</span2></div></div>
     </div>
                       <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
             
@@ -132,7 +138,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
     <input type='hidden' name='skillcatg' value='<?php echo $getSkiAdded->skillCatg; ?>' />
     <input type='hidden' name='editInstead' value='<?php echo ($useSkillAdd) ? 1 : 0; ?>' />
      <input type='hidden' name='userid' value='<?php echo $user->id; ?>' />
-    
+     <!--<input type='text' name='token' value='<?php ?>' />-->
     <span id="skillboxWarn">One of the fields is empty</span>
    
     <br /><input type='submit' value='Submit' /> 
