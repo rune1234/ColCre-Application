@@ -25,9 +25,22 @@ function dump(arr,level) {
 function selectCatg($catg)
 {
            jQuery('#addskillbox').slideDown();
+           var $userid = jQuery('input[name=userid]').val();
+          
            
+           if (parseInt($userid) == 0)
+           {
+               alert("You need to log in"); 
+               return;
+           }
+           else
+           {
+                angular.element(jQuery('#addusersk')).scope().setUserID($userid); 
+                angular.element(jQuery('#addusersk')).scope().setCatg($catg); 
+           }
+           angular.element(jQuery('#addusersk')).scope().showDelete(0); 
            jQuery('html, body').animate({ scrollTop:  jQuery('#addskillbox').offset().top - 50 }, 'slow');
-           if ($catg != jQuery("input[name=skillcatg]").val()) 
+           if (1 ==1 || $catg != jQuery("input[name=skillcatg]").val()) 
            { 
                 
                jQuery("input[name=skillcatg]").val( $catg );
@@ -36,11 +49,13 @@ function selectCatg($catg)
 		url: tasksURL,
 		type: 'POST',
 		data: { option: 'com_pfprojects', task: 'getUserSkilAj', 'catg' : $catg },
-		success: function( data ) { // alert(data);
-                    
+		success: function( data ) {  
+                   
                      data = JSON.parse(data);
                      jQuery("#addusersk").data('addskill', data);
                      angular.element(jQuery('#addusersk')).scope().changeTags($catg); 
+                    
+                      
                 } };
                 jQuery.ajax( $fragment_refresh );
                 //*********************************************************
@@ -48,17 +63,32 @@ function selectCatg($catg)
 		url: tasksURL,
 		type: 'POST',
 		data: { option: 'com_pfprojects', task: 'getUserMainSkilAj', 'catg' : $catg },
-		success: function( data ) {  //alert(data);
+		success: function( data ) { //alert(data);
                     
                      data = JSON.parse(data);
-                      
+                     if(data.skillDesc) 
+                         
+                    {
+                         
+                        angular.element(jQuery('#addusersk')).scope().showDelete(1); 
+                        angular.element(jQuery('#addusersk')).scope().Skillset = data.id; 
+                        
+                       
+                    }
+                     
                      jQuery("input[name=skill2dd]").val(data.skill);
                      jQuery("#skilldesc").val(data.skillDesc);
-                      
+                     
                 } };
                   jQuery.ajax( $fragment_refresh );
                
            }
+           /*else if($catg)
+           {
+               angular.element(jQuery('#addusersk')).scope().showDelete(1); 
+                angular.element(jQuery('#addusersk')).scope().Skillset = data.id; 
+           }*/
+               
            
            jQuery("input[name=skillcatg]").val(  $catg ); 
            if (jQuery('.newSkillTagCag').length == 1) 
@@ -160,6 +190,7 @@ function addUserSkill()
                      }
                      else
                      {
+                         jQuery('#noskillsadded').remove();
                          if (! data.edited)
                          {
                              jQuery('#skilalraded').append("<li><a onClick='selectCatg(" + skillCatg +")' href='javascript:void(0)'>" + skilltoAdd  + "</a></li>") ;
@@ -272,6 +303,8 @@ projectModule.factory('theService', function(theMenus, $http)
     var $tasks = [];
     var $inputs = [];
     var $chosenSkill = [];
+    var userid = 0;
+    var catg = 0;
     return {
         skillHandler:{
            x: $inputs,
@@ -280,6 +313,14 @@ projectModule.factory('theService', function(theMenus, $http)
           SkillInput: function()
            {
                
+           },
+           setUserID: function(id)
+           {
+               userid = id;
+           },
+           setCatg: function(changCatg)
+           {
+               catg = changCatg;
            },
            outputChange: function(id, value)
            {
@@ -344,6 +385,26 @@ projectModule.factory('theService', function(theMenus, $http)
                         else {   }
                     }).error(function(data, status) {  alert(status);
                     });
+          },
+          SkillDelete: function(id)
+          {
+              if (userid == 0) 
+              {
+                  alert(userid);
+                  return;
+              }
+              $http({method: 'POST', url: tasksURL + "?option=com_pfprojects&task=delskills", 
+                data: { id: id, userid: userid, catg: catg}}).
+                    success(function(data, status, headers, config) {
+                        data = angular.fromJson(data);
+                        if (data.msg == '')
+                        {
+                             jQuery('#skillnk_' + data.id).remove();
+                             jQuery('#addskillbox').slideUp();
+                        }
+                        else alert(data.msg);
+                    }).error(function(data, status) {  alert(status);
+                    });
           }
         },
         theTasks: {
@@ -405,9 +466,12 @@ projectModule.controller('projctInvite', function($scope, projInvite, $timeout)
 	}
 });
 projectModule.controller('taskControl', 
-    function($scope, theService) {
+    function($scope, theService, $timeout) {
+        $scope.deleteTask = true;
+        $scope.delTYesNo = true;
          var $tasks = theService.theTasks.getTasks();
          $scope.tasks = $tasks;
+         $scope.Skillset = 0;
          $scope.skillResults = theService.skillHandler.x;
          $scope.skillChosen = theService.skillHandler.chosenSkill;
          $scope.skillPress = function(keyp, taskid)
@@ -416,11 +480,48 @@ projectModule.controller('taskControl',
              var skillInput = jQuery('#skillInput' + taskid).val();
              theService.skillHandler.skillSearch(skillInput);
          }
+         $scope.showDelete = function(show)
+         {
+             $scope.$apply(function() {
+                 if (show) $scope.deleteTask = false;
+                 else 
+                 {
+                     $scope.deleteTask = true;
+                     $scope.delTYesNo = true;
+                 }
+             });
+         }
+         $scope.SkillYNHide = function()
+         {
+             $scope.delTYesNo = true;
+             
+         }
+         $scope.SkillYNYes = function()
+         {
+             alert('erer ' + $scope.Skillset);
+             theService.skillHandler.SkillDelete($scope.Skillset);
+         }
+         $scope.deletethisSet = function()
+         {
+              $scope.delTYesNo = false;
+        }
+         $scope.hideBox = function(taskid)
+         {
+             $timeout(function () { jQuery("#resultsList" + taskid).css("display", "none"); }, 2000);
+         }
          $scope.clearTags = function()
          {
              theService.skillHandler.clearSkills(1);
              $scope.skillChosen = '';
               $scope.addUserSkills(false);
+         }
+         $scope.setUserID = function(id)
+         {
+             theService.skillHandler.setUserID(id);
+         }
+         $scope.setCatg = function(id)
+         {
+             theService.skillHandler.setCatg(id);
          }
          $scope.changeTags = function(changeTags)
          {
@@ -442,6 +543,7 @@ projectModule.controller('taskControl',
              $scope.skillChosen = theService.skillHandler.chosenSkill;
              
          }
+         
          $scope.addTask = function()
          {
              var id = $scope.tasks.length + 1;
