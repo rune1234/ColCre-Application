@@ -70,6 +70,43 @@ class PFprojectsController extends JControllerLegacy
              exit;
           die();
     }
+    public function delSKills()
+    {
+          $db =& JFactory::getDBO();
+          $data = json_decode(file_get_contents("php://input"));
+          $fr = new stdClass();
+          if (!isset($data->id) || !is_numeric($data->id) || $data->id == 0)
+          { $fr->msg = 'ERROR - non-numeric ID'; }
+          elseif (!isset($data->catg) || !is_numeric($data->catg) || $data->catg == 0)
+          { $fr->msg = 'ERROR - non-numeric Category'; }
+          else
+          {
+             
+             $fr->id = $data->id;//we will need this to delete the skill link
+             $query = "SELECT skillCatg FROM #__pf_project_skills_added WHERE id=".$data->id." LIMIT 1";
+             $skillCatg = $db->setQuery($query)->loadResult();
+             if (! $skillCatg)
+             {
+                 $fr->msg = 'ERROR - data does not exist';
+                 exit;
+             }
+             $query = "DELETE FROM #__pf_project_skills_added where userid =".$data->userid." AND skillCatg=".$data->catg." AND id=".$data->id." LIMIT 1";
+             if (! $db->setQuery($query)->Query())
+             {
+                 $fr->msg = "There was an error deleting the project skills";
+             }
+             $query = "DELETE FROM #__pf_user_skills where user_id =".$data->userid." AND skillCatg=".$data->catg;
+             if (! $db->setQuery($query)->Query())
+             {
+                 $fr->msg = "There was an error deleting the user skills";
+             }
+             else $fr->msg = '';
+             
+          }
+          echo json_encode($fr);
+          exit;
+          die();
+    }
     function getUserMainSkilAj()
     {
         
