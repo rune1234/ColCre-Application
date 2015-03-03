@@ -37,7 +37,7 @@ $user = JFactory::getUser();
 		
 </div>
   
-<script type="text/javascript">
+<script type="text/javascript"><!--
 
 	joms.jQuery( document ).ready( function(){
 
@@ -140,6 +140,7 @@ var password_strength_settings = {
 }
 
 joms.jQuery('#jspassword').password_strength(password_strength_settings);
+//-->
 </script>
 
 
