@@ -243,12 +243,12 @@ the Colcre staff</p>";
         $r = $db->Query();
         if ($_POST['editInstead'] == 1)
         {
-            $query = "SELECT id FROM #__pf_project_skills_added WHERE userid= $user_id LIMIT 1";
+            $query = "SELECT id FROM #__pf_project_skills_added WHERE userid= $user_id AND skillCatg='".$db->escape($_POST['skillCatg'])."' LIMIT 1";
             $db->setQuery($query);
             $profiID = $db->loadResult();
         }
         else $profiID = $db->insertid();
-        //echo "profi is $profiID";
+        $response['id'] = $profiID;
         if (!$r) {
                 $response['status'] = 0;
                  $response['result'] = "There was an error adding data to the database";
