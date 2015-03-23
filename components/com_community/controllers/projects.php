@@ -4,9 +4,10 @@ class CommunityProjectsController extends CommunityBaseController
     function display()
     { 
         $model	=  $this->getModel ( 'projects' );
+        
 		$projects	=  $model->getProjects ();
 		//$modMsg	= array ();
- 
+
 		$view	=  $this->getView ( 'projects' );
 		$user_id = JRequest::getVar('user_id', 0, 'get', 'int');
                  
@@ -20,11 +21,13 @@ class CommunityProjectsController extends CommunityBaseController
 		{
 			return $this->blockUnregister();
 		}
+                
                 $data = new stdClass ( );
 		$data->matches = $projects;
                 $data->user = $user;
 		 $data->pagination =  $model->getPagination ();
 		echo $view->get ( 'projects', $data );
+                
     }
 }
 
