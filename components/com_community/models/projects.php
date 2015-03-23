@@ -10,9 +10,17 @@ class CommunityModelProjects extends JCCModel implements CNotificationsInterface
     function getProjects()
     {
         $db = $this->getDBO();
-        $my = CFactory::getUser();
-        $this->user = $my;
-        $query = "SELECT count(*) as total FROM #__pf_projects WHERE created_by = $my->id ORDER BY id DESC";
+        $user_id = JRequest::getVar('user_id', 0, 'get', 'int');
+                 
+                if ($user_id == 0)
+                {
+                    $user = $my		= CFactory::getUser ();
+                }
+                else $user =  JFactory::getUser($user_id);
+        //$my = CFactory::getUser();
+        $this->user = $user;
+        
+        $query = "SELECT count(*) as total FROM #__pf_projects WHERE created_by = $user->id ORDER BY id DESC";
          $db->setQuery($query);
 			$total = $db->loadResult();
                         //print_r($result);
@@ -20,7 +28,7 @@ class CommunityModelProjects extends JCCModel implements CNotificationsInterface
 		        $limitstart	= $this->getState('limitstart');*/
                          $limitstart = JRequest::getInt('limitstart');
                          $limit = JRequest::getVar( "limit", '5', 'get', 'int');
-        $query = "SELECT * FROM #__pf_projects WHERE created_by = $my->id ORDER BY id DESC  LIMIT $limitstart, $limit"; 
+        $query = "SELECT * FROM #__pf_projects WHERE created_by = $user->id ORDER BY id DESC  LIMIT $limitstart, $limit"; 
         
         $db->setQuery($query);
 			$result = $db->loadObjectList();
