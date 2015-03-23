@@ -46,6 +46,14 @@ class ProjectforkController extends JControllerLegacy
         $prl->getLikes($data->type_id, $data->type);
         exit;
     }
+    public function getUserLike()
+    {
+        jimport('projectfork.colcre.likes');
+        $data = json_decode(file_get_contents("php://input"));
+        $prl = new projectLikes();
+        echo ($prl->alreadyLiked($data->user_id, $data->type_id, $data->type)) ? 1 : 0;
+        exit;
+    }
     public function proposals()
     {
         $db = JFactory::getDbo();
