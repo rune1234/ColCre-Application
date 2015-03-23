@@ -124,7 +124,7 @@ $user = JFactory::getUser();
                 
     ?>
         <div ng-app="myLikes" >
-            <div ng-controller="projectLike" data-ng-init="getLikes(<?php echo $item->id; ?>)">
+            <div ng-controller="projectLike" data-ng-init="getLikes(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
                 <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span> | <span style="color: #000; font-size: 12px;"><span ng-bind="likes"></span> Likes</span></div>
                 <div style="clear: both"></div>
             </div>
