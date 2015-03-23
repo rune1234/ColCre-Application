@@ -42,7 +42,7 @@ defined('_JEXEC') or die();
          
         foreach ( $matches as $match ) : ?>
 	<tr>
-		<td class="js-mail-checkbox" style="background: #fff;">
+		<td style="background: #fff;">
 		 <?php  
                  $projectInfo = new stdClass();
                  $projectInfo->id = $match->project_id;
@@ -62,7 +62,8 @@ defined('_JEXEC') or die();
             elseif (JFile::exists($base_path . '/' . $match->id . '.gif')) {
                 $match->logo_img = $base_url . '/' . $match->id . '.gif';
             }
-                 echo "<img src='".$projectData->lookupIcon($projectInfo)."' alt='project $match->title logo' style='width: 150px;' />";// : "<img src='images/foldered.jpg' alt='project $match->title logo' style='width: 150px; height: 150px;' />";
+            // print_r($projectInfo);
+                 echo "<img src='".$projectData->lookupIcon($projectInfo)."' alt='project $match->title logo' style='height: 150px; width: 150px;' />";// : "<img src='images/foldered.jpg' alt='project $match->title logo' style='width: 150px; height: 150px;' />";
                  ?>
 		</td>
 		<td style="background: #fff;"><?php //print_r($match);
