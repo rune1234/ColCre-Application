@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die();
 
-
+jimport('projectfork.colcre.project');
 JHtml::_('pfhtml.script.listform');
 
 $list_order = $this->escape($this->state->get('list.ordering'));
@@ -40,44 +40,45 @@ $is_ssl = JFactory::getURI()->isSSL();
 
     <div class="grid">
         <form name="adminForm" id="adminForm" action="<?php echo JRoute::_(PFprojectsHelperRoute::getProjectsRoute()); ?>" method="post">
-
+ <?php //user should know what projects match his:
+            if (is_numeric($user->id) && $user->id > 0) {
+            ?><div><a id="projectInvite" href="<?php echo JRoute::_("index.php?option=com_community&view=matches&Itemid=158");?>">My Skill Matches</a></div>
+            <?php
+            }
+            ?>
             <div class="btn-toolbar btn-toolbar-top">
                 <?php echo $this->toolbar;?>
             </div>
 
             <div class="clearfix"></div>
-            <?php
-            if (is_numeric($user->id) && $user->id > 0) {
-            ?><div><a id="projectInvite" href="<?php echo JRoute::_("index.php?option=com_community&view=matches&Itemid=158");?>">My Matches</a></div>
-            <?php
-            }
-            ?>
+           
             <div class="<?php echo $filter_in;?>collapse" id="filters">
                 <div class="btn-toolbar clearfix">
                     <div class="filter-search btn-group pull-left">
                         <input type="text" name="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER_SEARCH'); ?>" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>"/>
                     </div>
                     <div class="filter-search-buttons btn-group pull-left">
-                        <button type="submit" class="btn" rel="tooltip" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>">
-                            <span aria-hidden="true" class="icon-search"></span>
+                        <button type="submit" class="btn" style='width: 150px; text-align: center;' rel="tooltip" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>">
+                            Search
                         </button>
-                        <button type="button" class="btn" rel="tooltip" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();">
-                            <span aria-hidden="true" class="icon-remove"></span>
+                        <button type="button" class="btn" style='width: 150px; text-align: center;' rel="tooltip" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();">
+                            Filter
                         </button>
                     </div>
                     <div class="filter-order btn-group pull-left">
-                        <select name="filter_order" class="inputbox input-small" onchange="this.form.submit()">
+                        <select name="filter_order" class="inputbox input-small"><!-- onchange="this.form.submit()">-->
                             <?php echo JHtml::_('select.options', $this->sort_options, 'value', 'text', $list_order, true);?>
                         </select>
                     </div>
                     <div class="folder-order-dir btn-group pull-left">
-                        <select name="filter_order_Dir" class="inputbox input-small" onchange="this.form.submit()">
+                        <select name="filter_order_Dir" class="inputbox input-small"><!-- onchange="this.form.submit()">-->
                             <?php echo JHtml::_('select.options', $this->order_options, 'value', 'text', $list_dir, true);?>
                         </select>
                     </div>
                     <div class="filter-category btn-group pull-left">
-                        <select name="filter_category" class="inputbox input-small" onchange="this.form.submit()">
+                        <select name="filter_category" class="inputbox input-small" style='width: 200px;'><!-- onchange="this.form.submit()">-->
                             <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
+                            <option>All</option>
                             <?php echo JHtml::_('select.options', JHtml::_('category.options', 'com_pfprojects'), 'value', 'text', $this->state->get('filter.category'));?>
                         </select>
                     </div>
@@ -88,15 +89,23 @@ $is_ssl = JFactory::getURI()->isSSL();
                                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
                             </select>
                         </div>
-                    <?php endif; ?>
+                    <?php endif; 
+                    $item_id = JRequest::getUInt('Itemid');
+                    ?>
                 </div>
-            </div>
-<div id='userProfileDiv' style="width: 65%;">
-            <ul id='userProfUl'><li>Most Popular</li><li>New this Week</li><li>Most Awarded</li><li>Most Funded</li></ul></div>
+            </div> 
+          
+<div id='userProfileDiv' style="width: 65%; margin: 40px;">
+    
+    <ul id='userProfUl'><li>Most Popular</li><li><a href='<?php echo JRoute::_('index.php?option=com_pfprojects&view=projects&Itemid='.$item_id.'&extr=newweek'); ?>'>New this Week</a></li><li>Most Awarded</li><li>Most Funded</li></ul></div>
+            <?php 
+                echo (isset($_POST['filter_category']) && is_numeric($_POST['filter_category']) && isset($this->items[0]->category_title ) ) ? "<div style='margin: 0px; padding: 0px;'><h4>Category: ".$this->items[0]->category_title."</h4></div>" : ''; 
+                if (! $this->items) { echo "<p><strong>There are no results</strong></p>"; }
+            ?>  
             <div class="clearfix"></div> 
             <div class="row-striped" style="margin: auto; margin-top: 15px; width: 98%;">
                 <div>
-                <?php
+                    <?php 
                 $k = 0;
                 $current_cat = '';
                 foreach($this->items AS $i => $item) :
@@ -112,7 +121,7 @@ $is_ssl = JFactory::getURI()->isSSL();
                     // Calculate project progress
                     $task_count = (int) $item->tasks;
                     $completed  = (int) $item->completed_tasks;
-
+ 
                     // Repo directory
                     $repo_dir = (int) $this->params->get('repo_dir');
 
@@ -144,7 +153,14 @@ $is_ssl = JFactory::getURI()->isSSL();
 	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".png"; ?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
 	    	    	    		<?php else: echo "<img src='".JUri::base()."images/foldered.jpg' alt='project $item->title logo' style='margin: auto; width: 120px; height: 120px;' />"; ?>
                                                     <?php endif ; ?>
-                                </a></div><div class="projcatg"><?php echo $item->category_title;?></div><div style='padding: 10px;'>
+                                </a></div><div class="projcatg"><?php echo $item->category_title;?></div>
+                                <?php
+                                 $pd = new projectData();//  lookupUser($id)
+                                 $createdBY = $pd->lookupUser($item->created_by);
+                                 //print_r($createdBY);
+                                 
+                                 ?>
+                                <div style='padding: 10px;'>
     	    	    		<h2 class="item-title">
                                 <?php if ($can_change || $uid) : ?>
                                     <label for="cb<?php echo $i; ?>" class="checkbox pull-left">
@@ -160,8 +176,11 @@ $is_ssl = JFactory::getURI()->isSSL();
                                     <?php echo $this->escape($item->title);?>
                                 </a>
                             </h2>
-                            <hr />
-	    	    	    	<div class="project-description"><?php echo JHtml::_('pf.html.truncate', $item->description, 200); ?></div>
+                            <hr style='margin: 5px 0px;' />
+                            <div class='pcreator'><img style='height: 50px;' src="<?php echo $createdBY->thumb; ?>" alt="<?php echo $createdBY->username; ?>" /><span>Creator: <a target='blank' href='<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>'><?php echo $createdBY->username; ?></a></span></div>
+                                  <hr style='margin: 5px 0px;' />
+                                
+	    	    	    	<div class="project-description"><?php echo JHtml::_('pf.html.truncate', $item->description, 150); ?></div>
 
 
     	    	    	 
