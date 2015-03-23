@@ -8,15 +8,21 @@ class CommunityProjectsController extends CommunityBaseController
 		//$modMsg	= array ();
  
 		$view	=  $this->getView ( 'projects' );
-		$my		= CFactory::getUser ();
-
-                if($my->id == 0)
+		$user_id = JRequest::getVar('user_id', 0, 'get', 'int');
+                 
+                if ($user_id == 0)
+                {
+                    $user = $my		= CFactory::getUser ();
+                }
+                else $user =  JFactory::getUser($user_id);
+                 
+                if($user->id == 0)
 		{
 			return $this->blockUnregister();
 		}
                 $data = new stdClass ( );
 		$data->matches = $projects;
-                $data->user = $my;
+                $data->user = $user;
 		 $data->pagination =  $model->getPagination ();
 		echo $view->get ( 'projects', $data );
     }
