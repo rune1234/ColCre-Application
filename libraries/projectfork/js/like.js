@@ -7,11 +7,12 @@ likeModule.factory('likesService', function($http)
         addLike: function(user_id, type_id, type, $scope)
         {
             var likeLayer = jQuery('.likelayer').css('background-image');
+            if (typeof(projectURL) === 'undefined') { alert(' projectURL is undefined')}
             if (likeLayer.indexOf('taken') > 0)
             {
-                jQuery('.likelayer').css({ 'background-image' : 'url(images/thumbs-up.png)' }); 
+                jQuery('.likelayer').css({ 'background-image' : 'url('+projectURL+'images/thumbs-up.png)' }); 
             }
-            else jQuery('.likelayer').css({ 'background-image' : 'url(images/thumbs-up-taken.png)' }); 
+            else jQuery('.likelayer').css({ 'background-image' : 'url('+projectURL+'images/thumbs-up-taken.png)' }); 
             //alert('horr');
             $http({method: 'POST', url: "index.php?option=com_projectfork&task=like", 
                 data: { user_id: user_id, type_id: type_id, type: type } }).
@@ -31,7 +32,7 @@ likeModule.factory('likesService', function($http)
                              theLikes = parseInt(theLikes) - 1;
                              $scope.likes = (theLikes < 1) ? 0 : theLikes;
                              theLikes = $scope.likes;
-                              jQuery('.likelayer').css({ 'background-image' : 'url(images/thumbs-up.png)' });
+                              jQuery('.likelayer').css({ 'background-image' : 'url('+projectURL+'images/thumbs-up.png)' });
                         }
                     }
                     }).error(function(data, status) {  data = angular.fromJson(data); alert(data.msg); });
@@ -56,7 +57,8 @@ likeModule.factory('likesService', function($http)
            $http({method: 'POST', url: "index.php?option=com_projectfork&task=getUserLike", 
                 data: { type_id: type_id, type: type, user_id: user_id } }).
                     success(function(data, status, headers, config) { //alert(data);
-                        if (parseInt(data) === 1) { jQuery('.likelayer').css({ 'background-image' : 'url(images/thumbs-up-taken.png)' }); }
+                        if (parseInt(data) === 1) 
+                        { jQuery('.likelayer').css({ 'background-image' : 'url('+projectURL+'images/thumbs-up-taken.png)' }); }
                            
                      }).error(function(data, status) {   });
        }   
@@ -88,7 +90,7 @@ likeModule.controller('taskLike', function($scope, likesService, $timeout)
     $scope.getLikes = function(project_id, user_id)
     {
        likesService.urlLikes(project_id, 2);
-      // alert(user_id);//jQuery('.likelayer').css({ 'background-image' : 'url(images/thumbs-up-taken.png)' }); 
+      // alert(user_id);//jQuery('.likelayer').css({ 'background-image' : 'url(images/-taken.png)' }); 
        likesService.getUserLike(project_id, 2, user_id);
         $timeout(function() 
         { $scope.likes = likesService.getLikes();  }, 1000);
