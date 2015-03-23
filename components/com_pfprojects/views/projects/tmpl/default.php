@@ -177,7 +177,9 @@ $is_ssl = JFactory::getURI()->isSSL();
                                 </a>
                             </h2>
                             <hr style='margin: 5px 0px;' />
-                            <div class='pcreator'><img style='height: 50px;' src="<?php echo $createdBY->thumb; ?>" alt="<?php echo $createdBY->username; ?>" /><span>Creator: <a target='blank' href='<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>'><?php echo $createdBY->username; ?></a></span></div>
+                            <div class='pcreator'><img style='height: 50px;' src="<?php echo $createdBY->thumb; ?>" alt="<?php echo $createdBY->username; ?>" /><span>Creator: <a target='blank' href='<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>'><?php echo $createdBY->username; ?></a></span>
+                                <div><a class="menu-icon" href="<?php echo JRoute::_('index.php?option=com_community&view=profile&view=projects&user_id='.$item->created_by); ?>">Other Projects</a> by <?php echo $createdBY->username; ?></div>
+                            </div>
                                   <hr style='margin: 5px 0px;' />
                                 
 	    	    	    	<div class="project-description"><?php echo JHtml::_('pf.html.truncate', $item->description, 150); ?></div>
