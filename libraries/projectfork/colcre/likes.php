@@ -20,6 +20,24 @@ class projectLikes
         if ($this->alreadyLiked($user_id, $type_id, $type))
         {
             $response->msg = "Already liked";
+          
+            /*if (1 == 1) 
+            {*/
+                $query = "DELETE FROM #__pf_likes WHERE type_id = $type_id AND user_id = $user_id AND type = $type LIMIT 1";
+                //echo($query);
+                $this->db->setQuery($query)->Query();
+                $query = "SELECT quantity FROM #__pf_likescount WHERE type_id = $type_id AND type = $type LIMIT 1";
+                $this->db->setQuery($query);
+                $result = $this->db->loadResult();
+                //echo "result is $result";
+                if ($result > 0) $result = $result - 1;
+                else $result = 0;
+                //{   
+                    $query = "UPDATE `#__pf_likescount` SET quantity = $result WHERE type = '$type' AND type_id = '$type_id'"; 
+                    $this->db->setQuery($query);
+                    $this->db->Query();
+                //}
+            //}
             $response->error = 0;//if it is 0, user won't get a warning.
             echo json_encode($response);
             return;
@@ -40,11 +58,13 @@ class projectLikes
             echo json_encode($response);
         }
     }
-    private function alreadyLiked($user_id, $type_id, $type)
+    public function alreadyLiked($user_id, $type_id, $type)
     {
         $query = "SELECT id FROM #__pf_likes WHERE type_id = $type_id AND user_id = $user_id AND type = $type LIMIT 1";
+        
         $this->db->setQuery($query);
         $result = $this->db->loadResult();
+        //echo "result is ".$result;
         return ($result) ? true : false;
     }
     private function countLike($type_id, $type)
