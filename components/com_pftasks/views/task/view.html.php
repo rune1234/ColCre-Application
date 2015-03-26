@@ -167,7 +167,21 @@ class PFtasksViewTask extends JViewLegacy
             $palias = $this->item->project_alias;
 
 			$path   = array(array('title' => $this->item->title, 'link' => ''));
-            $path[] = array('title' => $this->item->project_title, 'link' => JRoute::_("index.php?option=com_projectfork&view=dashboard&id=$pid:$palias"));
+                        
+                        
+                        $link = "index.php?option=com_projectfork&view=dashboard&id=$pid:$palias";
+ 
+        if ($item = PFApplicationHelper::itemRoute($pid, 'com_projectfork.dashboard')) {
+            $link .= '&Itemid=' . $item;
+        }
+        elseif ($item = PFApplicationHelper::itemRoute(null, 'com_projectfork.dashboard')) {
+            $link .= '&Itemid=' . $item;
+        }
+
+                        $link = JRoute::_($link);
+                        
+                        
+            $path[] = array('title' => $this->item->project_title, 'link' => $link);
 
 			$path = array_reverse($path);
 
