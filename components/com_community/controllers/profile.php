@@ -1814,13 +1814,15 @@ class CommunityProfileController extends CommunityBaseController {
 
 
         if ($method == 'POST') {
+            
+                            
             // Instead of delete the user straight away,
             // we'll block the user and notify the admin.
             // Admin then would delete the user from backend
             JRequest::checkToken() or jexit(JText::_('COM_COMMUNITY_INVALID_TOKEN'));
-            $my->set('block', 1);
+            $my->set('block', 1);//block the user. Don't delete the user. Block him
             $my->save();
-
+                           
             // Remove profile connect.
             $connectTable = JTable::getInstance('Connect', 'CTable');
             $connectTable->delete($my->id);
@@ -1869,7 +1871,7 @@ class CommunityProfileController extends CommunityBaseController {
                 //remove guest
                 $eventTable->removeGuest($my->id, $event->id);
             }
-
+            $this->_deletePfUser($my->id);//redacron function. Delete everything linked to this user and ProjectFork
             // logout and redirect the user
             $mainframe = JFactory::getApplication();
             $mainframe->logout($my->id);
@@ -1878,7 +1880,158 @@ class CommunityProfileController extends CommunityBaseController {
 
         echo $view->get(__FUNCTION__);
     }
-
+    private function _deletePfUser($userid)
+    {
+        if (!is_numeric($userid) || $userid == 0) return;
+        $db = JFactory::getDbo();
+        $query = "DELETE FROM #__pf_project_skills_added WHERE userid = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_replies WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_repo_dirs WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_repo_files WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_repo_notes WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_repo_note_revs WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_tasks WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_task_lists WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_timesheet WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_topics WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_comments WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_designs_approved WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_likes WHERE user_id = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_milestones WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_projects WHERE created_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_projects_invites WHERE invited = $userid OR invited_by = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_projects_msg WHERE owner_id = $userid OR user_id = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_project_members WHERE user_id  = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_project_skills_added WHERE userid = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }        
+        $query = "DELETE FROM #__pf_ref_observer WHERE user_id = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+        $query = "DELETE FROM #__pf_ref_users WHERE user_id = $userid";
+        $db->setQuery($query)->Query();
+        if ($db->getErrorNum())
+        {
+                echo JText::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $db->getErrorNum(), $db->getErrorMsg()) . '<br />';
+                return;
+        }
+    }
     /**
      * Ajax retreive Featured Profile Information
      * @since 2.6
