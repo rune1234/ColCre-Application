@@ -58,6 +58,7 @@ CAssets::attach($js, 'js');
 	</div>
     <?php
     }
+   //print_r($profile->id);
     ?>
 
 	<div class="js-focus-content">
@@ -149,14 +150,14 @@ CAssets::attach($js, 'js');
                                 </div>
                                 <?php } 
                                  
-                                 if (JRequest::getInt('userid') != (int)$my->id) {
+                                 if (JRequest::getInt('userid') != (int)$my->id && (int)$my->id > 0) {
                                 ?>
                                 <div ng-app="myProj">
                                     <div style="margin: 20px 0px;" ng-controller="projctInvite">
-										   <a id="projectInvite" href="javascript:void(0)" ng-click="inviteUser()">Invite to Project(s)</a>
+										   <a id="projectInvite" href="javascript:void(0)" ng-click="inviteUser(<?php echo $profile->id; ?>)">Invite to Project(s)</a>
 										   <div class='app-box' style='margin-top: 20px; display: none;' id="myProjt" >
 											   <form ng-submit="submitInvite()">
-											   <div ng-repeat="project in projects"  style='background: #fff; padding: 5px; margin-bottom: 2px; border-bottom: 1px solid #bbb;'>
+											   <div ng-repeat="project in projects" id="divpject_{{project.id}}" style='background: #fff; padding: 5px; margin-bottom: 2px; border-bottom: 1px solid #bbb;'>
 												   
 												  <p><input type="checkbox" class='invcheck' id="project_{{project.id}}" /> <b>{{project.title}}</b><br />
 												  <span ng-bind-html="project.description"></span></p>
