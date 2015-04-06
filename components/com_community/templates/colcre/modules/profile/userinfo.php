@@ -162,9 +162,10 @@ CAssets::attach($js, 'js');
 												  <p><input type="checkbox" class='invcheck' id="project_{{project.id}}" /> <b>{{project.title}}</b><br />
 												  <span ng-bind-html="project.description"></span></p>
 												  </div>
-										       <br /><input type="submit" value="Invite <?php echo $user->getDisplayName(); ?>" style='padding: 5px 10px; background: #fff;' />
+										       <br /><input type="submit" value="Invite <?php echo $user->getDisplayName(); ?>" style='padding: 5px 10px; background: #fff; display: none;' id="showInviteBut" />
 										       <input type='hidden' id="invitedUser" value="<?php echo JRequest::getInt('userid'); ?>" />
 										     </form>
+                                                                                       <div id="noProjectAvail" style="display: none;">No project available for this user</div>
                                                                                        <div id="invitewarn"></div>
 										   </div>
                                                                                    
