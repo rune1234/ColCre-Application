@@ -243,12 +243,12 @@ projectModule.factory('projInvite', function($http, $sce)
    
    return {
 	   projectlist: projectList1,
-	   projectSearch: function()
+	   projectSearch: function(user_id)
            {    var skinput = 'bla';
 			  
              $http({method: 'POST', url: "index.php?option=com_community&view=profile&task=myProjects", 
-                data: { skill: skinput}}).
-                    success(function(data, status, headers, config) {  
+                data: { skill: skinput, user_id: user_id }}).
+                    success(function(data, status, headers, config) { //alert(data); 
                         if (data.msg == '')
                         {   
 							 
@@ -271,9 +271,10 @@ projectModule.factory('projInvite', function($http, $sce)
           },
           projectInvite: function(user_id, project_id)
           {
+              jQuery('#divpject_' + project_id).remove();
               $http({method: 'POST', url: "index.php?option=com_pfprojects&task=inviteuser", 
                 data: { user_id: user_id, project_id: project_id}}).
-                    success(function(data, status, headers, config) {  alert(data);
+                    success(function(data, status, headers, config) {   
                         if (data.msg == '')
                         {   
 							 
@@ -435,6 +436,7 @@ projectModule.controller('addSkillTag', function($scope, $timeout, skillService)
                    jQuery('.newSkillTagCag:last').val(jQuery(this).val());
                }
            });
+            
     }, 300);
          
          
@@ -450,9 +452,9 @@ projectModule.controller('addSkillTag', function($scope, $timeout, skillService)
 projectModule.controller('projctInvite', function($scope, projInvite, $timeout)
 {
 	$scope.projects = projInvite.projectlist;
-    $scope.inviteUser = function()
+    $scope.inviteUser = function(user_id)
     {
-		projInvite.projectSearch();
+		projInvite.projectSearch(user_id);
         $timeout(function() { jQuery('#myProjt').slideDown(); }, 1000);
     }
     $scope.submitInvite = function()
