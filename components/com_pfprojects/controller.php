@@ -183,7 +183,7 @@ class PFprojectsController extends JControllerLegacy
 Description: <p><i>".nl2br( strip_tags($row->description) )."</i></p>
 <p>
 Sincerely,<br />
-the Colcre staff</p>";
+the Make Whatever staff</p>";
          
         //if (is_numeric($data->project_id) && is_numeric($data->user_id))
         {
