@@ -1249,9 +1249,15 @@ class CommunityProfileController extends CommunityBaseController {
      */
     public function myProjects()
     {
+        $data = json_decode(file_get_contents("php://input"));
+                            
 		 $my = CFactory::getUser();
 		 $db = JFactory::getDBO();
-		 $query = "SELECT * FROM #__pf_projects WHERE created_by = ".$my->id." AND state = 1 ORDER BY created DESC LIMIT 50";
+                 //unite with this query: $query = "SELECT project_id FROM #__pf_projects_invites WHERE project_id = ".$data->project_id." AND invited=".$data->user_id." LIMIT 1";
+                 //you need to make sure you don't repeat projects the user was already invited to
+		 $query = "SELECT a.* FROM #__pf_projects as a LEFT JOIN #__pf_projects_invites as b";
+                 $query .= " ON a.id = b.project_id ";
+                 $query .= " WHERE a.created_by = ".$my->id." AND a.state = 1 AND b.project_id IS NULL ORDER BY a.created DESC LIMIT 50";
 		 $db->setQuery($query);
 		 $rows = $db->loadObjectList();
 		 $fr = new stdClass();
