@@ -240,19 +240,32 @@ projectModule.factory('skillService', function($http)
 projectModule.factory('projInvite', function($http, $sce) 
 {
    var projectList1 = [];
-   
+    
    return {
+        
 	   projectlist: projectList1,
+           changeInviteButton: function()
+           {
+               console.log('changing this');  
+           },
 	   projectSearch: function(user_id)
            {    var skinput = 'bla';
 			  
              $http({method: 'POST', url: "index.php?option=com_community&view=profile&task=myProjects", 
                 data: { skill: skinput, user_id: user_id }}).
-                    success(function(data, status, headers, config) { //alert(data); 
+                    success(function(data, status, headers, config) {  //alert(data); 
                         if (data.msg == '')
                         {   
 							 
                             var  projects = JSON.parse(data.projects);
+                             
+                            if (projects.length < 1)
+                            {
+                                
+                                jQuery('#noProjectAvail').css({'display' : ''});
+                            }
+                            else 
+                            {    
                             for (id in projects)
                             {
                                 var oneSKill = {};
@@ -262,8 +275,10 @@ projectModule.factory('projInvite', function($http, $sce)
                                 oneSKill.description = $sce.trustAsHtml(projects[id].description);
                                 oneSKill.id = projects[id].id;
                                 projectList1[id] = oneSKill;
+                                jQuery('#showInviteBut').css({'display' : ''});
+                                jQuery('#noProjectAvail').css({'display' : 'none'});
                             }
-							 
+                        }					 
                         }
                         else {   }
                     }).error(function(data, status) {  alert(status);
@@ -452,18 +467,24 @@ projectModule.controller('addSkillTag', function($scope, $timeout, skillService)
 projectModule.controller('projctInvite', function($scope, projInvite, $timeout)
 {
 	$scope.projects = projInvite.projectlist;
+        //$scope.showInviteBut = projInvite.showInviteBut;
     $scope.inviteUser = function(user_id)
     {
 		projInvite.projectSearch(user_id);
         $timeout(function() { jQuery('#myProjt').slideDown(); }, 1000);
+        
+                     
     }
     $scope.submitInvite = function()
     {
 		jQuery('.invcheck').each(function()
 		{
-			if (jQuery(this).is(':checked')) {  
+			if (jQuery(this).is(':checked')) 
+                        {  
 			    projInvite.projectInvite(jQuery('#invitedUser').val(), jQuery(this).attr('id').replace('project_', ''));
-                       }
+                        }
+                        
+                        
                 });
 	}
 });
