@@ -58,7 +58,7 @@ class PFprojectsModelProjects extends JModelList
      * @return    mixed    $items    An array of objects on success, false on failure.
      */
     public function getItems()
-    {
+    { 
         $items     = parent::getItems();
        // print_r($items);
         $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
@@ -145,7 +145,7 @@ class PFprojectsModelProjects extends JModelList
     {
         $query = $this->_db->getQuery(true);
         $user  = JFactory::getUser();
-
+//print_r($_POST);
         // Get possible filters
         $filter_cat    = $this->getState('filter.category');
         $filter_state  = $this->getState('filter.published');
@@ -155,7 +155,7 @@ class PFprojectsModelProjects extends JModelList
         // Select the required fields from the table.
         $query->select(
             $this->getState('list.select',
-                'a.id, a.asset_id, a.catid, a.title, a.alias, a.description, a.created, '
+                'a.id, a.asset_id, a.catid, a.title, a.alias, a.description, a.created,'
                 . 'a.created_by, a.modified, a.modified_by, a.checked_out, '
                 . 'a.checked_out_time, a.attribs, a.access, a.state, a.start_date, '
                 . 'a.end_date'
@@ -165,19 +165,18 @@ class PFprojectsModelProjects extends JModelList
         $query->from('#__pf_projects AS a');
 
         // Join over the users for the checked out user.
-        $query->select('uc.name AS editor')
+       /* $query->select('uc.name AS editor')
               ->join('LEFT', '#__users AS uc ON uc.id = a.checked_out');
-
+*/
         // Join over the asset groups.
-        $query->select('ag.title AS access_level')
+       /* $query->select('ag.title AS access_level')
               ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-
+*/
         // Join over the users for the owner.
-        $query->select('ua.name AS author_name, ua.email AS author_email')
-              ->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
-
+       /* $query->select('ua.name AS author_name, ua.email AS author_email')
+              ->join('LEFT', '#__users AS ua ON ua.id = a.created_by');*/
         // Join over the milestones for milestone count
-        $query->select('COUNT(DISTINCT ma.id) AS milestones')
+       $query->select('COUNT(DISTINCT ma.id) AS milestones')
               ->join('LEFT', '#__pf_milestones AS ma ON ma.project_id = a.id');
 
         // Join over the categories.
@@ -185,10 +184,10 @@ class PFprojectsModelProjects extends JModelList
               ->join('LEFT', '#__categories AS c ON c.id = a.catid');
 
         // Join over the task lists for list count
-        $query->select('COUNT(DISTINCT tl.id) AS tasklists')
-              ->join('LEFT', '#__pf_task_lists AS tl ON tl.project_id = a.id');
+       $query->select('COUNT(DISTINCT tl.id) AS tasklists')
+              ->join('LEFT', '#__pf_tasks AS tl ON tl.project_id = a.id');
 
-        // Join over the observer table for email notification status
+       // Join over the observer table for email notification status
         if ($user->get('id') > 0) {
             $query->select('COUNT(DISTINCT obs.user_id) AS watching')
                   ->join('LEFT', '#__pf_ref_observer AS obs ON (obs.item_type = '
@@ -242,7 +241,7 @@ class PFprojectsModelProjects extends JModelList
           $db = JFactory::getDbo();
           $value  = $this->getState('filter.search');
           $value = $db->Quote('%' . $db->escape($value, true) . '%');
-          $qr = "SELECT id FROM #__pf_skills WHERE skill LIKE $value LIMIT 5";
+          $qr = "SELECT id FROM #__pf_skills WHERE skill LIKE $value LIMIT 5";//redacron alteration
           $rows = $db->setQuery($qr)->loadObjectList();
           $second = '';
           if ($rows) 
@@ -264,7 +263,26 @@ class PFprojectsModelProjects extends JModelList
                   $second = 'OR (a.id IN ('.$qr.'))';
               }
           }
-        $query->where('((' . $field . '.title LIKE ' . $value . ' OR ' . $field . '.alias LIKE ' . $value . ') '.$second.' )');
+         $must = $field.'.id > 0';
+         
+         
+         $must = 'a.id > 0';
+         $extr = JRequest::getVar('extr', '');
+         if ($extr)
+         {
+             switch ($extr)
+             {
+                 case 'newweek':
+                 {
+                     $week = 3600 * 24 * 7;
+                     $week = time() - $week;
+                     $must = 'a.created >=  \''.date('Y-m-d', $week).'\'';
+                     breaK;
+                 }
+             }
+         }
+          //this is where the conditions for the query are:
+        $query->where('( ('.$must.') AND ( (tl.title = '.$value.' OR tl.description = '.$value.') OR (' . $field . '.description LIKE ' . $value . ' OR ' . $field . '.title LIKE ' . $value . ' OR ' . $field . '.alias LIKE ' . $value . ') '.$second.' ) )');
         
              // Apply Filter
         PFQueryHelper::buildFilter($query, $filters);
@@ -273,8 +291,28 @@ class PFprojectsModelProjects extends JModelList
         $query->group('a.id');
  
         // Add the list ordering clause.
-        $query->order($this->getState('list.ordering', 'category_title, a.title') . ' ' . $this->getState('list.direction', 'ASC'));
-  
+        $query->order($this->getState('list.ordering', 'a.title') . ' ' . $this->getState('list.direction', 'ASC'));
+        
+        $query->order('CASE WHEN a.catid = 19 THEN a.catid END, 
+  CASE WHEN a.catid != 19 THEN a.catid END ' . $this->getState('list.direction', 'ASC'));
+        
+   /*
+    * // Group by ID
+        $query->group('a.id');
+ /*
+  * ORDER BY 
+  CASE WHEN catid = 19 THEN catid END DESC, 
+  else CASE WHEN catid != 19 THEN catid END DESC
+  */
+        // Add the list ordering clause.
+       /* echo $this->getState('list.ordering', 'CASE WHEN a.category_id = 19 THEN a.category_id END, 
+  CASE WHEN a.category_id != 19 THEN a.category_id END, a.title');  
+     **************************************
+        $query->order('a.title, CASE WHEN a.catid = 19 THEN a.catid END, CASE WHEN a.catid != 19 THEN a.catid END', 'ASC');
+   echo $query ." <---";
+      *************************************************
+    */
+        // echo $query;
         return $query;
     }
 
