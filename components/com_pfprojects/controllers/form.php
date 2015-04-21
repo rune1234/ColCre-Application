@@ -418,6 +418,8 @@ class PFprojectsControllerForm extends JControllerForm
     { 
         $db =& JFactory::getDBO(); 
         $tasks = $_POST['taskform'];
+        $user = JFactory::getUser();
+        $userid = $user->id;
         foreach($tasks as $tsk)
         {
             if (is_numeric($tsk['idedit']) && $tsk['idedit'] > 0) //user editing a task instead of adding it
@@ -426,7 +428,7 @@ class PFprojectsControllerForm extends JControllerForm
                   continue; 
              }
              $query = "INSERT INTO #__pf_tasks (id,asset_id,project_id,category_id, list_id,milestone_id,title,alias,description,created,created_by,modified,modified_by,checked_out,checked_out_time,attribs,access,state,priority,complete,completed,completed_by,ordering,start_date,end_date,rate,estimate)
-VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '2', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
+VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db->escape($tsk['title'])."', '".str_replace(' ', '-', $db->escape($tsk['title']))."', '".$db->escape($tsk['description'])."', '0000-00-00 00:00:00', '".$userid."', '0000-00-00 00:00:00', '0', '0', '0000-00-00 00:00:00', '', '1', '1', '0', '0', '0000-00-00 00:00:00', '', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '')";
             $db->setQuery($query);
             $db->Query();
             $taskid = $db->insertid();
@@ -460,7 +462,7 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
              $oldID = $db->loadResult();
              if (!is_numeric($oldID) || $oldID < 1)
              {
-                 $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '0')";
+                 $query ="INSERT INTO #__pf_skills (id,skill,category,user_id,published) VALUES (NULL , '$tag', '".$tagCatg[$a]."', '$userid', '1')";
                 // echo "<br />".$query;
                  $db->setQuery($query);
                  $db->Query();
@@ -513,9 +515,11 @@ VALUES (NULL , '0', '$id', '".$db->escape($tsk['category'])."', '0', '0', '".$db
         $item = $model->getItem();
         $id = $item->get('id');
             
-        if (is_numeric($id)) { 
+        if (is_numeric($id)) 
+        { 
             $this->commentSetting($id);
-            $this->projectTasks($id); }
+            $this->projectTasks($id); 
+        }
         switch($task)
         {
             case 'save2copy':
