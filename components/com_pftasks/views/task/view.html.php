@@ -181,12 +181,12 @@ class PFtasksViewTask extends JViewLegacy
                         $link = JRoute::_($link);
                         
                         
-            $path[] = array('title' => $this->item->project_title, 'link' => $link);
+            $path[] = array('title' => ucwords($this->item->project_title), 'link' => $link);
 
 			$path = array_reverse($path);
 
 			foreach($path as $item)
-			{
+			{   
 				$pathway->addItem($item['title'], $item['link']);
 			}
 		}
