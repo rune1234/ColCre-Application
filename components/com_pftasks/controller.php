@@ -27,8 +27,41 @@ class PFtasksController extends JControllerLegacy
      * @var    string
      */
     protected $default_view = 'tasks';
-
-
+    private function _getUserMap($user, & $db)
+    {
+       if (!is_numeric($user) || $user == 0) return false;
+       $query = "SELECT group_id FROM #__user_usergroup_map WHERE user_id = $user LIMIT 1";
+       $db->setQuery($query);
+       $level = $db->loadResult();
+       if ($level > 5 && $level != 9) {  return true;}
+       else {   return false;}
+    }
+    public function finishTask()
+    {
+        $id = $fintask = JRequest::getInt('taskid');
+        if ($id === 0)
+        {
+            echo "No task ID. Exiting"; exit; 
+        }
+        $db = JFactory::getDbo();
+        $user = JFactory::getUser();
+        $query = "SELECT * FROM #__pf_tasks WHERE id = $id LIMIT 1";
+        $row = $db->setQuery($query)->loadObject();
+        $fintask = JRequest::getInt('finish');
+        
+        if (! $row) { echo "Unavailable task"; exit; }
+        if ($row->created_by == $user->id) {}
+        elseif ($this->_getUserMap($user->id, $db)) {}
+        else  { echo "User does not have permission"; exit; }
+        if ($fintask)
+        $userid = $user->id;
+        else $userid = 0;
+        $query = "UPDATE #__pf_tasks SET complete = $fintask, completed_by = $userid WHERE id = $id LIMIT 1";
+        $change = $db->setQuery($query)->Query();
+        if ($change) echo "success";
+        else echo "There has been an error";
+        exit;
+    }
     /**
      * Displays the current view
      *
