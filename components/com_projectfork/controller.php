@@ -109,14 +109,30 @@ class ProjectforkController extends JControllerLegacy
         $user_id = $post['user_id'];
         if (!is_numeric($user_id) || !is_numeric($created_by) || !is_numeric($project_id)) return;
         $name = JFactory::getUser($user_id);
-        $query = "INSERT INTO #__pf_projects_msg (project_id,owner_id, user_id,from_name,posted_on,howwould,proposal) VALUES ($project_id, $created_by, $user_id, '".$name->name."', ".time().", '$howwould', '$proposal')";
+        $exists = $this->_proposalExists($user_id, $project_id);
+        if (!$exists) 
+        { 
+            $query = "INSERT INTO #__pf_projects_msg (project_id,owner_id, user_id,from_name,posted_on,howwould,proposal) VALUES ($project_id, $created_by, $user_id, '".$name->name."', ".time().", '$howwould', '$proposal')";
+        }
+        else
+        {
+            $query = "UPDATE #__pf_projects_msg SET howwould ='$howwould', proposal='$proposal' WHERE user_id = $user_id AND owner_id = $created_by AND project_id = $project_id LIMIT 1";
+        }
         $db->setQuery($query);
         $db->Query();
-        $this->_messageUser($post, $name->name, $db);
+        if (!$exists) {$this->_messageUser($post, $name->name, $db);}
         $post['proposal'] = nl2br($post['proposal']);
         $post['howwould'] = nl2br($post['howwould']);
         echo json_encode($post);
         exit;
+    }
+    private function _proposalExists($userid, $projectid)
+    {
+        if (!is_numeric($userid) || !is_numeric($projectid)) return false;
+        $query = "SELECT id FROM #__pf_projects_msg WHERE user_id = $userid AND project_id = $projectid LIMIT 1";
+        $db = JFactory::getDbo();
+        $id = $db->setQuery($query)->loadResult();
+        return ($id) ? true : false;
     }
     private function _messageUser($post, $name, & $db)
     {
@@ -145,7 +161,8 @@ class ProjectforkController extends JControllerLegacy
         // Load CSS and JS assets
         JHtml::_('pfhtml.style.bootstrap');
         JHtml::_('pfhtml.style.projectfork');
-
+        jimport('projectfork.colcre.project');
+ 
         JHtml::_('pfhtml.script.jquery');
         JHtml::_('pfhtml.script.bootstrap');
         JHtml::_('pfhtml.script.projectfork');
