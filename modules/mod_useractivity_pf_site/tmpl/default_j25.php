@@ -24,7 +24,9 @@ class JomSocialLib
           $query = "SELECT thumb FROM #__community_users WHERE userid = $userid LIMIT 1";
                     
           $avatar = $this->dcron->setQuery($query)->loadResult();
-          if (is_file(JURI::root()."/".$avatar))  { return JURI::root()."/".$avatar; }
+          
+          
+          if (is_file(JPATH_BASE."/".$avatar))  { return JURI::root()."".$avatar; }
           else { return JURI::base().'components/com_community/assets/user-Male-thumb.png'; }
     }
      
@@ -147,7 +149,7 @@ function uaFilterSearch<?php echo $id;?>(v)
             <div class="clr" style="clear: both;"></div>
         </fieldset>
     <?php endif; ?>
-    <strong>Latest Colcre Activities:</strong><br />
+    <strong>Latest MakeWhatever Activities:</strong><br />
     <!-- Start List -->
     <ul id="activities-<?php echo $id; ?>" style='list-style-type: none; font-size: 12px;'>
     	<?php if ($count) : ?>
