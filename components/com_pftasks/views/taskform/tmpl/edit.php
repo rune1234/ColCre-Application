@@ -22,6 +22,7 @@ $params = $this->state->get('params');
 $user   = JFactory::getUser();
 ?>
 <script type="text/javascript">
+<!--
 jQuery(document).ready(function()
 {
     PFform.radio2btngroup();
@@ -36,19 +37,20 @@ Joomla.submitbutton = function(task)
 		alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 	}
 }
+//-->
 </script>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
+    
 <?php if ($params->get('show_page_heading', 0)) : ?>
 <h1>
 	<?php echo $this->escape($params->get('page_heading')); ?>
 </h1>
 <?php endif; ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_pftasks&view=taskform&id=' . (int) $this->item->id . '&layout=edit'); ?>" method="post" name="adminForm" id="item-form" class="form-validate form-inline">
+<form action="<?php echo JRoute::_('index.php?option=com_pftasks&view=taskform&id=' . (int) $this->item->id . '&layout=edit'); ?>" method="post" name="adminForm" id="item-form" class="form-inline">
+   
     <fieldset>
-		<div class="formelm-buttons btn-toolbar">
-            <?php echo $this->toolbar; ?>
-		</div>
+		
         <?php if ($this->item->id <= 0) : ?>
     		<div class="formelm control-group">
                 <div class="control-label">
@@ -101,6 +103,45 @@ Joomla.submitbutton = function(task)
 		    	<?php echo $this->form->getInput('description'); ?>
 		    </div>
 		</div>
+        
+        
+         <hr />
+         <?php
+         //WARNING: this is tricky. $this->TaskNskills will be outside the rest of the form, and will need to become part of the controlle taskform.php with some tweaks here and there
+         ?>
+         <div id="task_1" style="display: none;"><?php echo json_encode($this->TaskNskills); // this is a way to send data to Angular.JS without relying on Ajax; ?></div>
+       <div ng-app="myProj"><div id="projTasks" ng-controller="taskControl" data-ng-init="editTask()">
+             
+    <h2>Add Tags</h2>
+    <?php $addTask = 0; ?> 
+        <div class="task-group" ng-repeat="task in tasks">
+                     
+                        <br /><br />
+                        <div class="control-group"><div class="control-label control-group">Tags:
+                                <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]"  />
+                    <ul class="token-input-list" style="height: auto;">
+             <?php
+               
+             ?>
+ <li class="token-input-token" ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]'><p>{{chosenSK.skill}}</p> <span class="token-input-delete-token" ng-click='deleteSKill(<?php echo $addTask;?> + task.id, chosenSK.id)'>×</span></li>
+    
+     <li class="token-input-input-token" ng-click='focusOnInput(<?php echo $addTask;?> + task.id)'>
+ <input type='text' id='skillInput{{<?php echo $addTask;?> + task.id}}' class="SkillInput" style='width: 100%; background: #fff;' ng-keyup="skillPress($event.altKey, <?php echo $addTask;?> + task.id)" />
+                
+  
+     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
+               </div></div>
+                       
+		</div><br /><br />
+                 <input type='hidden' name="taskform[{{<?php echo $addTask;?> + task.id}}][idedit]" value='{{task.idedit}}' />    
+        </div>
+         
+         
+          
+        </div>
+       
+    </div>
+        
 	</fieldset>
 
     <?php echo JHtml::_('tabs.start', 'taskform', array('useCookie' => 'true')) ;?>
@@ -253,9 +294,23 @@ Joomla.submitbutton = function(task)
         echo $this->form->getInput('elements');
     ?>
     </div>
+   
+     
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
     <input type="hidden" name="view" value="<?php echo htmlspecialchars($this->get('Name'), ENT_COMPAT, 'UTF-8');?>" />
 	<?php echo JHtml::_( 'form.token' ); ?>
+    <div class="formelm-buttons btn-toolbar">
+            <?php echo $this->toolbar; ?>
+		</div>
 </form>
 </div>
+<?php
+    $document = JFactory::getDocument();
+    $uribase = JURI::base(true). "/components/com_pfprojects/css/style.css";
+    $document->addStyleSheet($uribase);
+    $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+    $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+    $js = "var tasksURL = '".JURI::root()."';";
+    $document->addScriptDeclaration($js);
+?>
