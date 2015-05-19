@@ -81,7 +81,7 @@ class tempColcre
     }
     public function popularProjects()
     {
-         $query = "SELECT * FROM #__pf_projects WHERE state=1 ORDER BY id DESC LIMIT 4";
+         $query = "SELECT a.*, b.alias as category_alias FROM #__pf_projects a LEFT JOIN #__categories b ON b.id = a.catid WHERE a.state=1 ORDER BY a.id DESC LIMIT 4";
                                     $this->_db->setQuery($query);
                                     $rows = $this->_db->loadObjectList();
                                     return $rows;
@@ -94,7 +94,37 @@ class tempColcre
                                     $row = $this->_db->loadObject();
                                     return $row;
     }        
-            
+    public function lookup($task)
+        {
+            $key = (int) $task->id;
+           // print_r($task);
+
+            // Default - Projectfork avatar
+            $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
+            $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
+            $img_path  = NULL;
+//echo $base_path; echo $id; exit;
+            if (JFile::exists($base_path . '/' . $key . '.jpg')) {
+                $img_path = $base_url . '/' . $key . '.jpg';
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.jpeg')) {
+                $img_path = $base_url . '/' . $key . '.jpeg';
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.png')) {
+                $img_path = $base_url . '/' . $key . '.png';  
+            }
+            elseif (JFile::exists($base_path . '/' . $key . '.gif')) {
+                $img_path = $base_url . '/' . $key . '.gif';
+            }
+            else {  //echo JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"; 
+                if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".png";       
+               else return false;
+            }
+
+            return $img_path;
+ 
+        }        
     public function popularUsers()
     {
         $db = $this->_db;
@@ -126,13 +156,23 @@ class tempColcre
                 $obj->country = $this->_getInfo('FIELD_COUNTRY',$us->id);
                 $obj->state = $this->_getInfo('FIELD_STATE',$us->id);
                 $obj->city = $this->_getInfo('FIELD_CITY',$us->id);
-                $obj->skill_category = $this->getCategoryTitle($this->_getInfo('SKILL_CATEGORY',$us->id));
+                $obj->skill_category = $this->getUserMainSkill($us->id, $db);//$this->getCategoryTitle($this->_getInfo('SKILL_CATEGORY',$us->id));
                 $results[] = $obj;
         }
         //print_r($results);
         return $results;
         
     }
+    private function getUserMainSkill($userid, & $db)
+    {
+        if (!is_numeric($userid)) return;
+        $query = "SELECT * FROM #__pf_project_skills_added WHERE userid = $userid LIMIT 1";
+        $db->setQuery($query);
+        $row = $db->loadObject();
+        if ($row) return $row->skill;
+        else return '';
+    }
+
     function getCategoryTitle($id)
     {
           $db =& JFactory::getDBO();
@@ -171,8 +211,9 @@ class tempColcre
 
         $db->setQuery($query);
         $result = $db->loadObject();
+        
         if ($db->getErrorNum()) { JError::raiseError(500, $db->stderr()); }
-       return $result->value;
+       return ($result) ? $result->value : false;
     }
 }
 ?>
