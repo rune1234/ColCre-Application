@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-class projectData 
+class projectData    
 {
     var $db = '';
     var $user = '';
@@ -8,7 +8,7 @@ class projectData
     var $projUser = array();
     public function invitedORmember($project_id)
     {
-           echo "project is $project_id<br />";
+           //echo "project is $project_id<br />";
         if ($this->userInvited($project_id)) return true;
         $member = $this->userMember($project_id);
         if ($member && $member == 1) return true;
@@ -145,7 +145,7 @@ class projectData
             $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
             $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
             $img_path  = NULL;
-//echo $base_path; echo $id; exit;
+//echo $base_path;  
             if (JFile::exists($base_path . '/' . $key . '.jpg')) {
                 $img_path = $base_url . '/' . $key . '.jpg';
             }
@@ -159,7 +159,9 @@ class projectData
                 $img_path = $base_url . '/' . $key . '.gif';
             }
             else {  //echo JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"; 
-                if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
+                if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".jpg"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".jpg"; 
+                elseif ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
                 $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".png";       
                else return JUri::base()."/images/foldered.jpg";
                   
@@ -167,6 +169,21 @@ class projectData
 
             return $img_path;
  
+        }
+        function lookupUser($id)
+        {
+            if (!is_numeric($id)) return;
+            $query = "SELECT a.*, b.thumb FROM #__users a LEFT JOIN #__community_users b ON b.userid = a.id WHERE a.id = $id LIMIT 1";
+            $db = JFactory::getDbo();
+           
+            $db->setQuery($query);
+            $row = $db->loadObject();
+            if ($row && isset($row->thumb) && is_file($row->thumb))  { $row->thumb= JURI::base().$row->thumb;}
+            elseif($row)
+            {
+               $row->thumb = JURI::base().'components/com_community/assets/user-Male-thumb.png';
+            }
+            return ($row) ? $row : false;
         }
         function commentData($id)
         {
