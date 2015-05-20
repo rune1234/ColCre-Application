@@ -149,6 +149,9 @@ $is_ssl = JFactory::getURI()->isSSL();
                             <div style='width: 100%; margin: auto; text-align: center;'><a href="<?php echo JRoute::_($link);?>">
 	    	    	    		<?php if (!empty($item->logo_img)) : ?>
 	    	    	    		        <img src="<?php echo $item->logo_img;?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
+                                        <?php elseif (is_file(JPATH_ROOT."/templates/colcre/images/".$this->escape($item->category_alias).".jpg")) : ?>
+	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".jpg"; ?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
+	    	    	    		
 	    	    	    		<?php elseif (is_file(JPATH_ROOT."/templates/colcre/images/".$this->escape($item->category_alias).".png")) : ?>
 	    	    	    		        <img src="<?php echo JUri::base()."/templates/colcre/images/".$this->escape($item->category_alias).".png"; ?>" width="100%" alt="<?php echo "project $item->title logo";?>" />
 	    	    	    		<?php else: echo "<img src='".JUri::base()."images/foldered.jpg' alt='project $item->title logo' style='margin: auto; width: 120px; height: 120px;' />"; ?>
@@ -177,6 +180,12 @@ $is_ssl = JFactory::getURI()->isSSL();
                                 </a>
                             </h2>
                             <hr style='margin: 5px 0px;' />
+                            <?php
+                          //  if (!isset($createdBY)) $createdBY = new stdClass();
+                            if (!isset($createdBY->username)) @$createdBY->username = '';
+                            if (!isset($createdBY->thumb)) @$createdBY->thumb = '';
+                            
+                            ?>
                             <div class='pcreator'><img style='height: 50px;' src="<?php echo $createdBY->thumb; ?>" alt="<?php echo $createdBY->username; ?>" /><span>Creator: <a target='blank' href='<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>'><?php echo $createdBY->username; ?></a></span>
                                 <div><a class="menu-icon" href="<?php echo JRoute::_('index.php?option=com_community&view=profile&view=projects&user_id='.$item->created_by); ?>">Other Projects</a> by <?php echo $createdBY->username; ?></div>
                             </div>
