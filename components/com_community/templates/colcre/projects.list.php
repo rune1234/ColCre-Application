@@ -10,7 +10,7 @@
 defined('_JEXEC') or die();
 ?>
 <div class="cLayout cMail Inbox">
-     
+<?php if (1==2) { ?>    
     <!--
 <ul class="cMailBar cResetList cFloatedList clearfix">
 	<li>
@@ -31,6 +31,9 @@ defined('_JEXEC') or die();
 	</li>
 </ul>
 --->
+<?php } 
+$userid = $user->_userid;
+?>
 <table id="inbox-listing" class="table table-hover" >
 	<?php
          $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
@@ -39,13 +42,14 @@ defined('_JEXEC') or die();
                  require_once( JPATH_ROOT .'/libraries/projectfork/colcre/project.php' ); 
                  $projectData =  new projectData(); 
                  
-         
-        foreach ( $matches as $match ) : ?>
-	<tr>
+        
+     echo "<h3>".ucwords($user->username)." Projects:</h3>";
+        foreach ( $matches as $match ) :  ?>
+	<tr  id="projtrDel_<?php echo $match->id;?>">
 		<td style="background: #fff;">
 		 <?php  
                  $projectInfo = new stdClass();
-                 $projectInfo->id = $match->project_id;
+                 $projectInfo->id = ($match && isset($match->project_id)) ? $match->project_id : '';
                  $category = $projectData->getCategory($match->catid);
                  $projectInfo->category_alias = isset($category->alias) ? $category->alias : '';
                   $match->logo_img = null;
@@ -62,24 +66,35 @@ defined('_JEXEC') or die();
             elseif (JFile::exists($base_path . '/' . $match->id . '.gif')) {
                 $match->logo_img = $base_url . '/' . $match->id . '.gif';
             }
-            // print_r($projectInfo);
-                 echo "<img src='".$projectData->lookupIcon($projectInfo)."' alt='project $match->title logo' style='height: 150px; width: 150px;' />";// : "<img src='images/foldered.jpg' alt='project $match->title logo' style='width: 150px; height: 150px;' />";
+             echo "<img src='".$projectData->lookupIcon($projectInfo)."' alt='project $match->title logo' style='height: 150px; width: 150px;' />";// : "<img src='images/foldered.jpg' alt='project $match->title logo' style='width: 150px; height: 150px;' />";
                  ?>
 		</td>
 		<td style="background: #fff;"><?php //print_r($match);
-                echo '<div class="span8 pull-left">';
+                echo '<div class="span8">';
                 echo "<p><a href='".JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$match->id."&Itemid=124")."'>".ucwords($match->title)."</a></p>";
                 echo "<p>".substr($match->description, 0, 300)."...</p>";
                 
                 if ($match->created) { echo "<p style='font-size: 10px;'>Created: ".date('M-d-Y', (strtotime($match->created)))."</p>"; }
-                echo "</div>\n"
+                echo "</div>\n";
                 ?>
+                    <div style="clear: both;"></div>
                     <div class="pull-right small"></div>
+                    <?php
+                    if ($match->created_by == $userid):
+                    ?>
+                    <div class="projectDelete" id="projDel_<?php echo $match->id;?>" data-token='<?php echo md5($match->id."projk".$match->created_by); ?>' data-userid='<?php echo $match->created_by; ?>' data-projtitle='<?php echo $match->title;?>'>Delete Project</div>
+                    <?php endif; ?>
 		</td>
 	</tr>
 	<?php endforeach; ?>
 </table>
-
+ <div id="dialog" title="Delete Project" data-jsondel=''>
+     <p>Do you really want to delete Project <span id='dialogtitle'></span>?</p>
+     <div style='width: 100%; text-align: center;'><input type='button' value='Yes' class='projDelYes' style='padding: 5px; background: #fff; width: 70px;' /> | <input type='button' value='No' class='projDelClos' style='padding: 5px; background: #fff; width: 70px;' />
+</div></div>
+ 
+ 
+ 
 <?php
 if ( $pagination )
 {
@@ -89,6 +104,7 @@ if ( $pagination )
 </div>
 <?php
 }
+if (1 == 2) {
 ?>
 <script type="text/javascript">/*
 function checkAll()
@@ -146,4 +162,14 @@ function setAllAsUnread()
 	});
 }*/
 </script>
+<?php
+}
+    $document = JFactory::getDocument();
+    $js = "var projectURL = '".JURI::root()."';";
+    $document->addScriptDeclaration($js);
+    $document->addCustomTag('<script src="'.JURI::root().'components/com_pfprojects/js/pfp.js" type="text/javascript"></script>');
+    $document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
+    
+?>
+ 
 </div>
