@@ -12,13 +12,13 @@ defined('_JEXEC') or die();
 function lookupIcon($task)
         {
             $key = (int) $task->id;
-            //print_r($task);
+             //print_r($task);
 
             // Default - Projectfork avatar
             $base_path = JPATH_ROOT . '/media/com_projectfork/repo/0/logo';
             $base_url  = JURI::root(true) . '/media/com_projectfork/repo/0/logo';
             $img_path  = NULL;
-//echo $base_path; echo $id; exit;
+   
             if (JFile::exists($base_path . '/' . $key . '.jpg')) {
                 $img_path = $base_url . '/' . $key . '.jpg';
             }
@@ -32,11 +32,14 @@ function lookupIcon($task)
                 $img_path = $base_url . '/' . $key . '.gif';
             }
             else {  //echo JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"; 
-                if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
+                 if ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".jpg"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".jpg"; 
+                elseif ($task->category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$task->category_alias.".png"))  
                 $img_path = JUri::base()."/templates/colcre/images/".$task->category_alias.".png";       
-               else return false;
+               else return JUri::base()."/images/foldered.jpg";
+                  
             }
-
+//echo $img_path;
             return $img_path;
  
         }
@@ -99,7 +102,14 @@ function getAvatarThumb($userid)
       if (!$avatar) return false;
       return JURI::root()."/".$avatar;
 }
-
+function proposalExists($userid, $projectid)
+{
+    if (!is_numeric($userid) || !is_numeric($projectid)) return false;
+    $query = "SELECT * FROM #__pf_projects_msg WHERE user_id = $userid AND project_id = $projectid LIMIT 1";
+    $db = JFactory::getDbo();
+    $row = $db->setQuery($query)->loadObject();
+    return ($row) ? $row : false;
+}
 // Create shortcuts
 $item    = $this->item;
 $params  = $this->params;
@@ -111,10 +121,26 @@ $nulldate = JFactory::getDbo()->getNullDate();
 $details_in     = ($state->get('project.request') ? 'in ' : '');
 $details_active = ($state->get('project.request') ? ' active' : '');
 $user = JFactory::getUser();
- 
+
+$proDat = new projectData();   
+$proCreator = $proDat->lookupUser($item->created_by);
 ?>
 <div id="projectfork" class="category-list<?php echo $this->pageclass_sfx;?> view-dashboard projectFrame" style="padding: 10px; margin: 10px;">
 
+     <div id="projprof">
+                <a style="float: left; margin: 5px;" href="<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>"> 
+                    <img src="<?php echo $proCreator->thumb;?>" alt="<?php echo $proCreator->username; ?>" /></a>
+                 
+                
+                 <a class="menu-icon" href="<?php echo JRoute::_('index.php?option=com_community&view=profile&view=projects&user_id='.$proCreator->id); ?>">Other Projects</a> by 
+                     <a href="<?php echo JRoute::_('index.php?option=com_community&view=profile&userid='.$item->created_by); ?>">
+                     <?php echo $proCreator->username; ?></a>
+        <?php
+        
+        ?>
+                 <div style="clear: both;"></div>
+            </div>
+    
     <?php if ($params->get('show_page_heading', 1)) : ?>
         <h1><?php echo $this->escape($params->get('page_heading')); ?></h1>
     <?php endif; 
@@ -122,14 +148,23 @@ $user = JFactory::getUser();
                 $likedata['userid'] = 45;
                 $likedata['typeid'] = 666;
                 
-    ?>
+    ?>    
+        
         <div ng-app="myLikes" >
+            
             <div ng-controller="projectLike" data-ng-init="getLikes(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
-                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain"><div class="likelayer"></div><br /><span>Like</span> | <span style="color: #000; font-size: 12px;"><span ng-bind="likes"></span> Likes</span></div>
-                <div style="clear: both"></div>
+                <div ng-click="like(<?php echo $user->id;?>, <?php echo $item->id; ?>)" class="likemain">
+                    
+                    <div class="likelayer"></div><br /><span>Like</span> | <span style="color: #000; font-size: 12px;"><span ng-bind="likes"></span> Likes</span></div>
+                    
+                <div style="float: left; margin-left: 150px; margin-top: -33px;"><a href="#comments" style="color: #a00;"><img src="<?php echo JURI::base()."images/comicon.jpg";?>" alt="comment icon" style="height: 45px;"/>Comments</a></div>
+                  
+                   
+               <div style="clear: both"></div>
+               <br /> 
             </div>
         </div>
-    <div class="cat-items">
+     <div class="cat-items">
 
         <form id="adminForm" name="adminForm" method="post" action="<?php echo JRoute::_(PFprojectsHelperRoute::getDashboardRoute($state->get('filter.project'))); ?>">
 
@@ -234,36 +269,69 @@ $user = JFactory::getUser();
                             <div class="clearfix"></div>
                              
                             <?php if ($this->owner) { ?>
-                            <div style="padding: 5px; float: left;"><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="project matches" /><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Matches</a>') ; ?></div>
-                             <div style="padding: 5px; float: left;"><img style="height: 70px;" src="<?php JUri::base();?>images/notepad-icon.png" alt="proposals"/><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=proposals&id='.$item->id.'&Itemid=124">'.ucwords($item->title).' Proposals</a>') ; ?></div>
-                            <div class="clearfix"></div>
+                            <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="project matches" /><?php echo ucwords($item->title).' Matches</a>' ; ?></div>
+                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=proposals&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/notepad-icon.png" alt="proposals"/><?php echo ucwords($item->title).' Proposals</a>' ; ?></div>
+                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=userlikes&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/thumbs-up-users.png" alt="user likes"/><?php echo ucwords($item->title).' Likes</a>' ; ?></div>
+                             <div style="padding: 5px; float: left; padding-left: 30px;">
+                        <?php echo JRoute::_('<a  data-token="'.md5($item->id."projk".$item->created_by).'" data-userid="'.$item->created_by.'" data-projtitle="'.$item->title.'" id="projDel_'.$item->id.'" href="javascript:void(0)" class="projPagDel">');?><img style="height: 60px;" src="<?php JUri::base();?>images/Delete-icon.png" alt="delete project"/>
+                           <?php echo  'Delete Project</a>' ; ?> </div>
+                             <div class="clearfix"></div>
                                 <?php } ?>
                             <hr />
                            
 <?php
  
-
+//echo $item->id; 
 if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
 {
+    $row = proposalExists($user->id, $item->id);
+    $submit = (! $row) ? "Submit" : "Edit Your Proposal";
+    $create = (! $row) ? "Create a" : "Edit your";
+    //print_r($row);
+    if (!$row)
+    {
+        $proos = new stdClass();
+        $proos->howwould = '';
+        $proos->proposal = '';
+        
+    }
+    else
+    {
+        $proos = $row;
+        unset($row);
+    }
     ?>
                             <form> <div class="alert" style="color: #555;">
-                            <h3>Create a Proposal for <?php echo $item->title; ?></h3>
+                            <h3><?php echo $create;?> Proposal for <?php echo $item->title; ?>:</h3>
                             <div style="margin: 25px 0 5px;">Describe your relevant experience and qualifications.</div>
-                            <div id="propoDIV"><textarea style="width: 60%;" id="proposal"></textarea></div>
+                            <div id="propoDIV"><textarea style="width: 60%;" id="proposal"><?php echo $proos->proposal; ?></textarea></div>
                             <div style="margin: 25px 0 5px;">Outline your approach to the job, or ask for more information.</div>
-                            <div id="howwDIV"><textarea style="width: 60%;" id="howwould"></textarea></div>
+                            <div id="howwDIV"><textarea style="width: 60%;" id="howwould"><?php echo $proos->howwould;?></textarea></div>
                             <input type="hidden" id="project_id" value="<?php echo $item->id;?>" />
                             <input type="hidden" id="created_by" value="<?php echo $item->created_by;?>" />
                             <input type="hidden" id="user_id" value="<?php echo $user->id;?>" />
-                            <p id="submitPropos"><a href="javascript:void(0)" class="btn btn-mini btn-info" onClick="msgOwner()">Submit</a></p>
+                            <p id="submitPropos"><a href="javascript:void(0)" class="btn btn-mini btn-info" onClick="msgOwner()"><?php echo $submit;?></a></p>
                                 </div>
                             
                             </form>
+                            <hr />
     <?php
+    
 }
 ?>
                            
-<hr />
+
+
+<!-- Begin Dashboard Modules -->
+        <?php if(count(JModuleHelper::getModules('pf-dashboard-top'))) : ?>
+        <div class="row-fluid">
+        	<div class="span12">
+        		<?php echo $modules->render('pf-dashboard-top', array('style' => 'xhtml'), null); ?>
+        	</div>
+        </div>
+        <?php endif; ?>
+
+
                     	</div>
                     </div>
                     
@@ -299,14 +367,7 @@ if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
  }*/
  
  ?>
-        <!-- Begin Dashboard Modules -->
-        <?php if(count(JModuleHelper::getModules('pf-dashboard-top'))) : ?>
-        <div class="row-fluid">
-        	<div class="span12">
-        		<?php echo $modules->render('pf-dashboard-top', array('style' => 'xhtml'), null); ?>
-        	</div>
-        </div>
-        <?php endif; ?>
+        
         <?php if(count(JModuleHelper::getModules('pf-dashboard-left')) || count(JModuleHelper::getModules('pf-dashboard-right'))) : ?>
         <div class="row-fluid">
         	<div class="span6">
@@ -329,4 +390,15 @@ if (isset($user->id) && $user->id > 0 && $item->created_by != $user->id)
         <?php if ($item) echo $item->event->afterDisplayContent; ?>
 
 	</div>
+        <div id="bottomcom"><!--used for comments scroll---></div>
 </div>
+ <div id="dialog" title="Delete Project" data-jsondel='' data-url='<?php echo JRoute::_("index.php?option=com_community&view=projects&Itemid=158");?>'>
+     <p>Do you really want to delete Project <span id='dialogtitle'></span>?</p>
+     <div style='width: 100%; text-align: center;'><input type='button' value='Yes' class='projPagDelYes' style='padding: 5px; background: #fff; width: 70px;' /> | <input type='button' value='No' class='projDelClos' style='padding: 5px; background: #fff; width: 70px;' />
+</div></div>
+ <?php
+   $document = JFactory::getDocument();
+    $js = "var projectURL = '".JURI::root()."';";
+    $document->addScriptDeclaration($js);
+   // $document->addCustomTag('<script src="'.JURI::root().'components/com_pfprojects/js/pfp.js" type="text/javascript"></script>');
+ ?>
