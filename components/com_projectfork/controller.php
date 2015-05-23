@@ -38,6 +38,23 @@ class ProjectforkController extends JControllerLegacy
         $prl->likeProject($data->user_id, $data->type_id, $data->type);
         exit;
     }
+    public function userlikes()
+    {
+        jimport('projectfork.colcre.likes');
+        $prl = new projectLikes();
+        $pid = JRequest::getInt('id');
+        $view = $this->getView('userlikes', 'html');
+        list($likes, $pagination) = $prl->projectLikes($pid);
+        $view->set('userlikes', $likes);
+        $pd = new projectData();
+        $info = $pd->projectInfo();
+         
+        $view->set('pagination', $pagination);
+        $view->set('profile_data', $pd);
+        $view->set('info', $info);
+        $view->display();
+         
+    }
     public function getlikes()
     {
         $data = json_decode(file_get_contents("php://input"));
@@ -97,6 +114,87 @@ class ProjectforkController extends JControllerLegacy
          $view->set('pd', $pd);
         $view->display();
         //<div class="span3 pull-left projectBox"
+    }
+    public function deleteProject()
+    {
+        $post = $_POST; 
+        $id = $post['project_id'];
+        $created_by = $post['created_by'];
+        $token = $post['token'];
+        if (!is_numeric($id) || !is_numeric($created_by)) exit;
+        $ourToken = md5($id."projk".$created_by);
+        $msg = array();
+        $db = JFactory::getDbo();
+        if ($ourToken != $token) 
+        {
+            $msg['error'] = 1;
+            $msg['msg'] = "Invalid Data";
+            echo json_encode($msg);
+            exit;
+        }
+            $query = "DELETE FROM #__pf_projects WHERE id = $id LIMIT 1";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_projects_invites WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_projects_msg WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_project_skills WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_ref_tasks WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_ref_attachments WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_ref_labels WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_ref_observer WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_replies WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_repo_dirs WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_repo_files WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_repo_file_revs WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_repo_notes WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+            $query = "DELETE FROM #__pf_task_lists WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_tasks WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_topics  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_milestones  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_labels  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_design_revisions  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_design_albums  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_designs  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_comments  WHERE project_id = $id";
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_likes WHERE type = 1 AND type_id = $id"; 
+        $this->delProjDb($query, $db);
+             $query = "DELETE FROM #__pf_likescount WHERE type = 1 AND type_id = $id";
+        $this->delProjDb($query, $db);
+        $msg['error'] = 0;
+        $msg['msg'] = "Successfully delete project";
+        echo json_encode($msg);
+        exit;
+    }
+    private function delProjDb($query,& $db)
+    {
+        $r = $db->setQuery($query)->Query();
+        if (!$r)
+        {
+            $msg['error'] = 1;
+            $msg['msg'] = $db->getErrorMsg();
+            echo json_encode($msg);
+            exit;
+        }
     }
     public function msgOwner()//redacron function, message a project Owner
     {
@@ -175,6 +273,7 @@ class ProjectforkController extends JControllerLegacy
                            );
         $document = JFactory::getDocument();
         $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+          $document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
         $document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
         $document->addScript(JURI::root() . 'libraries/projectfork/js/like.js');
         $js = "var projectURL = '".JURI::root()."';";
