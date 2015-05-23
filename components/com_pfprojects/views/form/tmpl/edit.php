@@ -20,6 +20,7 @@ $params = $this->state->get('params');
 $user   = JFactory::getUser();
 ?>
 <script type="text/javascript">
+<!--
 jQuery(document).ready(function()
 {
     PFform.radio2btngroup();
@@ -34,6 +35,7 @@ Joomla.submitbutton = function(task)
 		alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 	}
 }
+//-->
 </script>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 
@@ -125,7 +127,7 @@ Joomla.submitbutton = function(task)
                         </select></div>
                             <div style="float: right;">How Many? <input type='text' name="taskform[{{<?php echo $addTask;?> + task.id}}][howmanylikes]" /></div>-->
                         <br /><br />
-                        <div class="control-group"><div class="control-label control-group">Skills Required:
+                        <div class="control-group"><div class="control-label control-group">Tags:
                                 <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]" />
                     <ul class="token-input-list" style="height: auto;">
              <?php
@@ -156,7 +158,7 @@ Joomla.submitbutton = function(task)
              }?></select>
              
             </div>
-            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Skill</a></div>
+            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Tag</a></div>
         
         
     
@@ -231,14 +233,14 @@ Joomla.submitbutton = function(task)
             </div>
 		<?php endif; ?>
     </fieldset>
-
-    <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_LABELS'), 'project-labels') ;?>
-    <fieldset>
+<!--
+    <?php //echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_LABELS'), 'project-labels') ;?>
+    <fieldset> <---- These are the labels, all of them, just these lines
     	<div class="formelm control-group">
-    		<?php echo $this->form->getInput('labels'); ?>
+    		<?php // echo $this->form->getInput('labels'); ?>
     	</div>
     </fieldset>
-
+-->
     <?php if ($this->item->id && PFApplicationHelper::enabled('com_pfrepo')) : ?>
     <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_ATTACHMENTS'), 'project-attachments') ;?>
     <fieldset>
