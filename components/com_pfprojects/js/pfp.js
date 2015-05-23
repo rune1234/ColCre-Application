@@ -1,8 +1,53 @@
 jQuery(document).ready(function($) {  
+    jQuery( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+    jQuery(".projDelClos").click(function() {jQuery( "#dialog" ).dialog( "close" ); });
+    jQuery(".projDelYes, .projPagDelYes").click(function() 
+    { 
+        var projectPage = false;
+        if ( jQuery(this).attr('class') == 'projPagDelYes') { projectPage = true; }
+         
+        deleteProject( jQuery('#dialog').data('jsondel'), projectPage); 
+        jQuery( "#dialog" ).dialog( "close" ); 
+    });
+    jQuery( ".projectDelete, .projPagDel" ).click(function() 
+    {     
+          
+          jQuery('#dialogtitle').html(jQuery(this).data('projtitle'));
+          var ygor = {};
+          ygor.token =  jQuery(this).data('token');
+          ygor.userid =  jQuery(this).data('userid');
+          ygor.id = jQuery(this).attr('id').replace('projDel_', '');
+          jQuery('#dialog').data('jsondel', JSON.stringify(ygor));
+        
+          jQuery( "#dialog" ).dialog( "open" );
+    });
         jQuery('input[type="text"].SkillInput').keyup(function () { _appUrl = jQuery(this).val(); getSkills(_appUrl); });
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
          
-});
+}); 
+function deleteProject(projDat, projectPage)//user must be able to message a project's owner
+{
+    //if (projDat == '') return;
+    var data = JSON.parse(projDat);
+    jQuery('#projtrDel_' + data.id).remove();
+    $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_projectfork', task:'deleteproject', project_id:data.id, created_by: data.userid, token: data.token},
+		success: function( data ) { if (projectPage === true) { window.location.href = jQuery('#dialog').data('url'); } }
+    };
+    jQuery.ajax( $fragment_refresh );
+}
 function msgOwner()//user must be able to message a project's owner
 {
     var project_id = jQuery("#project_id").val();
