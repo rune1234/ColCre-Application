@@ -96,7 +96,8 @@ function selectCatg($catg)
                jQuery('.newSkillTagCag option').each(function()
                {
                   // alert(jQuery("input[name=skillcatg]").val());
-                  //alert(jQuery(this).attr('name'));
+                  // alert('#2 ' + jQuery(this).val());
+                // alert(jQuery(this).attr('name'));
                    if (jQuery("input[name=skillcatg]").val() == jQuery(this).attr('name')) 
                    { 
                        jQuery('.newSkillTagCag').val( jQuery(this).val() );
@@ -135,12 +136,18 @@ function addUserSkill()
    
     var $t = 0;
     var newTagsCatg = [];
+    /*alert( jQuery(".newSkillTagCag_2").attr('name'));
+    alert ( jQuery("option:selected", jQuery(".newSkillTagCag_2")).attr('name') );
+    alert( jQuery('.newSkillTagCag_2').val() );*/
+     
     jQuery(".newSkillTagCag").each(function()
     {
         
-        var nTaCg = $("option:selected", this).attr('name');
+        var nTaCg = jQuery('.newSkillTagCag_2').val();// $("option:selected", this).attr('name');
+        //alert("This is it: "  + nTaCg);
         if(typeof(nTaCg) !== 'undefined' && nTaCg != '') newTagsCatg.push(nTaCg);
     });
+   // return;
     var newTags = [];
     jQuery(".newSkillTag").each(function() //male sure t is here, since there will always be a category, but not necessarily a tag
     {
@@ -204,7 +211,7 @@ function addUserSkill()
 }
 
 
-
+ 
 //******************************************************************
 var projectModule = angular.module('myProj', []);
 projectModule.factory('theMenus', function() { return });
