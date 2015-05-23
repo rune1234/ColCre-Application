@@ -359,8 +359,8 @@ the Make Whatever staff</p>";
     $document->addScriptDeclaration($js);
         $document->addStyleSheet($uribase);
         $document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
-        //$document->addScript(JURI::root() . 'components/com_pfprojects/js/pfp.js');
         $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+        
         
          
          
