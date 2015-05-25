@@ -61,7 +61,7 @@ function delPayMethod(data)//user must be able to message a project's owner
 		type: 'GET',
 		data: { option: 'com_colcrewallet', task:'deletemethod', id: data.id, type: data.typeid, token: data.token, userid:data.userid},
 		success: function( data ) 
-                {  
+                { // alert(data);
                     data = JSON.parse(data); 
                     if (data.error == 1) alert(data.msg); 
                 } 
