@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Make Whatever Wallet Send Points Form" option="Make Whatever Wallet Send Points Form">
+		<help
+			key = "Make Whatever Wallet Send Points Page"
+		/>
+		<message>
+			<![CDATA[COM_CONFIG_CONFIG_VIEW_DEFAULT_DESC]]>
+		</message>
+	</layout>
+	<fields name="request">
+		<fieldset name="request">
+			<field name="controller" 
+				type="hidden"
+				default=""
+			/>
+		</fieldset>
+	</fields>
+</metadata>

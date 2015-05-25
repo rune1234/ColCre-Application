@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Make Whatever Wallet Cash Out Form" option="Make Whatever Wallet Assets Page">
+		<help
+			key = "Make Whatever Wallet Assets Page"
+		/>
+		<message>
+			<![CDATA[COM_CONFIG_CONFIG_VIEW_DEFAULT_DESC]]>
+		</message>
+	</layout>
+	<fields name="request">
+		<fieldset name="request">
+			<field name="controller" 
+				type="hidden"
+				default=""
+			/>
+		</fieldset>
+	</fields>
+</metadata>
