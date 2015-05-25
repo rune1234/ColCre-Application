@@ -31,16 +31,49 @@ jQuery(document).ready(function($) {
         
           jQuery( "#dialog" ).dialog( "open" );
     });
+    //**********************************************************************************
+    jQuery( ".methodDel" ).click(function() //used to delete payment methods
+    {     
+         jQuery( "#dialog" ).dialog( "open" );
+         var ygor = {};
+         ygor.id = jQuery(this).attr('id').replace('paytyplnk_','');
+         ygor.typeid = jQuery(this).data('typeid');
+         ygor.token = jQuery(this).data('token');
+         ygor.userid = jQuery('#dialog').data('userid');
+          jQuery('#dialog').data('jsondel', JSON.stringify(ygor));
+    });
+    jQuery('.methodDelYes').click(function()//user chose to delete the payment type
+    {
+         var ygor = jQuery('#dialog').data('jsondel');
+         var data = JSON.parse(ygor);
+         delPayMethod(data);
+         jQuery( "#dialog" ).dialog( "close" );
+    });
         jQuery('input[type="text"].SkillInput').keyup(function () { _appUrl = jQuery(this).val(); getSkills(_appUrl); });
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
          
 }); 
+function delPayMethod(data)//user must be able to message a project's owner
+{
+    jQuery('#paytype_' + data.id).remove();
+    var $fragment_refresh = {
+		url: projectURL,
+		type: 'GET',
+		data: { option: 'com_colcrewallet', task:'deletemethod', id: data.id, type: data.typeid, token: data.token, userid:data.userid},
+		success: function( data ) 
+                {  
+                    data = JSON.parse(data); 
+                    if (data.error == 1) alert(data.msg); 
+                } 
+    };
+    jQuery.ajax( $fragment_refresh );
+}
 function deleteProject(projDat, projectPage)//user must be able to message a project's owner
 {
     //if (projDat == '') return;
     var data = JSON.parse(projDat);
     jQuery('#projtrDel_' + data.id).remove();
-    $fragment_refresh = {
+    var $fragment_refresh = {
 		url: projectURL,
 		type: 'POST',
 		data: { option: 'com_projectfork', task:'deleteproject', project_id:data.id, created_by: data.userid, token: data.token},
