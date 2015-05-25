@@ -38,16 +38,16 @@ if ($df == 0)
    
 </div>
 <div class="row-fluid"><div class="lead page-header">Your Accounts</div>
-     <div class="container-fluid creditbar" style="margin-left: 5px;">
+     <!--<div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span3">Bitcoin Account</div><div class="span3"></div>
     
-    </div>
+    </div>-->
     <?php
     if (isset($payment['bitcoin'])) 
     {
        $newbitcoin = 'new';
     ?>
-    <div class="container-fluid creditalr" ><p><b>Your Bitcoin Accounts:</b></p>
+    <div class="container-fluid creditbar" ><p><b>Your Bitcoin Accounts:</b></p>
         <?php 
         foreach ($payment['bitcoin'] as $bitc)
         {
@@ -61,16 +61,16 @@ if ($df == 0)
      <div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span4"><a href='<?php echo JRoute::_('index.php?option=com_colcrewallet&task=method&df=5');?>'>Enter <?php echo $newbitcoin." ";?>Bitcoin Account Information</a></div>
     </div>
-    <div class="container-fluid creditbar" style="margin-left: 5px;">
+    <!--<div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span3">Paypal Accounts</div><div class="span3"></div>
     </div>
-    
+    -->
      <?php
     if (isset($payment['paypal'])) 
     {
        $newpaypal = 'new ';
     ?>
-    <div class="container-fluid creditalr" ><p><b>Your Paypal Accounts:</b></p>
+    <div class="container-fluid creditbar" ><p><b>Your Paypal Accounts:</b></p>
         <?php 
         foreach ($payment['paypal'] as $bitc)
         {
@@ -85,15 +85,15 @@ if ($df == 0)
     <div class="container-fluid creditbar" style="margin-left: 5px;">
         <div class="span4"><a href='<?php echo JRoute::_('index.php?option=com_colcrewallet&task=method&df=1');?>'>Enter <?php echo $newpaypal;?>Paypal Account</a></div>
     </div>
-    <div class="container-fluid creditbar" style="margin-left: 5px;">
+    <!--<div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span3">Skrill Accounts</div><div class="span3"></div>
-    </div>
+    </div>-->
           <?php
     if (isset($payment['skrill'])) 
     {
        $newskrill = 'new ';
     ?>
-    <div class="container-fluid creditalr" ><p><b>Your Skrill Accounts:</b></p>
+    <div class="container-fluid creditbar" ><p><b>Your Skrill Accounts:</b></p>
         <?php 
         foreach ($payment['skrill'] as $bitc)
         {
@@ -113,12 +113,30 @@ if ($df == 0)
     </div>
      <div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span4"><a href='<?php echo JRoute::_('index.php?option=com_colcrewallet&task=method&df=3');?>'>Enter Credit Card Account</a></div>
-    </div>-->
+    </div>
     <div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span3">Bank Account</div><div class="span3"></div>
     </div>
+   -->
+        <?php
+    if (isset($this->banks)) 
+    {
+       $newskrill = 'new ';
+    ?>
+    <div class="container-fluid creditbar" ><p><b>Your Bank Accounts:</b></p>
+        <?php 
+        foreach ($this->banks as $bitc)
+        {
+             
+            echo "<div style='display: -webkit-flex; display: flex;' id='paytype_".$bitc->id."'><div style='width: 300px;'>Account: $bitc->account</div><div style='margin-left: 100px;'><a href='".JRoute::_('index.php?option=com_colcrewallet&task=method&df=4&id='.$bitc->id)."'>Edit</a> | <a href='javascript:void(0)' id='paytyplnk_".$bitc->id."' data-token= '".md5($bitc->id."idtype"."3".$user->id)."' data-typeid='3' class='methodDel'>Delete</a> </div></div>";
+        }
+?></div>
+    <?php
+    } else $newskrill = '';
+    ?>
+   
      <div class="container-fluid creditbar" style="margin-left: 5px;">
-    <div class="span4"><a href='<?php echo JRoute::_('index.php?option=com_colcrewallet&task=method&df=4');?>'>Enter Bank Account Information</a></div>
+    <div class="span4"><a href='<?php echo JRoute::_('index.php?option=com_colcrewallet&task=method&df=4');?>'>Enter <?php echo $newskrill;?>Bank Account Information</a></div>
     </div>
 </div>
 
