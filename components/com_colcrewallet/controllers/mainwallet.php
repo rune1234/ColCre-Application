@@ -41,7 +41,9 @@ class WalletControllerMainwallet extends WalletController
             exit;
         }
         $db = JFactory::getDbo();
-        $query = "DELETE FROM #__colcretypesaddresses WHERE user_id = $userid AND payment_type = $type AND id = $id LIMIT 1";
+        if ($type == 3)
+        { $query = "DELETE FROM #__colcrewalletbank WHERE user_id = $userid AND id = $id LIMIT 1"; }
+        else { $query = "DELETE FROM #__colcretypesaddresses WHERE user_id = $userid AND payment_type = $type AND id = $id LIMIT 1"; }
         $r = $db->setQuery($query)->Query();
         if (! $r)
         {
@@ -115,8 +117,10 @@ class WalletControllerMainwallet extends WalletController
         $view = &$this->getView('methods', $viewType);
         $view->assign('cash', $cash);
         $view->assign('thisModel', $thisModel);
-        $address = '';
+        $address = '';//we get
+        $banks = '';
         $view->assign('address', $address);
+        $view->assign('banks', $banks);
         $view->assign('user_id', $user_id);
         $view->display();
     }
