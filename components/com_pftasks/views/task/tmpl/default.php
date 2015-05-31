@@ -110,8 +110,10 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
     			<?php echo JText::_('JGRID_HEADING_CREATED_BY');?>:
     		</dt>
     		<dd class="owner-data">
-    			 <?php  
-                          echo JHtml::_('pfhtml.label.author', $item->author, $item->created); ?>
+    			 <?php
+                         //print_r($item);
+                         echo "<a target='self' href='".JRoute::_('index.php?option=com_community&view=profile&view=projects&user_id='.$item->created_by)."'>".$item->author."</a>";
+                          //echo JHtml::_('pfhtml.label.author', $item->author, $item->created); ?>
     		</dd>
             <?php if (PFApplicationHelper::enabled('com_pfrepo') && count($item->attachments)) : ?>
                 <dt class="attachment-title">
@@ -142,15 +144,32 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
                 <div style='padding: 10px; color: #fff; background: #51a351;   -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); width: 20%;'><input type="radio" id="jform_complete1" name="jformcomplete" class='jformcomplete' value="1" <?php echo ($item->complete) ? "checked=\"checked\"" : ''; ?> />&nbsp;&nbsp;<span>Project is Completed</span></div>
-                       	    
+                 <?php if ($authorized) { ?>
+                 
+               <div style='margin-top: 40px;'><a style="float: left; margin-left: 2%; width: 30%;" class="thumbnail btn" href='<?php echo JRoute::_("index.php?option=com_pftasks&id=".$item->id."&view=taskform&layout=edit");?>'><img src="<?php echo JUri::base();?>media/com_projectfork/projectfork/images/header/icon-48-config.png" alt="Edit Task">  Edit Task</a>
+                <?php   echo JRoute::_('<a style="float: left; margin-left: 2%; width: 30%;" class="thumbnail btn taskDel" title="Delete Project" data-userid="'.$item->created_by.'" data-token="'.md5($item->id."taskjk".$item->created_by).'" data-url="'.JRoute::_("index.php?option=com_projectfork&view=dashboard&id=".$item->project_id."&Itemid=".$_GET['Itemid']).'" id="taskDel_'.$item->id.'" href="javascript:void(0)">');?><img style="height: 50px;" src="<?php JUri::base();?>images/Delete-icon.png" alt="delete project"/>Delete Task</a>
+              
+                    <?php } 
+    if ($projerized) { ?><a style="float: left; margin-left: 2%; width: 30%;" class="thumbnail btn" href='<?php echo JRoute::_("index.php?option=com_pftasks&view=taskform&layout=edit");?>'><img src="<?php echo JUri::base();?>/media/com_projectfork/projectfork/images/header/icon-48-taskform.add.png" alt="Add Task"> Add another Task for <?php echo $item->project_title;?></a></div><div style='clear: both;'></div><?php } ?>       	    
+                        
             </div>
     	</div><br />
 <?php } ?>
     <?php  echo $item->event->afterDisplayContent;
-    if ($authorized) { ?><p><a href='<?php echo JRoute::_("index.php?option=com_pftasks&id=".$item->id."&view=taskform&layout=edit");?>'>Edit Task</a></p><?php } 
-    if ($projerized) { ?><p><a href='<?php echo JRoute::_("index.php?option=com_pftasks&view=taskform&layout=edit");?>'>Add another Task for <?php echo $item->project_title;?></a></p><?php } ?>
-        
+   
+        ?>
 </div>
+<?php
+$document = JFactory::getDocument();
+$document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
+    $document->addScript(JURI::root() . 'components/com_pfprojects/js/angpfp.js');
+   
+?>
+<div id="dialog" data-jsondel=''>
+     <p>Do you really want to delete this task?</p>
+     <div style='width: 100%; text-align: center;'>
+         <input type='button' value='Yes' class='TaskDelYes' style='padding: 5px; background: #fff; width: 70px;' /> | <input type='button' value='No' class='projDelClos' style='padding: 5px; background: #fff; width: 70px;' />
+</div></div>
 <script><!--
    jQuery(document).ready(function () {  
         jQuery('.jformcomplete').change(function () { 
@@ -165,3 +184,7 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
         
     });
 --></script>
+ <?php
+   $document = JFactory::getDocument();
+   $document->addCustomTag('<script src="'.JURI::root().'components/com_pfprojects/js/pfp.js" type="text/javascript"></script>');
+ ?>
