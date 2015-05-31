@@ -115,6 +115,34 @@ class ProjectforkController extends JControllerLegacy
         $view->display();
         //<div class="span3 pull-left projectBox"
     }
+    public function deleteTask()
+    {
+        $post = $_POST; 
+        $id = $post['id'];
+        $created_by = $post['created_by'];
+        $token = $post['token'];
+        if (!is_numeric($id) || !is_numeric($created_by)) exit;
+        $ourToken = md5($id."taskjk".$created_by);
+        $msg = array();
+        $db = JFactory::getDbo();
+        if ($ourToken != $token) 
+        {
+            $msg['error'] = 1;
+            $msg['msg'] = "Invalid Data";
+            echo json_encode($msg);
+            exit;
+        }
+    $query = "DELETE FROM #__pf_ref_tasks WHERE task_id = $id"; 
+        $this->delProjDb($query, $db);
+        $query = "DELETE FROM #__pf_tasks WHERE id = $id";  
+        $this->delProjDb($query, $db);
+        $query = "DELETE FROM #__pf_project_skills WHERE task_id = $id";
+        $this->delProjDb($query, $db);
+        $msg['error'] = 0;
+        $msg['msg'] = "Successfully delete project";
+        echo json_encode($msg);
+        exit;
+    }
     public function deleteProject()
     {
         $post = $_POST; 
