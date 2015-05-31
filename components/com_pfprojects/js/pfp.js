@@ -1,4 +1,5 @@
-jQuery(document).ready(function($) {  
+jQuery(document).ready(function($) 
+{  
     jQuery( "#dialog" ).dialog({
       autoOpen: false,
       show: {
@@ -40,7 +41,7 @@ jQuery(document).ready(function($) {
          ygor.typeid = jQuery(this).data('typeid');
          ygor.token = jQuery(this).data('token');
          ygor.userid = jQuery('#dialog').data('userid');
-          jQuery('#dialog').data('jsondel', JSON.stringify(ygor));
+         jQuery('#dialog').data('jsondel', JSON.stringify(ygor));
     });
     jQuery('.methodDelYes').click(function()//user chose to delete the payment type
     {
@@ -48,11 +49,32 @@ jQuery(document).ready(function($) {
          var data = JSON.parse(ygor);
          delPayMethod(data);
          jQuery( "#dialog" ).dialog( "close" );
+    });  
+    //************************************************************************************
+    //used to delete tasks:
+    jQuery( ".taskDel" ).click(function() //used to delete payment methods
+    {      var ygor = {};
+          ygor.id = jQuery(this).attr('id').replace('taskDel_', '');
+          ygor.url = jQuery(this).data('url');
+          ygor.token = jQuery(this).data('token');
+          ygor.userid = jQuery(this).data('userid');
+          jQuery('#dialog').data('jsondel', JSON.stringify(ygor));
+          jQuery( "#dialog" ).dialog( "open" );
+     });
+    jQuery(".TaskDelYes").click(function()
+    {
+          var ygor = deleteTask(jQuery('#dialog').data('jsondel'));
+          var data = JSON.parse(ygor);
     });
+    //************************************************************************************
+    
         jQuery('input[type="text"].SkillInput').keyup(function () { _appUrl = jQuery(this).val(); getSkills(_appUrl); });
         jQuery('.token-input-input-token').click(function() { jQuery('.SkillInput').focus(); } );
          
 }); 
+
+// END OF EVENTS ******************************************************************************************
+
 function delPayMethod(data)//user must be able to message a project's owner
 {
     jQuery('#paytype_' + data.id).remove();
@@ -65,6 +87,19 @@ function delPayMethod(data)//user must be able to message a project's owner
                     data = JSON.parse(data); 
                     if (data.error == 1) alert(data.msg); 
                 } 
+    };
+    jQuery.ajax( $fragment_refresh );
+}
+function deleteTask(data)//user must be able to message a project's owner
+{
+    //if (projDat == '') return;
+    var data = JSON.parse(data);
+    jQuery('#projtrDel_' + data.id).remove();
+    var $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_projectfork', task:'deleteTask', id:data.id, created_by: data.userid, token: data.token},
+		success: function( data_2 ) { if (typeof(data.url) !== 'undefined') window.location.href = data.url; }
     };
     jQuery.ajax( $fragment_refresh );
 }
