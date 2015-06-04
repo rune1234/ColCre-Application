@@ -2354,7 +2354,7 @@ class CommunityProfileController extends CommunityBaseController {
         }
 
         /* template display */
-        $document = JFactory::getDocument();
+        //$document = JFactory::getDocument();
                              
         $viewType = $document->getType();
                             
