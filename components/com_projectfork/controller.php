@@ -73,26 +73,39 @@ class ProjectforkController extends JControllerLegacy
     }
     public function proposals()
     {
-        $db = JFactory::getDbo();
-        $user = JFactory::getUser();
-        $pid = JRequest::getInt('id'); 
-        if ($pid == 0) return;
-        if (!$user || !isset($user->id) || $user->id == 0) return;
-        $limitstart = JRequest::getInt('limitstart');
-        $limit = JRequest::getVar( "viewlistlimit", '10', 'get', 'int');
-        
-        $total = $db->setQuery("SELECT count(id) FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid)->loadResult();
-        $pagination = new JPagination($total, $limitstart, $limit);
-          $rows = $db->loadObjectList();
-          $query = "SELECT * FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid." ORDER BY id DESC LIMIT $limitstart, $limit";
-          
-          $rows = $db->setQuery($query)->loadObjectList();
+         $db = JFactory::getDbo();
+         $user = JFactory::getUser();
+         $pid = JRequest::getInt('id'); 
+         if ($pid == 0) return;
+         if (!$user || !isset($user->id) || $user->id == 0) return;
+         $limitstart = JRequest::getInt('limitstart');
+         $limit = JRequest::getVar( "viewlistlimit", '10', 'get', 'int');
+         $total = $db->setQuery("SELECT count(id) FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid)->loadResult();
+         $pagination = new JPagination($total, $limitstart, $limit);
+         $rows = $db->loadObjectList();
+         $query = "SELECT * FROM #__pf_projects_msg WHERE ";//owner_id = ".$user->id." AND ";
+         $query .= "project_id=".$pid." ORDER BY id DESC LIMIT $limitstart, $limit";
+         //echo $query;
+         $rows = $db->setQuery($query)->loadObjectList();
          // $pagination = $pagination->getPagesLinks();
-        $view = $this->getView('proposals', 'html');
-        $view->set('proposals', $rows);
-        $view->set('db', $db);
-        $view->set('pagination', $pagination);
-        $view->display();
+         $query = "SELECT title, created_by FROM #__pf_projects WHERE id= $pid LIMIT 1";
+         $db->setQuery($query);
+         $project = $db->loadObject();
+         if ($project->created_by != $user->id)
+         {
+             ?>
+<div class="projectFrame" style="color: #a00; padding: 0px; padding-left: 10px; margin: 10px;">
+    <h3>ERROR - you are not authorized to be here</h3>
+</div> 
+<?php 
+            return;
+         }
+         $view = $this->getView('proposals', 'html');
+         $view->set('project', $project->title);
+         $view->set('proposals', $rows);
+         $view->set('db', $db);
+         $view->set('pagination', $pagination);
+         $view->display();
     }
     public function prmatch()
     {
