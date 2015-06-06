@@ -4,6 +4,15 @@ class WalletControllerMainwallet extends WalletController
 {
     public function display()
     { 
+        $user = JFactory::getUser();
+        $viewType = "html";
+        $this->name = 'Colcre';
+        $view = &$this->getView('walletbasics', $viewType);
+        $view->assign('userid', $user->id);
+         $view->display();
+    }
+    public function transactions()
+    {
         $thisModel = $this->getModel('colcre');
         $user = JFactory::getUser();
          

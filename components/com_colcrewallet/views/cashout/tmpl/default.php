@@ -1,12 +1,15 @@
 <?php
-echo "<div id='wallet-menu'><ul>"
-       /*  . "<li><a href='#'>Held Points</a></li>"
-               /* . "<li><a href='#'>Released Points</a></li>"*/
+
+echo "<div id='wallet-menu' class='row-fluid' style='width: 100%;'><ul>"
+       /*  . "<li><a href='#'>Held Points</a></li>"*/
+                . "<li><a href='".JRoute::_('index.php?option=com_colcrewallet')."'>Instructions</a></li>"
                 . "<li><a href='".JRoute::_('index.php?option=com_colcrewallet&task=sendpoints')."'>Transfer</a></li>"
                  ."<li><a href='".JRoute::_('index.php?option=com_colcrewallet&task=assets')."'>My Assets</a></li>"
          ."<li><a href='".JRoute::_('index.php?option=com_colcrewallet&task=cashout')."'>Cash Out</a></li>"
         ."<li><a href='".JRoute::_('index.php?option=com_colcrewallet&task=transactions')."'>Transfer History</a></li>"
                 . "</ul></div><div style='clear: both;'></div><br />";
+                
+                
                  
 $usrname = isset($this->post['username']) ? $this->post['username'] : '';
 $points = isset($this->post['points']) ? $this->post['points'] : '';
@@ -43,6 +46,10 @@ function validaWitWr()
 }
 //-->
 </script>
+<div>
+
+
+</div>
 <form method='post' id='cashoutform' onSubmit='return validaWitWr()'>
     <h4>Cash Out:</h4> 
     <?php
