@@ -167,3 +167,23 @@ function getSkills(skill)
                } };
     jQuery.ajax( $fragment_refresh );
 }
+function acceptProposal(project, proposal)
+{
+    jQuery('#accdec_' + proposal).html('<p><b>Proposal Accepted</b></p>');
+    $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task:'acceptproposal', proposal: proposal, project: project},
+		success: function( data ) { alert(data); } };
+    jQuery.ajax( $fragment_refresh );
+}
+function rejectProposal(project, proposal)
+{
+    jQuery('#accdec_' + proposal).html('<p><b>Proposal Declined</b></p>');
+    $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_pfprojects', task:'rejecroposal', proposal: proposal, project: project},
+		success: function( data ) { alert(data); } };
+    jQuery.ajax( $fragment_refresh );
+}
