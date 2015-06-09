@@ -22,6 +22,7 @@ function dump(arr,level) {
 	}
 	return dumped_text;
 }
+
 function selectCatg($catg)
 {
            jQuery('#addskillbox').slideDown();
