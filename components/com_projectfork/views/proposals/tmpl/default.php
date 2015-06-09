@@ -11,13 +11,13 @@ if ($this->proposals)
 {
     ?>
 <div class="projectFrame" style="padding: 0px; padding-left: 10px; margin: 10px;">
-    <h3>Project <?php echo ucwords($this->project);?> Proposals:</h3>
+    <h3>Project <?php echo ucwords($this->project->title);?> Proposals:</h3>
 </div>    
 <?php
 foreach($this->proposals as $pr)
 {  
     ?>
-<div class="projectFrame" style="padding: 10px; margin: 10px;"><?php  
+<div class="projectFrame" id='propros_<?php echo $pr->id;?>' style="padding: 10px; margin: 10px;"><?php  
 $avatar = getAvatar($pr->user_id, $this->db);
 if ($avatar)
 {
@@ -29,7 +29,8 @@ echo "<p>".$pr->proposal."<br /><br />";
 
 echo $pr->howwould."</p>";
 echo "<div style='clear: both'><a href=\"javascript:void(0)\" class=\"btn\" onClick=\"joms.messaging.loadComposeWindow('".$pr->user_id."')\"><img src='".JUri::base()."images/msg_icon.png' style='height: 30px;' />Message User</a></div>";
-echo "<div class='clearfix'></div><hr /><p><a href=\"javascript:void(0)\" class=\"btn btn-mini btn-info\" onClick=\"msgOwner()\">Accept Proposal</a> <a href=\"javascript:void(0)\" class=\"btn btn-mini btn-info\" onClick=\"msgOwner()\">Decline Proposal</a></p>";
+if ($pr->accepted != 1) echo "<div class='clearfix'></div><hr /><div id='accdec_$pr->id'><p><a href=\"javascript:void(0)\" class=\"btn btn-mini btn-info\" onClick=\"acceptProposal(".$this->project->id.",".$pr->id.")\">Accept Proposal</a> <a href=\"javascript:void(0)\" class=\"btn btn-mini btn-info\" onClick=\"rejectProposal(".$this->project->id.",".$pr->id.")\">Decline Proposal</a></p></div>";
+else { ?> <div class='clearfix'></div><hr /><div><p><b>Proposal Accepted</b></p></div><?php }
 ?><div class='clearfix'></div></div>
     <?php
 }
