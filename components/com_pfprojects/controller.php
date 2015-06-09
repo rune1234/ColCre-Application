@@ -399,4 +399,44 @@ the Make Whatever staff</p>";
         // Return own instance for chaining
         return $this;
     }
+    public function acceptProposal()
+    {
+        $project_id = $_POST['project'];
+        $propos_id = $_POST['proposal'];
+        if (!is_numeric($propos_id) || $propos_id == 0) return;
+        if (!is_numeric($project_id) || $project_id == 0) return;
+        $query = "UPDATE #__pf_projects_msg SET accepted = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+        $db = JFactory::getDbo();
+        $r = $db->setQuery($query)->Query();
+        if ($r)
+        {
+            $query = "SELECT user_id FROM #__pf_projects_msg WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+            $user_id = $db->setQuery($query)->loadResult();
+            if (is_numeric($user_id) && $user_id > 0)
+            {
+                $query = "INSERT INTO #__pf_project_members (project_id, user_id, status, member_since) VALUES($project_id, $user_id, 1, ".time().")";
+                $db->setQuery($query)->Query();
+            }
+        }
+        exit;
+    }
+    public function rejecroposal()
+    {
+        $project_id = $_POST['project'];
+        $propos_id = $_POST['proposal'];
+        if (!is_numeric($propos_id) || $propos_id == 0) return;
+        if (!is_numeric($project_id) || $project_id == 0) return;
+        $query = "UPDATE #__pf_projects_msg SET declined = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+        $db = JFactory::getDbo();
+        $r = $db->setQuery($query)->Query();
+        $this->proposalCleanUp($db);
+        exit;
+    }
+    private function proposalCleanUp(& $db)
+    {
+        $threeMonths = 3600 * 24 * 90;
+        $threeMonths = time() - $threeMonths;
+        $query = "DELETE FROM #__pf_projects_msg WHERE declined = 1 AND posted_on < $threeMonths";
+        $db->setQuery($query)->Query();
+    }
 }
