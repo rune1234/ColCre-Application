@@ -88,7 +88,7 @@ class ProjectforkController extends JControllerLegacy
          //echo $query;
          $rows = $db->setQuery($query)->loadObjectList();
          // $pagination = $pagination->getPagesLinks();
-         $query = "SELECT title, created_by FROM #__pf_projects WHERE id= $pid LIMIT 1";
+         $query = "SELECT title, id, created_by FROM #__pf_projects WHERE id= $pid LIMIT 1";
          $db->setQuery($query);
          $project = $db->loadObject();
          if ($project->created_by != $user->id)
@@ -101,7 +101,7 @@ class ProjectforkController extends JControllerLegacy
             return;
          }
          $view = $this->getView('proposals', 'html');
-         $view->set('project', $project->title);
+         $view->set('project', $project);
          $view->set('proposals', $rows);
          $view->set('db', $db);
          $view->set('pagination', $pagination);
