@@ -166,48 +166,7 @@ class PFprojectsController extends JControllerLegacy
              exit;
         }
     }
-    public function inviteUser()
-    {
-        $db =& JFactory::getDBO();
-        $data = json_decode(file_get_contents("php://input"));
-         if (!is_numeric($data->project_id) || !is_numeric($data->user_id)) exit;
-        $user = JFactory::getUser();
-        $user_2 =  JFactory::getUser($data->user_id);
-        // print_r($user_2); exit;
-        $query = "SELECT * FROM #__pf_projects WHERE id = ".$data->project_id." LIMIT 1";
-        $db->setQuery($query);
-        $row = $db->loadObject();
-        $mailMSG = "<p>Hi ".ucwords($user_2->name).",</p>
-<p>You've been invited to apply for a job! Sign in and select \"Invitations\" on your dashboard to respond.</p>
-<p>Project: $row->title (ID: $row->id)
-Description: <p><i>".nl2br( strip_tags($row->description) )."</i></p>
-<p>
-Sincerely,<br />
-the Make Whatever staff</p>";
-         
-        //if (is_numeric($data->project_id) && is_numeric($data->user_id))
-        {
-            $query = "SELECT project_id FROM #__pf_projects_invites WHERE project_id = ".$data->project_id." AND invited=".$data->user_id." LIMIT 1";
-            
-            $db->setQuery($query);
-            $thisID = $db->loadResult();
-            if ($thisID && is_numeric($thisID)) 
-            {
-                echo "You already invited ".$user_2->name." to project ".$row->title; 
-                exit;
-            }     
-            $mainframe = JFactory::getApplication();
-            $mailfrom = $mainframe->getCfg('mailfrom');
-            $fromname = $mainframe->getCfg('fromname');
-            $mail = JFactory::getMailer();
-            $mail->sendMail($mailfrom, $fromname, $user_2->email, "You have been invited!", $mailMSG, true);    
-            $query = "INSERT INTO #__pf_projects_invites (project_id, invited, invited_by, accepted, date_added) VALUES (".$data->project_id.", ".$data->user_id.", ".$user->id.", 0, ".time().")";
-            $db->setQuery($query);
-            $db->Query();
-        }
-        
-        exit;
-    }
+    
     private function editInstead($user_id, $skillCatg, & $db)
     {
         if (!is_numeric($skillCatg)) return false;
@@ -405,17 +364,23 @@ the Make Whatever staff</p>";
         $propos_id = $_POST['proposal'];
         if (!is_numeric($propos_id) || $propos_id == 0) return;
         if (!is_numeric($project_id) || $project_id == 0) return;
-        $query = "UPDATE #__pf_projects_msg SET accepted = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
         $db = JFactory::getDbo();
-        $r = $db->setQuery($query)->Query();
-        if ($r)
+        $query = "SELECT a.user_id, b.id as project_id, b.title FROM #__pf_projects_msg a INNER JOIN #__pf_projects b ON a.project_id = b.id WHERE a.project_id = $project_id AND a.id = $propos_id LIMIT 1";
+        $msg = $db->setQuery($query)->loadObject();
+        if ((int)$msg->project_id > 0)
         {
-            $query = "SELECT user_id FROM #__pf_projects_msg WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
-            $user_id = $db->setQuery($query)->loadResult();
-            if (is_numeric($user_id) && $user_id > 0)
+            $this->proposalMSG($msg, $db);
+            $query = "UPDATE #__pf_projects_msg SET accepted = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+            $r = $db->setQuery($query)->Query();
+            if ($r)
             {
-                $query = "INSERT INTO #__pf_project_members (project_id, user_id, status, member_since) VALUES($project_id, $user_id, 1, ".time().")";
-                $db->setQuery($query)->Query();
+                $query = "SELECT user_id FROM #__pf_projects_msg WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+                $user_id = $db->setQuery($query)->loadResult();
+                if (is_numeric($user_id) && $user_id > 0)
+                {
+                    $query = "INSERT INTO #__pf_project_members (project_id, user_id, status, member_since) VALUES($project_id, $user_id, 1, ".time().")";
+                    $db->setQuery($query)->Query();
+            }
             }
         }
         exit;
@@ -426,10 +391,16 @@ the Make Whatever staff</p>";
         $propos_id = $_POST['proposal'];
         if (!is_numeric($propos_id) || $propos_id == 0) return;
         if (!is_numeric($project_id) || $project_id == 0) return;
-        $query = "UPDATE #__pf_projects_msg SET declined = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
         $db = JFactory::getDbo();
-        $r = $db->setQuery($query)->Query();
-        $this->proposalCleanUp($db);
+        $query = "SELECT a.user_id, b.id as project_id, b.title FROM #__pf_projects_msg a INNER JOIN #__pf_projects b ON a.project_id = b.id WHERE a.project_id = $project_id AND a.id = $propos_id LIMIT 1";
+        $msg = $db->setQuery($query)->loadObject();
+        if ((int)$msg->project_id > 0)
+        {
+            $this->proposalMSG($msg, $db, false);
+            $query = "UPDATE #__pf_projects_msg SET declined = 1 WHERE project_id = $project_id AND id = $propos_id LIMIT 1";
+            $r = $db->setQuery($query)->Query();
+            $this->proposalCleanUp($db);
+        }
         exit;
     }
     private function proposalCleanUp(& $db)
@@ -438,5 +409,90 @@ the Make Whatever staff</p>";
         $threeMonths = time() - $threeMonths;
         $query = "DELETE FROM #__pf_projects_msg WHERE declined = 1 AND posted_on < $threeMonths";
         $db->setQuery($query)->Query();
+    }
+    private function proposalMSG($msg, & $db, $accepted = true)
+    {
+         if ($accepted) $mailMSG = "<p>Your Application for project ".ucwords($msg->title)." has been accepted.</p>"
+                . "<p>Please visit <a href='".JRoute::_('index.php?option=com_projectfork&view=dashboard&id='.$msg->project_id.'&Itemid=124')."'>".ucwords($msg->title)."</a>
+for more information.</p>
+<p>Sincerely,<br />the Make Whatever staff</p>";
+         else 
+         {
+             $mailMSG = "<p>Your Application for project ".ucwords($msg->title)." has been declined.</p><p>Fortunately there are other projects you can be a part of.</p>";
+         }
+         if ($accepted) $title = "Proposal Accepted";
+         else $title = "Proposal Declined";
+         $query = "SELECT email FROM #__users WHERE id = $msg->user_id LIMIT 1";
+         $email = $db->setQuery($query)->loadResult();
+         if (! $email ) return;
+         $mainframe = JFactory::getApplication();
+         $mailfrom = $mainframe->getCfg('mailfrom');
+         $fromname = $mainframe->getCfg('fromname');
+         $mail = JFactory::getMailer();
+         $mail->sendMail($mailfrom, $fromname, $email, $title, $mailMSG, true);
+         $this->proposalMSG_2($title, $mailMSG, $msg,  $db);
+    }
+    private function proposalMSG_2($title, $mailMSG, $msg,  & $db)
+    {
+        $db =& JFactory::getDBO();
+        $post = array();
+        $post['user_id'] = 859;
+        $post['user'] = "Make Whatever";
+        $query = "INSERT INTO `#__community_msg` (`id`, `from`, `parent`, `deleted`, `from_name`, `posted_on`, `subject`, `body`) VALUES (NULL, ".$post['user_id'].", 1, 0, '".$post['user']."', '".date('Y-m-d H:i:s', time())."', '".$db->escape($title)."', '".$db->escape($mailMSG)."')";
+        $db->setQuery($query);
+        $db->Query();
+        $insertId = $db->insertid();
+        if (is_numeric($insertId))
+        {
+            $query = "INSERT INTO #__community_msg_recepient (`msg_id`,`msg_parent`,`msg_from`,`to`,`bcc`,`is_read`,`deleted`) VALUES ($insertId, $insertId, ".$post['user_id'].",".$msg->user_id.", 0, 0, 0)";
+            $db->setQuery($query);
+            $db->Query();
+            $query = "UPDATE `#__community_msg` SET parent = $insertId WHERE id = $insertId LIMIT 1";
+            $db->setQuery($query);
+            $db->Query();
+        }
+        return;
+    }
+    public function inviteUser()
+    {
+        $db =& JFactory::getDBO();
+        $data = json_decode(file_get_contents("php://input"));
+         if (!is_numeric($data->project_id) || !is_numeric($data->user_id)) exit;
+        $user = JFactory::getUser();
+        $user_2 =  JFactory::getUser($data->user_id);
+        // print_r($user_2); exit;
+        $query = "SELECT * FROM #__pf_projects WHERE id = ".$data->project_id." LIMIT 1";
+        $db->setQuery($query);
+        $row = $db->loadObject();
+        $mailMSG = "<p>Hi ".ucwords($user_2->name).",</p>
+<p>You've been invited to apply for a job! Sign in and select \"Invitations\" on your dashboard to respond.</p>
+<p>Project: $row->title (ID: $row->id)
+Description: <p><i>".nl2br( strip_tags($row->description) )."</i></p>
+<p>
+Sincerely,<br />
+the Make Whatever staff</p>";
+         
+        //if (is_numeric($data->project_id) && is_numeric($data->user_id))
+        {
+            $query = "SELECT project_id FROM #__pf_projects_invites WHERE project_id = ".$data->project_id." AND invited=".$data->user_id." LIMIT 1";
+            
+            $db->setQuery($query);
+            $thisID = $db->loadResult();
+            if ($thisID && is_numeric($thisID)) 
+            {
+                echo "You already invited ".$user_2->name." to project ".$row->title; 
+                exit;
+            }     
+            $mainframe = JFactory::getApplication();
+            $mailfrom = $mainframe->getCfg('mailfrom');
+            $fromname = $mainframe->getCfg('fromname');
+            $mail = JFactory::getMailer();
+            $mail->sendMail($mailfrom, $fromname, $user_2->email, "You have been invited!", $mailMSG, true);    
+            $query = "INSERT INTO #__pf_projects_invites (project_id, invited, invited_by, accepted, date_added) VALUES (".$data->project_id.", ".$data->user_id.", ".$user->id.", 0, ".time().")";
+            $db->setQuery($query);
+            $db->Query();
+        }
+        
+        exit;
     }
 }
