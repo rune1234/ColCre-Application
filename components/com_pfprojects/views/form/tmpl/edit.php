@@ -145,18 +145,19 @@ Joomla.submitbutton = function(task)
   
      </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
                </div>
-                         <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
+                         <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add New Tag:</h4><form><br />
             
             <div ng-repeat='skillTag in skillTags'> 
             
             <br ng-if="skillTag.id > 0" /> 
-            <b>Skill {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTag][{{skillTag.id}}]" value="" />
-            <br /><b>Skill Category:</b> 
-         <select class="newSkillTagCag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTagCag][{{skillTag.id}}]"><?php foreach ($this->skillCategories as $skctg)
+            <b>Tag {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTag][{{skillTag.id}}]" value="" />
+            <!--<br /><b>Skill Category:</b> 
+         <select class="newSkillTagCag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTagCag][{{skillTag.id}}]"><?php/* foreach ($this->skillCategories as $skctg)
         {
              echo "<option value='$skctg->id'>".$skctg->category."</option>\n";
-             }?></select>
-             
+             }*/
+         ?></select>
+             -->
             </div>
             <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Tag</a></div>
         
