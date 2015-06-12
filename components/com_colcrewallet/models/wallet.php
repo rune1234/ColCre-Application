@@ -304,10 +304,12 @@ class WalletModelColcre extends JModelList
             $insertId = $db->insertid();
             if (is_numeric($insertId))
             {
-                $query = "INSERT INTO #__community_msg_recepient (`msg_id`,`msg_parent`,`msg_from`,`to`,`bcc`,`is_read`,`deleted`) VALUES ($insertId, 1, ".$sender.",".$receiver.", 0, 0, 0)";
+                $query = "INSERT INTO #__community_msg_recepient (`msg_id`,`msg_parent`,`msg_from`,`to`,`bcc`,`is_read`,`deleted`) VALUES ($insertId, $insertId, ".$sender.",".$receiver.", 0, 0, 0)";
                 $db->setQuery($query);
                 $db->Query();
-                 
+                $query = "UPDATE `#__community_msg` SET parent = $insertId WHERE id = $insertId LIMIT 1";
+                $db->setQuery($query);
+                $db->Query();
             }
             return;
      }
