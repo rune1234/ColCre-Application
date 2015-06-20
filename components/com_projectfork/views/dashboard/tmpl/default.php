@@ -269,12 +269,14 @@ $proCreator = $proDat->lookupUser($item->created_by);
                             <div class="clearfix"></div>
                              
                             <?php if ($this->owner) { ?>
-                            <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="project matches" /><?php echo ucwords($item->title).' Matches</a>' ; ?></div>
-                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=proposals&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/notepad-icon.png" alt="proposals"/><?php echo ucwords($item->title).' Proposals</a>' ; ?></div>
-                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a href="index.php?option=com_projectfork&task=userlikes&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/thumbs-up-users.png" alt="user likes"/><?php echo ucwords($item->title).' Likes</a>' ; ?></div>
-                             <div style="padding: 5px; float: left; padding-left: 30px;">
-                        <?php echo JRoute::_('<a  data-token="'.md5($item->id."projk".$item->created_by).'" data-userid="'.$item->created_by.'" data-projtitle="'.$item->title.'" id="projDel_'.$item->id.'" href="javascript:void(0)" class="projPagDel">');?><img style="height: 60px;" src="<?php JUri::base();?>images/Delete-icon.png" alt="delete project"/>
-                           <?php echo  'Delete Project</a>' ; ?> </div>
+                            <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a class="thumbnail btn" href="index.php?option=com_projectfork&task=prmatch&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/survey_icon.gif" alt="project matches" /><?php echo ucwords($item->title).' Matches</a>' ; ?></div>
+                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a class="thumbnail btn" href="index.php?option=com_projectfork&task=proposals&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/notepad-icon.png" alt="proposals"/><?php echo ucwords($item->title).' Proposals</a>' ; ?></div>
+                             <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a class="thumbnail btn" href="index.php?option=com_projectfork&task=userlikes&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/thumbs-up-users.png" alt="user likes"/><?php echo ucwords($item->title).' Likes</a>' ; ?></div>
+                             
+                              <div style="padding: 5px; float: left;"><?php echo JRoute::_('<a class="thumbnail btn" href="index.php?option=com_projectfork&task=members&id='.$item->id.'&Itemid=124">');?><img style="height: 70px;" src="<?php JUri::base();?>images/user_accounts.png" alt="members"/><?php echo ucwords($item->title).' Members</a>' ; ?></div>
+                             <div style="padding: 5px; float: left;">
+                        <?php echo JRoute::_('<a  class="thumbnail btn projPagDel" data-token="'.md5($item->id."projk".$item->created_by).'" data-userid="'.$item->created_by.'" data-projtitle="'.$item->title.'" id="projDel_'.$item->id.'" href="javascript:void(0)">');?><img style="height: 70px;" src="<?php JUri::base();?>images/Delete-icon.png" alt="delete project"/>
+                           <?php echo  'Delete '.ucwords($item->title).'</a>' ; ?> </div>
                              <div class="clearfix"></div>
                                 <?php } ?>
                             <hr />

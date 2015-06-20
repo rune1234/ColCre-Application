@@ -55,6 +55,44 @@ class ProjectforkController extends JControllerLegacy
         $view->display();
          
     }
+    public function members()
+    {
+        $db = JFactory::getDbo();
+        $user = JFactory::getUser();
+        $pid = JRequest::getInt('id'); 
+        if ($pid == 0) return;
+        if (!$user || !isset($user->id) || $user->id == 0) return;
+        jimport('projectfork.colcre.project');
+        $pd = new projectData();
+        $project = $pd->projectInfo();
+        $document = JFactory::getDocument();
+        //$document->addScript(JURI::root() . 'libraries/projectfork/js/angular.min.js');
+        $document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
+        $owner = $pd->projectOwner();
+        if ($owner)
+        {
+            $limitstart = JRequest::getInt('limitstart');
+            $limit = JRequest::getVar( "viewlistlimit", '10', 'get', 'int');
+            $total = $db->setQuery("SELECT count(project_id) FROM #__pf_project_members WHERE project_id=".$pid)->loadResult();
+            $pagination = new JPagination($total, $limitstart, $limit);
+            $query = "SELECT * FROM #__pf_project_members WHERE ";//owner_id = ".$user->id." AND ";
+            $query .= "project_id=".$pid." LIMIT $limitstart, $limit";
+            $members = $db->setQuery($query)->loadObjectList();
+            
+            $view = $this->getView('members', 'html');
+            $view->set('info', $project);
+            /*$view->set('proposals', $rows);*/
+             $view->set('usermembers', $members);
+            $view->set('profile_data', $pd);
+            $view->set('total', $total);
+            $pagination = $pagination->getPagesLinks();
+            $view->set('pagination', $pagination);
+            $view->display();
+        } else {
+            echo "<h2 style='color: #a00;'>You are not authorized to be here</h2>";
+            echo "<script>window.location='".JUri::base()."'</script>";
+        }
+    }
     public function getlikes()
     {
         $data = json_decode(file_get_contents("php://input"));
@@ -82,7 +120,7 @@ class ProjectforkController extends JControllerLegacy
          $limit = JRequest::getVar( "viewlistlimit", '10', 'get', 'int');
          $total = $db->setQuery("SELECT count(id) FROM #__pf_projects_msg WHERE owner_id = ".$user->id." AND project_id=".$pid)->loadResult();
          $pagination = new JPagination($total, $limitstart, $limit);
-         $rows = $db->loadObjectList();
+         //$rows = $db->loadObjectList();
          $query = "SELECT * FROM #__pf_projects_msg WHERE ";//owner_id = ".$user->id." AND ";
          $query .= "project_id=".$pid." ORDER BY id DESC LIMIT $limitstart, $limit";
          //echo $query;
@@ -127,6 +165,28 @@ class ProjectforkController extends JControllerLegacy
          $view->set('pd', $pd);
         $view->display();
         //<div class="span3 pull-left projectBox"
+    }
+    public function removeUser()
+    {
+        $post = $_POST;
+        $token = md5($post['projid']."michelle".$post['projid']);
+        if ($post['token'] != $token) { exit; } 
+        if (!is_numeric($post['projid']) && !is_numeric($post['userid'])) exit;
+        $query = "DELETE FROM #__pf_project_members WHERE project_id=".$post['projid']." AND user_id=".$post['userid']." LIMIT 1";
+        $db = JFactory::getDbo();
+        $r = $db->setQuery($query)->Query();
+        $error = array();
+        if (!$r)
+        {
+            $error['error'] = 1;
+            $error['msg'] = $db->getErrorMsg();
+            echo json_encode($error);
+            exit;
+        }
+        $error['error'] = 0;
+        $error['msg'] = "";
+        echo json_encode($error);
+        exit;
     }
     public function deleteTask()
     {
