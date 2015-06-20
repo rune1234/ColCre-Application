@@ -74,7 +74,48 @@ jQuery(document).ready(function($)
 }); 
 
 // END OF EVENTS ******************************************************************************************
-
+function banuser(projid, userid, token)
+{
+      deleteuser(projid, userid, token, 1);
+}
+function deleteuser(projid, userid, token, option)
+{
+    if (isNaN(userid) || userid == 0) { alert('invalid user'); return; }
+    if (isNaN(projid) || projid == 0) { alert('invalid project'); return; }
+    if (typeof(option) == 'undefined') option = 0;
+    jQuery( "#dialog" ).dialog( "open" );
+    jQuery('#dialog').data('token', token);
+    jQuery('#dialog').data('option', option);
+    jQuery('#dialog').data('userid', userid);
+    jQuery('#dialog').data('token', token);
+    jQuery('#dialog').data('projid', projid);
+}
+function delProjMember()
+{
+    jQuery('#memerbox_'+ jQuery('#dialog').data('userid')).remove();
+    jQuery('#dialog').dialog('close');
+     var total = jQuery('#profmemcount').html();
+    if (parseInt(total) > 0)
+    {
+        total = total - 1;
+        jQuery('#profmemcount').html(total);
+    }
+    var token = jQuery('#dialog').data('token');
+     var option_2 = jQuery('#dialog').data('option');
+     var userid = jQuery('#dialog').data('userid');
+     var projid = jQuery('#dialog').data('projid');
+     var $fragment_refresh = {
+		url: projectURL,
+		type: 'POST',
+		data: { option: 'com_projectfork', option_2: option_2, task:'removeuser', token: token, projid: projid, userid: userid},
+		success: function( data ) 
+                {  
+                    data = JSON.parse(data); 
+                    if (data.error == 1) alert(data.msg); 
+                } 
+    };
+    jQuery.ajax( $fragment_refresh );
+}
 function delPayMethod(data)//user must be able to message a project's owner
 {
     jQuery('#paytype_' + data.id).remove();
