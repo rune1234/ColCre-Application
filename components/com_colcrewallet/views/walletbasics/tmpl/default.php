@@ -15,9 +15,8 @@ echo "<div id='wallet-menu' class='row-fluid' style='width: 100%;'><ul>"
 <p>To get the fun started its always good with money in the wallet. Here you can buy Makertokens for your wallet. We are very early in the startup process, so we separate our system with any reel payment system, and process the transfer manually. As soon as possible we will implement more smooth transfer methods.   
     You can cash-in money to your account by a making money transfer to one of the following account, we will then transfer the Makertoken to your wallet.</p>
 <p>We will then process it, deduct fee, and put it in your wallet.</p>
-<p>The Processing fee for Bitcoin, Paypal, Skrill is $5 + 1% of the amount.
-The processing fee for bankwire transfer is: $5 + 1% of the amount.
-1 Maker token is cost 1 US dollar.</p></div>
+<p>The Processing fee for Bitcoin, Paypal, Skrill is $5 + 1% of the amount.<br />The processing fee for bankwire transfer is: $50 + 1% of the amount.
+        <br />Value of 1 Maker token is 1 US dollar.</p></div>
     <div style="background: #888; color: #fff; padding: 10px; margin: 5px; margin-bottom: 10px; border-radius: 5px;"><p><strong>Bank Transfer:</strong></p>
 <p>SWIFT: ALBADKKK</p>
 <p>IBAN : DK7853610000345973</p>
