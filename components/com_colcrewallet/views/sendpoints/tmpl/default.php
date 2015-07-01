@@ -26,6 +26,7 @@ $maxValue = 120;
             <option value='1'>Make Whatever Tokens</option>
             <option value='2'>Dollars</option>
             <option value='3'>Bitcoins</option>
+            <option value="4">KBHTF</option>
         </select>
     </p>
     <div style="vertical-align: text-top;">Note:
