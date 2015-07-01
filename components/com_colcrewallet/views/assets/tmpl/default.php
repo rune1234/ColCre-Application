@@ -15,7 +15,7 @@ echo "<div id='wallet-menu' class='row-fluid' style='width: 100%;'><ul>"
 <div class="row-fluid">
      
      <?php 
-     $pt = array('Make Whatever Tokens', 'Dollars','Bitcoins');
+     $pt = array('Make Whatever Tokens', 'Dollars','Bitcoins', 'KBHTF');
      foreach ($this->rows as $rw) 
      {
      echo " <div class=\"container-fluid\" style='margin-bottom: 5px; background: #fff; padding-top: 7px;'><div class=\"span4\">".$pt[$rw->payment_type - 1]." Points: $rw->points</div></div>";
