@@ -120,7 +120,8 @@ class WalletModelColcre extends JModelList
       {
           if (!is_numeric($userid)) return;
           $db = JFactory::getDbo();
-          $query = "SELECT * FROM #__colcreassets WHERE recipient_id = $userid and type = 1 LIMIT 5";
+          //with this limit, you cannot have more ten payment systems:
+          $query = "SELECT * FROM #__colcreassets WHERE recipient_id = $userid and type = 1 LIMIT 10";
           //echo $query;
           $db->setQuery($query);
           return $db->loadObjectList();
@@ -164,7 +165,8 @@ class WalletModelColcre extends JModelList
           //print_r($post); return;
           if (!is_numeric($post['user_id']) && trim($post['username']) == '') return array("Invalid Data", false);
           if (!is_numeric($post['points']) && $post['points']== 0) return array("Invalid Number of Points", false);
-          if ($post['method'] > 3 || $post['method'] < 1) return array("ERROR - unknown method. If this is happening, contact Make Whatever as soon as possible", false);
+          //with this system, you cannot have more than ten payment systems:
+          if ($post['method'] > 10 || $post['method'] < 1) return array("ERROR - unknown method. If this is happening, contact Make Whatever as soon as possible", false);
           $myUser = JFactory::getUser();
           $myUser = $myUser->id;
           //print_r($post); exit;
