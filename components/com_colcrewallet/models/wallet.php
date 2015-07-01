@@ -120,7 +120,7 @@ class WalletModelColcre extends JModelList
       {
           if (!is_numeric($userid)) return;
           $db = JFactory::getDbo();
-          $query = "SELECT * FROM #__colcreassets WHERE recipient_id = $userid and type = 1 LIMIT 3";
+          $query = "SELECT * FROM #__colcreassets WHERE recipient_id = $userid and type = 1 LIMIT 5";
           //echo $query;
           $db->setQuery($query);
           return $db->loadObjectList();
