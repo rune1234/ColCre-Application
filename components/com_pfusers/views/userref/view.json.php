@@ -72,7 +72,7 @@ class PFusersViewUserRef extends JViewLegacy
 
         parent::display($tpl);
     }
-    public function getProjectUsers($id)
+    public function getProjectUsers($id)//redacron function.It is used to assign tasks only to project mebmers
     {
         /*{"total":20,"items":[{"id":893,"text":"[carborrtek] Pedro RP"},{"id":902,"text":"[Cashin] Cashin"},{"id":886,"text":"[Colcre adm] Colcre adm"},{"id":883,"text":"[pcyahoo] Pedro Carbonell"},{"id":918,"text":"[Pedrohot] Pedrohot"},{"id":864,"text":"[rhoegh] Rune"},{"id":860,"text":"[rpcarnell] Pedro Carbonell"},{"id":884,"text":"[rpgmail] rpc pedo"},{"id":887,"text":"[runelf] Rune Fritzen"},{"id":859,"text":"[rune_colcre] Super User"}]}*/
          
