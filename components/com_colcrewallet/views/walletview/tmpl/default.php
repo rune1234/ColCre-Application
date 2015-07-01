@@ -9,7 +9,7 @@ echo "<div id='wallet-menu' class='row-fluid' style='width: 100%;'><ul>"
                 . "</ul></div><div style='clear: both;'></div><br />";
                 
                 
- $pt = array('Make Whatever Tokens', 'Dollars','Bitcoins');
+ $pt = array('Make Whatever Tokens', 'Dollars','Bitcoins', 'KBHTF');
 foreach($this->rows as $rw)
 {  //print_r($rw);
     if ($rw->recipientData->id == $this->userid)
