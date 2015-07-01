@@ -71,7 +71,9 @@ function validaWitWr()
 <div>
     <!--<p>Available Balance 	US $<span id='availablebal'><?php echo $this->cash->money; ?></span></p> -->
     <p>Withdrawal Amount  <input type='text' name='amount' id='currentamount' onblur='changeQuantity()' id='widthamount' maxlength="4" size="4" style='width: 50px;' /> US $</p> 	
-    <p>The Processing fee for Bitcoin, Paypal, Skrill is $5 + 10%.<br />The processing fee for bankwire transfer is: $75 + 10%.</p>
+    <p>The Processing fee for Bitcoin, Paypal, Skrill is $5 + 1% of the amount.<br />The processing fee for bankwire transfer is: $50 + 1% of the amount.
+        <br />Value of 1 Maker token is 1 US dollar.</p>
+    
     <!-- <div>New Balance 	US $<span id='newbalance'><?php // echo $this->cash->money; ?></span></div>--><br />
 <div style='color: #a00; font-weight: bold;' id='amountwarning'></div>
 </div>
