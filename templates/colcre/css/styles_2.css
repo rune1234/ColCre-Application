@@ -24,9 +24,15 @@ body
 }
 header
 {
-   background: #e74c3c;
+   background: #000;/* #e74c3c;*/
    height: 60px;
     
+}
+ 
+.joms-stream-content header
+{
+    background: #fff;
+    padding: 10px;
 }
 .logoheader
 {
@@ -75,7 +81,7 @@ header ul.menu li.current
  header ul.menu li.current a
 {
     color: #fff;
-    text-decoration: underline;
+   /* text-decoration: underline;*/
     font-weight: bold;
 }
 
@@ -86,9 +92,10 @@ header ul.menu li a{
 }
 h1#logo
 {
-    font-size: 40px;
+    font-size: 30px;
     color: #fff;
     margin: 10px;
+    margin-bottom: 0px;
 }
 section.subheader
 {
@@ -200,12 +207,14 @@ footer ul.menu li.parent ul
 {
     background: #fff;
     width: 235px;
+    
 }
 #contentarea
 {
     background: #f4f4f4;
     float: right;
     width: 1030px;
+    padding: 5px;
 }
 #contentarea_2
 {
@@ -253,19 +262,24 @@ h1.colcreh, h3.colcreh
     padding: 5px;
     color: #fff;
     height: 40px;
-    text-align: center;
+    text-align: center; 
+    opacity: 0.8;
 }
 
-.projectBox, .projectFrame, .userMatch
+.matchBox, .projectBox, .projectFrame, .userMatch
 {
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:3px;-webkit-box-shadow:0 0 1px rgba(0, 0, 0, 0.2);-moz-box-shadow:0 0 1px rgba(0, 0, 0, 0.2);box-shadow:0 0 1px rgba(0, 0, 0, 0.2);
     padding:0px;position:relative;
     background: rgb(255, 255, 255) !important;
-    height: 570px;
-    margin-bottom: 20px;
+   margin-bottom: 20px;
     margin-right: 20px;
+}
+.projectBox, .projectFrame, .userMatch
+{
+   height: 620px;
+   
 }
 .projectFrame, .userMatch{
     height: auto;
@@ -276,7 +290,7 @@ h1.colcreh, h3.colcreh
 #userProfileDiv
 {
     margin: 60px auto;
-    width: 50%;
+    width: 70%;
      
 }
 ul#userProfUl
@@ -297,6 +311,12 @@ ul#userProfUl li
      padding: 5px;
      text-align: center;
      color: #fff;
+}
+ul.unstyled,
+ol.unstyled {
+  margin-left: 0;
+  padding-left: 20px !important;
+  list-style: none;
 }
 #addskillbox{
     background: #fff;
@@ -339,6 +359,26 @@ ul#userProfUl li
 	opacity: .60;
 	z-index: 2;
 }
+#projectInvite
+{
+   
+    background: rgb(231, 76, 60);
+    padding: 5px 10px;
+    border: 1px solid #777;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    margin: 0px;
+    width: 200px;
+    text-align: center;
+     text-decoration: none !important;
+}
+#projectInvite:hover
+{
+    text-decoration: none !important;
+     background: #f96;
+   
+}
 /*--Making IE6 Understand Fixed Positioning--*/
 *html #fade {
 	position: absolute;
@@ -352,4 +392,260 @@ img.btn_close {
         z-index: 3;
 }
 
- 
+#wallet-menu
+{
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+     
+}
+
+#wallet-menu ul li a {
+    text-decoration: none;
+    color: white;
+   
+    margin-right: 10px;
+    margin-bottom: 3px;
+    background: rgb(85, 85, 85); 
+    padding: 10px;
+    width: 150px;
+   display: block;
+   float: left;
+   text-align: center;
+}
+
+#wallet-menu a:hover {
+    background: rgb(255, 255, 255); 
+    color: rgb(85,85,85);
+}
+
+#wallet-menu ul li {
+    display: inline;
+    
+}
+
+#wallet-menu ul li:hover {}
+
+/* +++++++++++++++++++++++ pagenav +++++++++++++++++++++++  */
+.pagination span,
+.pagination span  a:hover {
+	color: #999999;
+	background-color: #555;
+        
+}
+
+/* active item */
+span.pagenav
+{
+background:#aaa;
+color:#fff
+}
+
+.pagination-start span.pagenav,
+.pagination-prev  span.pagenav,
+.pagination-end span.pagenav,
+.pagination-next span.pagenav
+
+{
+background-color:#f5f5f5;
+color:#444
+}
+.pagenav {
+	text-align: right;
+        
+}
+
+.pagenav ul {
+	display: inline-block;
+	*display: inline;
+	/* IE7 inline-block hack */
+	list-style-type: none;
+	margin-left: 0;
+	margin-bottom: 0;
+}
+
+.pagenav li {
+	display: inline;
+	margin: 0px;
+	padding: 0;
+       
+        
+}
+
+.pagenav a,span.pagenav {
+	padding: 0 14px;
+	margin: 0;
+	line-height: 1.9em;
+	text-decoration: none;
+	border: 1px solid #ddd;
+	border-left: 0px solid #ddd;
+	display: inline-block;
+	line-height: 1.9em;
+         color: #000;
+          
+}
+
+.pagenav li:first-child a,.pagination-start span {
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+	border-left: solid 1px #ddd
+}
+
+.pagenav li:last-child a,.pagination-end span {
+	-webkit-border-radius: 0 3px 3px 0;
+	-moz-border-radius: 0 3px 3px 0;
+	border-radius: 0 3px 3px 0;
+}
+
+.pagination ul {
+	margin: 10px 10px 10px 0;
+	padding: 0
+}
+
+.pagination li {
+	display: inline;
+        
+}
+
+.pagination a {
+	padding: 0 14px;
+	line-height: 2em;
+	text-decoration: none;
+	border: 1px solid #ddd;
+	border-left: 0px solid #ddd;
+	display: inline-block;
+       
+}
+
+.pagination .active a {
+	cursor: default;
+}
+
+.pagination span,.pagination span  a:hover {
+	cursor: default;
+	padding: 0 14px;
+	line-height: 2em;
+}
+
+.pagination li:first-child a {
+	border-left-width: 1px;
+	-webkit-border-radius: 3px 0 0 3px;
+	-moz-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+
+.pagination li:last-child a {
+	-webkit-border-radius: 0 3px 3px 0;
+	-moz-border-radius: 0 3px 3px 0;
+	border-radius: 0 3px 3px 0;
+}
+
+.submit-button
+{
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.warn
+{
+     color: #a00;    
+}
+.creditbar, .creditalr
+{
+    padding: 5px;
+}
+.creditalr
+{
+    background: #ddd;
+    border: 1px solid #fff;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.creditbar:nth-child(even)
+{
+        background: #fff;
+}
+.likemain
+{
+    color: #a00;
+}
+.likemain span{
+    padding-top: 20px;
+}
+.likelayer
+{
+    width: 60px;
+    height: 60px;
+    background-image: url("../../../images/thumbs-up.png");
+     background-size: 60px 60px;
+     	background-repeat: no-repeat;
+        float: left;
+}
+
+#errjsemailmsg
+{
+    color: #f00;
+}
+.pcreator
+{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 5px;
+    
+}
+.pcreator > span
+{
+    vertical-align: top;
+    margin-left: 3px;
+}
+.delSkillYN
+{
+    margin-top: 5px; text-align: center; background: #fff; border: 2px solid #999; border-radius: 5px; padding: 10px; width: 20%;
+}
+.delSkillYN span2
+{
+    color: #a00 !important;
+    font-size: 14px;
+}
+.firstsearch
+{
+   width:600px;
+    margin: auto;
+}
+.firstsearch input
+{
+    float: left;
+   
+}
+
+#projprof
+{
+    padding: 10px;
+    background: #eee;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    width: 30%;
+    float: right;
+}
+
+.projectDelete
+{
+    background: #a00;
+    padding: 5px;
+    width: 200px;
+    color: #fff;
+    height: 20px !important;
+    text-align: center;
+}
+
+a.contentPage
+{
+    color: #333;
+    text-decoration: underline;
+}
