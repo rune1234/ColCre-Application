@@ -250,7 +250,22 @@ Joomla.submitbutton = function(task)
     	</div>
     </fieldset>
     <?php endif; ?>
-
+   <?php //website, email, phone, image are here:
+    $fieldsets = $this->form->getFieldsets('attribs');
+    if (count($fieldsets)) :
+        echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_DETAILS_FIELDSET'), 'project-options');
+		foreach ($fieldsets as $name => $fieldset) :
+            ?>
+			<fieldset>
+                <?php foreach ($this->form->getFieldset($name) as $field) : ?>
+                    <div class="formelm control-group">
+                    	<div class="control-label"> <?php echo $field->label; ?></div>
+            		    <div class="controls"><?php echo $field->input; ?></div>
+            		</div>
+                <?php endforeach; ?>
+            </fieldset>
+        <?php endforeach; ?>
+    <?php endif; ?>
     
 
     <?php if ($user->authorise('core.admin', 'com_pfprojects') || $user->authorise('core.manage', 'com_pfprojects')) : ?>
