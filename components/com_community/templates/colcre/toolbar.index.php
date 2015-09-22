@@ -124,11 +124,19 @@ $taskName = JRequest::getCmd( 'task');
 						</li>
 					<?php } 
  if (1 == 1){?>
-								<li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=matches'); ?>">Matches</a>
+        </ul>  <ul class="nav">
+								<li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=matches'); ?>">Matches</a>
 								</li>
-                                                                <li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=profile&view=projects'); ?>">My Projects</a>
+                                                                <li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=projects'); ?>">My Projects</a>
 								</li>
-								 
+                                                                <li class="visible-desktop">	<a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=invitations'); ?>">Invitations</a>
+								</li>
+                                                                <li>
+                                                                    <a class="menu-icon" href="<?php echo CRoute::_('index.php?option=com_community&view=profile&task=addskill'); ?>">Add Skill</a>
+                                                                </li>
+                                                                 <li>
+                                                                    <a class="menu-icon" href="<?php echo JRoute::_('index.php?option=com_colcrewallet&Itemid=161'); ?>">Wallet</a>
+                                                                </li>
 							<?php }?>
 
         </ul>
