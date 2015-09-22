@@ -61,7 +61,7 @@ Joomla.submitbutton = function(task)
     		    </div>
     		</div>
         <?php endif; ?>
-        <?php if (PFApplicationHelper::enabled('com_pfmilestones')) : ?>
+        <?php if (1 == 2 && PFApplicationHelper::enabled('com_pfmilestones')) : ?>
     		<div class="formelm control-group">
     			<div class="control-label">
     		    	<?php echo $this->form->getLabel('milestone_id'); ?>
@@ -70,7 +70,7 @@ Joomla.submitbutton = function(task)
     		    	<?php echo $this->form->getInput('milestone_id'); ?>
     		    </div>
     		</div>
-        <?php endif; ?>
+        <?php endif; if (1 == 2 ) { ?>
 		<div class="formelm control-group">
 			<div class="control-label">
 		    	<?php echo $this->form->getLabel('list_id'); ?>
@@ -79,6 +79,7 @@ Joomla.submitbutton = function(task)
 		    	<?php echo $this->form->getInput('list_id'); ?>
 		    </div>
 		</div>
+        <?php } ?>
         <div id="jform_access_element">
             <div id="jform_access_reload"><?php echo $this->form->getInput('access'); ?></div>
         </div>
