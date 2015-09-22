@@ -269,7 +269,7 @@ projectModule.factory('projInvite', function($http, $sce)
                              
                             if (projects.length < 1)
                             {
-                                
+                                jQuery('#showInviteBut').css({'display' : 'none'});
                                 jQuery('#noProjectAvail').css({'display' : ''});
                             }
                             else 
@@ -283,7 +283,7 @@ projectModule.factory('projInvite', function($http, $sce)
                                 oneSKill.description = $sce.trustAsHtml(projects[id].description);
                                 oneSKill.id = projects[id].id;
                                 projectList1[id] = oneSKill;
-                                jQuery('#showInviteBut').css({'display' : ''});
+                                jQuery('#showInviteBut').css({'display' : ''}); 
                                 jQuery('#noProjectAvail').css({'display' : 'none'});
                             }
                         }					 
@@ -621,6 +621,10 @@ projectModule.controller('taskControl',
          }
          $scope.focusOnInput = function(taskid)
          { jQuery('#skillInput' + taskid).focus(); }
+         $scope.closeLayer = function(xArray)
+         {  
+              jQuery("#resultsList" + xArray).css("display", "none");
+         }
          $scope.chooseSkill = function(taskid, skillid, skill)//also used for the user to add skills to his profile
          {
              if (skillid == 0) return;//skillid is present when no matching skill has been found
