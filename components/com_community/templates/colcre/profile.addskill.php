@@ -19,6 +19,15 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
 {
     $useSkillAdd = true;
 } else $useSkillAdd = false;
+function createdBackg($category_alias)
+{
+     if ($category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$category_alias.".jpg"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$category_alias.".jpg"; 
+                elseif ($category_alias && is_file(JPATH_ROOT."/templates/colcre/images/".$category_alias.".png"))  
+                $img_path = JUri::base()."/templates/colcre/images/".$category_alias.".png";       
+               else return JUri::base()."/images/foldered.jpg";
+               return $img_path;
+}
 ?>
 <script><!--
     
@@ -37,10 +46,10 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
      
     <div class='maincatgbox'>
         <?php
-        //print_r($userSkills);
+        
          foreach ($skillCategories as $skctg)
         {
-             echo "<div class='catgbox' data-catg='$skctg->id'>\n<div class='catgtitle' >".ucwords($skctg->category)."</div></div>\n";
+             echo "<div class='catgbox' data-catg='$skctg->id' style=\"background-image: url('".createdBackg($skctg->alias)."'); background-size: 200px 200px;\">\n<div class='catgtitle' >".ucwords($skctg->category)."</div></div>\n";
         }
         ?>
         <div style='clear: both;'></div>
@@ -81,11 +90,11 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
                     <!--<div id="categoryPan" style="font-weight: bold;">None</div><br />--></td></tr>
             <tr><td valign='top'>Description:&nbsp;</td>
                 <td><textarea name='skilldesc' id='skilldesc' style='width: 520px; height: 200px;'><?php echo ($useSkillAdd) ? $getSkiAdded->skillDesc : ''; ?></textarea></td></tr>
-        <tr><td valign='top'>Skill Tags: </td><td>
+        <tr><td valign='top'>Tag: </td><td>
                   
                   <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
                           <div style="display: none;" ng-click="clearTags()" id="cleartags">click this</div>
-     <div class="control-group"><div class="control-label control-group">Adding skills to your profile will help us match them to projects that need people just like you:
+     <div class="control-group"><div class="control-label control-group"> Add a Tag. A tag can be a skill, keyword, location or preferred language. If you cant see it in the autosuggestion, you can add it below.:
                <div class="task-group" ng-repeat="task in tasks">
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.skill}}' id='skiinnam_{{$index}}' class='taskNfNam' name="taskNfNam[{{$index}}]" />
@@ -103,7 +112,7 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
                                 
    
                                 </ul><div style='position: relative; margin-left: 50px;'>
-         <ul class='resultsList' id='resultsList{{task.id}}'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li>
+         <ul class='resultsList' id='resultsList{{task.id}}' ng-mouseleave='closeLayer(task.id)'><li ng-click='chooseSkill(task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[task.id]'>{{skill.skill}}</li>
          </ul>
      </div>
                </div></div></div>
@@ -113,20 +122,22 @@ if (isset($getSkiAdded) && is_object($getSkiAdded) && isset($getSkiAdded->skill)
                 <div ng-hide='delTYesNo' style="margin-top: 20px; ">Do you really want to delete this set of skills?
                     <div class='delSkillYN'><span2 ng-click='SkillYNYes()'>YES</span2> | <span2 ng-click='SkillYNHide()'>NO</span2></div></div>
     </div>
-                      <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add a Skill Tag:</h4><form><br />
+                      <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add New Tag:</h4><form><br />
             
             <div ng-repeat='skillTag in skillTags'> 
             
             <br ng-if="skillTag.id > 0" /> 
-            <b>Skill {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" value="" />
-            <br /><b>Skill Category:</b> 
+            <b>Tag {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" value="" />
+            <br />
+            <div style="display: none;">
+            <b>Tag Category:</b> 
          <select class="newSkillTagCag"><?php foreach ($skillCategories as $skctg)
-        {
+        { 
              echo "<option name='$skctg->id'>".$skctg->category."</option>\n";
              }?></select>
-             
             </div>
-            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Skill</a></div>
+            </div>
+            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add a New Tag</a></div>
         
         
     
