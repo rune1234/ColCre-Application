@@ -190,7 +190,9 @@ CAssets::attach($js, 'js');
 								</div>
 							<?php endif ?>
 						<?php endif; ?>
-					<?php endif ?>
+					<?php endif;   ?>
+                                        <div style='margin-top: 10px;'><a class="menu-icon" href="<?php echo JRoute::_('index.php?option=com_community&view=profile&view=projects&user_id='.$profile->id."&Itemid=174"); ?>">Projects</a> by <?php echo $profile->name; ?></div>
+                           
 				</div>
                                                                                    
                                                                                    
