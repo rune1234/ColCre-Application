@@ -61,7 +61,7 @@ class PFprojectsController extends JControllerLegacy
           {
               $rows[0] = new stdClass();
               $rows[0]->id = 0;
-              $rows[0]->skill = "There's no match for the skill you are seeking. Click on Add a Skill Tag to add the skill.";
+              $rows[0]->skill = "There's no match for the tag you are seeking. Click on Add a New Tag to add it.";
           }
           $fr = new stdClass();
           $fr->skills = json_encode($rows);
