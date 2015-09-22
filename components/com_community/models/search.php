@@ -417,7 +417,7 @@ class CommunityModelSearch extends JCCModel
         }
 
         $query .= ' LIMIT ' . $limitstart . ',' . $limit;
-        echo $query;
+       // echo $query;
         $db->setQuery($query);
         $result = $db->loadObjectList();
 
@@ -555,7 +555,7 @@ class CommunityModelSearch extends JCCModel
 
 			foreach($filter as $obj)
 			{
-                            
+                            //redacron alteration:
                              $filter_2[] = " (skillTags LIKE ".$db->Quote( '%' . $obj->value . '%' ) ."  OR skill LIKE ".$db->Quote( '%' . $obj->value . '%' ) ." OR skillDesc LIKE ".$db->Quote( '%' . $obj->value . '%' ).")" ;
 			
 				if($obj->field == 'username' || $obj->field == 'useremail')
@@ -602,6 +602,7 @@ class CommunityModelSearch extends JCCModel
 						$query .= ' AND b.' . $db->quoteName( 'thumb' ) . ' != ' . $db->Quote( 'components/com_community/assets/default_thumb.jpg' );
 						$query .= ' AND b.' . $db->quoteName( 'thumb' ) . ' != ' . $db->Quote( '' );
 					}
+                                        //redacron alteration:
              $SELECTIN = "a.id IN (SELECT userid FROM #__pf_project_skills_added WHERE ". implode(' OR ', $filter_2).") OR";
 					$query	.= ' WHERE '.$SELECTIN . $this->_mapConditionKey($obj->condition, $obj->fieldType, $obj->value, $useArray[$obj->field]);
 
