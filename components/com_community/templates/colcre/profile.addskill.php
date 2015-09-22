@@ -94,7 +94,7 @@ function createdBackg($category_alias)
                   
                   <div><div ng-controller="taskControl" data-ng-init="addUserSkills()" id="addusersk" data-addskill='<?php echo str_replace("'", "\\'", json_encode($userSkills)); ?>'>
                           <div style="display: none;" ng-click="clearTags()" id="cleartags">click this</div>
-     <div class="control-group"><div class="control-label control-group"> Add a Tag. A tag can be a skill, keyword, location or preferred language. If you cant see it in the autosuggestion, you can add it below.:
+     <div class="control-group"><div class="control-label control-group"> Add a Tag. A tag can be a skill, keyword, location or preferred language. If you cant see it in the autosuggestion, you can add it below.
                <div class="task-group" ng-repeat="task in tasks">
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.id}}' id='skiinp_{{$index}}' class='taskfID' name="taskfID[{{$index}}]" />
                     <input type='hidden' ng-repeat='chosenSK in skillChosen[task.id]' value='{{chosenSK.skill}}' id='skiinnam_{{$index}}' class='taskNfNam' name="taskNfNam[{{$index}}]" />
