@@ -54,14 +54,46 @@ $authorized = PFtasksHelper::taskPermission($item->id, $user->id);//redacron
 		<?php echo $item->text; ?>
 <?php if($this->skillsNeeded && is_numeric($this->skillsNeeded[0]->task_id) && $this->skillsNeeded[0]->task_id > 0) : ?>
         		<div style="margin: 10px 0;"> 
-                            <dt>Skills Needed:</dt>
+                            <dt>Tags:</dt>
         		 
                             <dd><?php 
                             $skillComm = array();
                             foreach ($this->skillsNeeded  as $tskl) { $skillComm[] = $tskl->skill; }
                             echo implode(', ', $skillComm);
                             ?></dd></div> 
-            <?php endif; ?>
+            <?php endif; 
+             if (isset($item->start_date) && $item->start_date != '0000-00-00 00:00:00') {
+            ?>
+            <div style="margin: 10px 0;"> 
+                            <dt>Start Date:</dt>
+        		 
+                            <dd><?php 
+                            $unixStart = strtotime(str_replace('-', '/', $item->start_date));
+                            $itestart_date = date('M-d-Y H:i:s', $unixStart);
+                         echo $itestart_date;
+                            ?></dd></div> <?php } 
+             if (isset($item->end_date) && $item->end_date != '0000-00-00 00:00:00') {
+            ?>
+            <div style="margin: 10px 0;"> 
+                            <dt>End Date:</dt>
+        		 
+                            <dd><?php 
+                            $unixStart = strtotime(str_replace('-', '/', $item->end_date));
+                            $itestart_date = date('M-d-Y H:i:s', $unixStart);
+                         echo $itestart_date;
+                            ?></dd></div> <?php } 
+          
+             if (isset($item->rate)) {
+            ?>
+            <div style="margin: 10px 0;"> 
+                            <dt>Rate:</dt>
+        		 
+                            <dd><?php 
+                           echo "$".$item->rate." per hour";
+                            ?></dd></div> <?php } ?>
+            
+            
+          
         <dl class="article-info dl-horizontal pull-right">
     		<dt class="project-title">
     			<?php echo JText::_('JGRID_HEADING_PROJECT');?>:
