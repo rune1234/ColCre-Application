@@ -168,11 +168,12 @@ function msgOwner()//user must be able to message a project's owner
 		url: projectURL,
 		type: 'POST',
 		data: { option: 'com_projectfork', task:'msgOwner', project_id:project_id, created_by: created_by, user_id: user_id, proposal:proposal, howwould: howWould},
-		success: function( data ) {   data = JSON.parse(data);
+		success: function( data ) {    data = JSON.parse(data);
                      
                     jQuery('#propoDIV').html(data.proposal).css({'padding' : '5px', 'border' : '1px solid #bbb', 'margin' : '5px', 'background': '#fff'});
                     jQuery('#howwDIV').html(data.howwould).css({'padding' : '5px', 'border' : '1px solid #bbb', 'margin' : '5px', 'background': '#fff'});
                     jQuery('#submitPropos').remove();
+                    jQuery('.alert').html('<b>Your proposal has been successfully submitted:</b><br />'+data.proposal);
         }
     };
     jQuery.ajax( $fragment_refresh );
@@ -215,7 +216,7 @@ function acceptProposal(project, proposal)
 		url: projectURL,
 		type: 'POST',
 		data: { option: 'com_pfprojects', task:'acceptproposal', proposal: proposal, project: project},
-		success: function( data ) { alert(data); } };
+		success: function( data ) {   } };
     jQuery.ajax( $fragment_refresh );
 }
 function rejectProposal(project, proposal)
@@ -225,6 +226,6 @@ function rejectProposal(project, proposal)
 		url: projectURL,
 		type: 'POST',
 		data: { option: 'com_pfprojects', task:'rejecroposal', proposal: proposal, project: project},
-		success: function( data ) { alert(data); } };
+		success: function( data ) {    } };
     jQuery.ajax( $fragment_refresh );
 }
