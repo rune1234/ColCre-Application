@@ -175,6 +175,9 @@ class ProjectforkController extends JControllerLegacy
         $query = "DELETE FROM #__pf_project_members WHERE project_id=".$post['projid']." AND user_id=".$post['userid']." LIMIT 1";
         $db = JFactory::getDbo();
         $r = $db->setQuery($query)->Query();
+        
+        $query = "DELETE FROM #__pf_projects_msg WHERE project_id=".$post['projid']." AND user_id=".$post['userid']." LIMIT 1";
+        $db->setQuery($query)->Query();
         $error = array();
         if (!$r)
         {
