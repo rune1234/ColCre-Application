@@ -403,7 +403,7 @@ class PFprojectsController extends JControllerLegacy
         }
         exit;
     }
-    private function proposalCleanUp(& $db)
+    private function proposalCleanUp(& $db)//remove declined proposals if they are too old. It doesn't matter who they belong to. Clean them up
     {
         $threeMonths = 3600 * 24 * 90;
         $threeMonths = time() - $threeMonths;
