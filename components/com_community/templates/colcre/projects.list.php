@@ -167,8 +167,13 @@ function setAllAsUnread()
     $document = JFactory::getDocument();
     $js = "var projectURL = '".JURI::root()."';";
     $document->addScriptDeclaration($js);
-    $document->addCustomTag('<script src="'.JURI::root().'components/com_pfprojects/js/pfp.js" type="text/javascript"></script>');
-    $document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
+    
+$document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jQuery.js" type="text/javascript"></script>');
+$document->addCustomTag('<script src="'.JURI::root().'libraries/projectfork/js/jquery-ui.dialog.js" type="text/javascript"></script>');
+$document->addCustomTag('<script src="'.JURI::root().'components/com_pfprojects/js/pfp.js" type="text/javascript"></script>');
+
+
+  
     
 ?>
  
