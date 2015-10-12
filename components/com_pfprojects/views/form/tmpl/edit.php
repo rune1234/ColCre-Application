@@ -101,6 +101,10 @@ Joomla.submitbutton = function(task)
                             </select></div>
             		</div>  
       </div>
+      <?php
+     if (1 == 2) //for now, adding tasks through here will not be possible. Start_date and end_date just don't work properly
+     {
+      ?>
 <div id="task_1" style='display: none;'><?php echo json_encode($this->tasks); // this is a way to send data to Angular.JS without relying on Ajax; ?></div>
     <hr /><div ng-app="myProj"><div id="projTasks" ng-controller="taskControl" data-ng-init="editTask()">
              
@@ -143,7 +147,7 @@ Joomla.submitbutton = function(task)
  <input type='text' id='skillInput{{<?php echo $addTask;?> + task.id}}' class="SkillInput" style='width: 100%' ng-keyup="skillPress($event.altKey, <?php echo $addTask;?> + task.id)" />
                 
   
-     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
+     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}' ng-mouseleave='closeLayer(task.id)'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
                </div>
                          <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add New Tag:</h4><form><br />
             
@@ -164,6 +168,60 @@ Joomla.submitbutton = function(task)
         
     
       </div> 
+                         
+                         
+                         
+                         <?php
+                         if (1 == 1) { ?>
+                         
+                         <div class="formelm control-group">
+    		<div class="control-label">
+    	    	<?php echo $this->form->getLabel('complete'); ?>
+    	    </div>
+    	    <div class="controls">
+    	    	<?php echo $this->form->getInput('complete'); ?>
+    	    </div>
+    	</div>
+    	<div class="formelm control-group">
+    		<div class="control-label">
+                    
+    	    	<?php echo $this->form->getLabel('start_date'); ?>
+    	    </div>
+    	    <div id="jform_start_date_reload" class="controls">
+                <input title="" name="jform[start_date]" id="jform_start_date" value="" size="22" maxlength="45" class="inputbox hasTooltip" type="text">
+                    <button type="button" class="btn" id="jform_start_date_img"><i class="icon-calendar"></i></button>
+    	    	<?php //echo $this->form->getInput('start_date'); ?>
+    	    </div>
+    	</div>
+    	<div class="formelm control-group">
+    		<div class="control-label">
+    	    	<?php echo $this->form->getLabel('end_date'); ?>
+    	    </div>
+    	    <div id="jform_end_date_reload" class="controls">
+    	    	<?php echo $this->form->getInput('end_date'); ?>
+    	    </div>
+    	</div>
+        <div class="formelm control-group">
+    		<div class="control-label">
+    	    	<?php echo $this->form->getLabel('rate'); ?>
+    	    </div>
+    	    <div class="controls">
+    	    	<?php echo $this->form->getInput('rate'); ?>
+    	    </div>
+    	</div>
+        <div class="formelm control-group">
+    		<div class="control-label">
+    	    	<?php echo $this->form->getLabel('estimate'); ?>
+    	    </div>
+    	    <div class="controls">
+    	    	<?php echo $this->form->getInput('estimate'); ?>
+    	    </div>
+    	</div>
+                         
+                         <?php } ?>
+                         
+                         
+                         
                         </div>
                        
 		</div><br /><br />
@@ -175,6 +233,9 @@ Joomla.submitbutton = function(task)
         </div>
        
     </div>
+    <?php
+    }
+    ?>
     
       <div id='projectTabs'> 
     <?php echo JHtml::_('tabs.start', 'projectform', array('useCookie' => 'true')) ;?> 
@@ -255,12 +316,15 @@ Joomla.submitbutton = function(task)
     if (count($fieldsets)) :
         echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_DETAILS_FIELDSET'), 'project-options');
 		foreach ($fieldsets as $name => $fieldset) :
+                    
             ?>
 			<fieldset>
-                <?php foreach ($this->form->getFieldset($name) as $field) : ?>
+                <?php  foreach ($this->form->getFieldset($name) as $field) :
+                     if ($field->name != 'jform[attribs][logo]') continue;
+                    ?>
                     <div class="formelm control-group">
-                    	<div class="control-label"> <?php echo $field->label; ?></div>
-            		    <div class="controls"><?php echo $field->input; ?></div>
+                    	<div class="control-label"><?php echo $field->label; ?></div>
+            		    <div class="controls"><?php  echo $field->input; ?></div>
             		</div>
                 <?php endforeach; ?>
             </fieldset>
