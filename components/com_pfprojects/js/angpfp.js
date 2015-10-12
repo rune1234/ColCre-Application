@@ -434,6 +434,14 @@ projectModule.factory('theService', function(theMenus, $http)
         theTasks: {
             addTask: function(task){  
             $tasks.push(task);
+           
+		document.formvalidator.setHandler('expiredate', function(value) {
+			expiredate = new Date(document.id('jform_expire_date').value);
+			startdate = new Date(document.id('jform_start_date').value);
+			return (startdate.diff(expiredate,'minute') >= 0);
+		});
+	 
+            
         },
             getTasks: function() { return $tasks; } 
         }
