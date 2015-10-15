@@ -16,7 +16,16 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
 JHtml::_('pfhtml.script.form');
-
+ function getSkillsList()//almost the same as the above function
+    {
+        $db = JFactory::getDbo();
+       // $query = "SELECT * FROM #__pf_skill_category ORDER BY category";
+        $query = "SELECT id, LOWER(title) as category FROM #__categories WHERE extension='com_pfprojects' ORDER BY LOWER(title)";
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+        return $rows;
+    }
+    $skillCategories = getSkillsList();
 // Create shortcut to parameters.
 $params = $this->state->get('params');
 $user   = JFactory::getUser();
@@ -118,7 +127,8 @@ Joomla.submitbutton = function(task)
         <div class="task-group" ng-repeat="task in tasks">
                      
                         <br /><br />
-                        <div class="control-group"><div class="control-label control-group">Tags:
+                        <div class="control-group"><div class="control-label control-group"><b>Tags:</b>
+                                <p style='font-size: 11px;'>Add a Tag. A tag can be a skill, keyword, location, or preferred language. If you cannot see it in the auto-suggestion, you can add it below.</p>
                                 <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]"  />
                     <ul class="token-input-list" style="height: auto;">
              <?php
@@ -132,7 +142,31 @@ Joomla.submitbutton = function(task)
   
      </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
                </div></div>
-                       
+                        <?php
+                        {
+                        ?>
+                        <br /><div ng-controller="addSkillTag" class="addSkillTag"><h4>Add New Tag:</h4>
+            
+            <div ng-repeat='skillTag in skillTags'> 
+            
+            <br ng-if="skillTag.id > 0" /> 
+            <b>Tag {{skillTag.id + 1}}:</b> <input type="text" class="newSkillTag" name="taskform[newSkillTag][{{skillTag.id}}]" value="" />
+           <!-- <br /><b>Skill Category:</b> 
+         <select class="newSkillTagCag" name="taskform[{{<?php echo $addTask;?> + task.id}}][newSkillTagCag][{{skillTag.id}}]"><?php 
+         /*foreach ($skillCategories as $skctg)
+        {
+             echo "<option value='$skctg->id'>".$skctg->category."</option>\n";
+             }*/
+         ?></select>
+            --> 
+            </div>
+            <div style='margin: 10px 5px;' ng-Click='addTagForm()' ng-hide="addTagShow()"><a>Add Another Tag</a></div>
+        
+        
+    
+      </div><?php
+      }
+      ?>
 		</div><br /><br />
                  <input type='hidden' name="taskform[{{<?php echo $addTask;?> + task.id}}][idedit]" value='{{task.idedit}}' />    
         </div>
@@ -148,7 +182,7 @@ Joomla.submitbutton = function(task)
     <?php echo JHtml::_('tabs.start', 'taskform', array('useCookie' => 'true')) ;?>
     <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_PUBLISHING'), 'task-publishing') ;?>
     <fieldset>
-    	<div class="formelm control-group">
+    	<!--<div class="formelm control-group">
     		<div class="control-label">
     	    	<?php echo $this->form->getLabel('state'); ?>
     	    </div>
@@ -163,7 +197,7 @@ Joomla.submitbutton = function(task)
     	    <div class="controls">
     	    	<?php echo $this->form->getInput('priority'); ?>
     	    </div>
-    	</div>
+    	</div>-->
     	<div class="formelm control-group">
     		<div class="control-label">
     	    	<?php echo $this->form->getLabel('complete'); ?>
@@ -232,7 +266,7 @@ Joomla.submitbutton = function(task)
             </div>
     	</div>
     </fieldset>
-
+<!--
     <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_DEPENDENCIES'), 'task-dependencies') ;?>
     <fieldset>
     	<div id="jform_dependency_element" class="formelm control-group">
@@ -252,7 +286,7 @@ Joomla.submitbutton = function(task)
         	</div>
         </fieldset>
     <?php endif; ?>
-
+-->
     <?php
     $fieldsets = $this->form->getFieldsets('attribs');
     if (count($fieldsets)) :
