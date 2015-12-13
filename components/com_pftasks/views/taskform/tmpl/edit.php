@@ -88,7 +88,10 @@ Joomla.submitbutton = function(task)
 		    	<?php echo $this->form->getInput('list_id'); ?>
 		    </div>
 		</div>
-        <?php } ?>
+        <?php } 
+       
+        ?>
+               
         <div id="jform_access_element">
             <div id="jform_access_reload"><?php echo $this->form->getInput('access'); ?></div>
         </div>
@@ -108,6 +111,15 @@ Joomla.submitbutton = function(task)
                 <?php echo $this->form->getInput('labels'); ?>
             </div>
         </div>
+        <div class="controls">Task Category: <select name="taskform[category]">
+                            
+                    <?php 
+                    foreach($this->categories as $catg)
+                    {
+                        echo "<option value='$catg->id'>$catg->title</option>\n";
+                    }
+                     ?>
+                        </select></div><br />
 		<div class="formelm control-group">
 		    <div class="controls">
 		    	<?php echo $this->form->getInput('description'); ?>
@@ -129,7 +141,7 @@ Joomla.submitbutton = function(task)
                         <br /><br />
                         <div class="control-group"><div class="control-label control-group"><b>Tags:</b>
                                 <p style='font-size: 11px;'>Add a Tag. A tag can be a skill, keyword, location, or preferred language. If you cannot see it in the auto-suggestion, you can add it below.</p>
-                                <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]' value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]"  />
+                                <input type='hidden' ng-repeat='chosenSK in skillChosen[<?php echo $addTask;?> + task.id]'  value='{{chosenSK.id}}' id='skiinp_{{<?php echo $addTask;?> + task.id}}_{{chosenSK.id}}' name="taskform[{{<?php echo $addTask;?> + task.id}}][SkillInput][]"  />
                     <ul class="token-input-list" style="height: auto;">
              <?php
                
@@ -140,7 +152,7 @@ Joomla.submitbutton = function(task)
  <input type='text' id='skillInput{{<?php echo $addTask;?> + task.id}}' class="SkillInput" style='width: 100%; background: #fff;' ng-keyup="skillPress($event.altKey, <?php echo $addTask;?> + task.id)" />
                 
   
-     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
+     </li></ul><div style='position: relative; margin-left: 50px;'><ul class='resultsList'  ng-mouseleave='closeLayer(task.id)' id='resultsList{{<?php echo $addTask;?> + task.id}}'><li ng-click='chooseSkill(<?php echo $addTask;?> + task.id, skill.id, skill.skill)' ng-repeat='skill in skillResults[<?php echo $addTask;?> + task.id]'>{{skill.skill}}</li></ul></div>
                </div></div>
                         <?php
                         {
@@ -227,7 +239,8 @@ Joomla.submitbutton = function(task)
     	    	<?php echo $this->form->getLabel('rate'); ?>
     	    </div>
     	    <div class="controls">
-    	    	<?php echo $this->form->getInput('rate'); ?>
+    	    	<?php 
+                echo $this->form->getInput('rate', null, '10,00'); ?>
     	    </div>
     	</div>
         <div class="formelm control-group">
@@ -235,7 +248,7 @@ Joomla.submitbutton = function(task)
     	    	<?php echo $this->form->getLabel('estimate'); ?>
     	    </div>
     	    <div class="controls">
-    	    	<?php echo $this->form->getInput('estimate'); ?>
+    	    	<?php echo $this->form->getInput('estimate', null, '10'); ?>
     	    </div>
     	</div>
     	<?php if ($this->item->modified_by) : ?>
@@ -258,7 +271,7 @@ Joomla.submitbutton = function(task)
     	<?php endif; ?>
     </fieldset>
 
-    <?php echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_ASSIGNED_USERS'), 'task-users') ;?>
+    <?php echo JHtml::_('tabs.panel', 'Committed Users', 'task-users') ;// echo JHtml::_('tabs.panel', JText::_('COM_PROJECTFORK_FIELDSET_ASSIGNED_USERS'), 'task-users') ;?>
     <fieldset>
     	<div id="jform_users_element" class="formelm control-group">
             <div id="jform_users_reload">
