@@ -39,7 +39,7 @@ if ($df == 0)
     <!--<div class="container-fluid" style="margin-left: 5px;"><p>Payment Account will be used to automatically pay for your Make Whatever membership</p></div>-->
    
 </div>
-<div class="row-fluid"><div class="lead page-header">Your Accounts</div>
+<div><div class="lead page-header">Your Accounts</div>
      <!--<div class="container-fluid creditbar" style="margin-left: 5px;">
     <div class="span3">Bitcoin Account</div><div class="span3"></div>
     
