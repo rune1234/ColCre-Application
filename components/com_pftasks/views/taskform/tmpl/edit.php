@@ -239,16 +239,20 @@ Joomla.submitbutton = function(task)
     	    	<?php echo $this->form->getLabel('rate'); ?>
     	    </div>
     	    <div class="controls">
-    	    	<?php 
-                echo $this->form->getInput('rate', null, '10,00'); ?>
+    	    	<?php // print_r($this->item);
+                $rate = (isset($this->item->rate)) ? $this->item->rate : '10.00';
+                echo $this->form->getInput('rate', null, $rate); ?>
     	    </div>
     	</div>
         <div class="formelm control-group">
     		<div class="control-label">
-    	    	<?php echo $this->form->getLabel('estimate'); ?>
+    	    	<?php 
+                echo $this->form->getLabel('estimate'); ?>
     	    </div>
     	    <div class="controls">
-    	    	<?php echo $this->form->getInput('estimate', null, '10'); ?>
+    	    	<?php 
+                $estimate = (isset($this->item->estimate)) ? $this->item->estimate : 10;
+                echo $this->form->getInput('estimate', null, $estimate); ?>
     	    </div>
     	</div>
     	<?php if ($this->item->modified_by) : ?>
