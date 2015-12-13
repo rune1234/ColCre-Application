@@ -91,7 +91,8 @@ class PFtasksControllerTaskForm extends JControllerForm
         }
         
            $data = $_POST['jform'];
-           
+           $data['category'] = is_numeric($_POST['taskform']['category']) ? $_POST['taskform']['category'] : '';
+          // echo "Category is ".$data['category']; exit;
            //print_r($_POST['taskform'][1]['idedit']);
    //print_r($_POST['taskform'][1]['SkillInput']); exit;
            $data['skills'] = $_POST['taskform'][1]['SkillInput'];
@@ -112,7 +113,7 @@ class PFtasksControllerTaskForm extends JControllerForm
         if (!is_numeric($user->id) || $user->id == 0) return;
        
            $query = "UPDATE #__pf_tasks ";
-          $query .= "SET project_id='".$data['project_id']."', title='".$db->escape($data['title'])."', alias='".$db->escape($data['alias'])."', description='".$db->escape($data['description'])."', modified_by ='".$user->id."',modified ='".date('Y-m-d H:i:s', time())."', start_date='".$db->escape($data['start_date'])."', end_date='".$db->escape($data['end_date'])."', rate='".$db->escape($data['rate'])."', estimate='".$db->escape($data['estimate'])."' WHERE id = $task_id LIMIT 1";
+          $query .= "SET category_id = '". $data['category']."', project_id='".$data['project_id']."', title='".$db->escape($data['title'])."', alias='".$db->escape($data['alias'])."', description='".$db->escape($data['description'])."', modified_by ='".$user->id."',modified ='".date('Y-m-d H:i:s', time())."', start_date='".$db->escape($data['start_date'])."', end_date='".$db->escape($data['end_date'])."', rate='".$db->escape($data['rate'])."', estimate='".$db->escape($data['estimate'])."' WHERE id = $task_id LIMIT 1";
           $db->setQuery($query);
           $db->Query();
           $this->addSkills($data, $task_id, $db, true);
@@ -125,7 +126,7 @@ class PFtasksControllerTaskForm extends JControllerForm
         $user = JFactory::getUser();
         if (!is_numeric($user->id) || $user->id == 0) return;
         $query = "INSERT INTO #__pf_tasks (`id`,`asset_id`,`project_id`,`category_id`,`list_id`,`milestone_id`,`title`,`alias`,`description`,`created`,`created_by`,`modified`,`modified_by`,`checked_out`,`checked_out_time`,`attribs`,`access`,`state`,`priority`,`complete`,`completed`,`completed_by`,`ordering`,`start_date`,`end_date`,`rate`,`estimate`) ";
-        $query .= "VALUES (NULL , '', '".$data['project_id']."', '', '', '', '".$db->escape($data['title'])."', '".$db->escape($data['alias'])."', '".$db->escape($data['description'])."', '".date('Y-m-d H:i:s', time())."', '".$user->id."', '', '', '', '', '', '1', '1', '', '', '', '', '', '".$db->escape($data['start_date'])."', '".$db->escape($data['end_date'])."', '".$db->escape($data['rate'])."', '".$db->escape($data['estimate'])."');";
+        $query .= "VALUES (NULL , '', '".$data['project_id']."', '".$data['category']."', '', '', '".$db->escape($data['title'])."', '".$db->escape($data['alias'])."', '".$db->escape($data['description'])."', '".date('Y-m-d H:i:s', time())."', '".$user->id."', '', '', '', '', '', '1', '1', '', '', '', '', '', '".$db->escape($data['start_date'])."', '".$db->escape($data['end_date'])."', '".$db->escape($data['rate'])."', '".$db->escape($data['estimate'])."');";
         $db->setQuery($query);
         $db->Query();
         $task_id = $db->insertid();
@@ -391,8 +392,8 @@ class PFtasksControllerTaskForm extends JControllerForm
             $project   = PFApplicationHelper::getActiveProjectId();   
             $milestone = (int) $app->getUserStateFromRequest('com_pftasks.tasks.filter.milestone', 'milestone_id', '');
             $list      = (int) $app->getUserStateFromRequest('com_pftasks.tasks.filter.tasklist', 'list_id', '');
-
-            return JRoute::_(PFtasksHelperRoute::getTasksRoute($project, $milestone, $list), false);
+            return JRoute::_('index.php?option=com_projectfork&view=dashboard&id=34&Itemid=124');//redacron alteration
+            //--> we have neutralized this one: return JRoute::_(PFtasksHelperRoute::getTasksRoute($project, $milestone, $list), false);
         }
         else {
             return base64_decode($return);
