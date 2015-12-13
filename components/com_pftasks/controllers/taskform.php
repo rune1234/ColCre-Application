@@ -392,8 +392,8 @@ class PFtasksControllerTaskForm extends JControllerForm
             $project   = PFApplicationHelper::getActiveProjectId();   
             $milestone = (int) $app->getUserStateFromRequest('com_pftasks.tasks.filter.milestone', 'milestone_id', '');
             $list      = (int) $app->getUserStateFromRequest('com_pftasks.tasks.filter.tasklist', 'list_id', '');
-            return JRoute::_('index.php?option=com_projectfork&view=dashboard&id=34&Itemid=124');//redacron alteration
-            //--> we have neutralized this one: return JRoute::_(PFtasksHelperRoute::getTasksRoute($project, $milestone, $list), false);
+            return JRoute::_('index.php?option=com_projectfork&view=dashboard&id='.$project.'&Itemid=124');//redacron alteration
+           return JRoute::_(PFtasksHelperRoute::getTasksRoute($project, $milestone, $list), false);
         }
         else {
             return base64_decode($return);
