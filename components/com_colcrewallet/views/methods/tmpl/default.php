@@ -36,7 +36,7 @@ if ($df == 0)
 }
 ?>
 <div><div class="lead page-header">Default & Backup Payment Account</div>
-    <div class="container-fluid" style="margin-left: 5px;"><p>Payment Account will be used to automatically pay for your Make Whatever membership</p></div>
+    <!--<div class="container-fluid" style="margin-left: 5px;"><p>Payment Account will be used to automatically pay for your Make Whatever membership</p></div>-->
    
 </div>
 <div class="row-fluid"><div class="lead page-header">Your Accounts</div>
