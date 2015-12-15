@@ -97,7 +97,7 @@ $is_ssl = JFactory::getURI()->isSSL();
           
 <div id='userProfileDiv' style="width: 65%; margin: 40px;">
     
-    <ul id='userProfUl'><li>Most Popular</li><li><a href='<?php echo JRoute::_('index.php?option=com_pfprojects&view=projects&Itemid='.$item_id.'&extr=newweek'); ?>'>New this Week</a></li><li>Most Awarded</li><li>Most Funded</li></ul></div>
+    <!--<ul id='userProfUl'><li>Most Popular</li><li><a href='<?php echo JRoute::_('index.php?option=com_pfprojects&view=projects&Itemid='.$item_id.'&extr=newweek'); ?>'>New this Week</a></li><li>Most Awarded</li><li>Most Funded</li></ul>--></div>
             <?php 
                 echo (isset($_POST['filter_category']) && is_numeric($_POST['filter_category']) && isset($this->items[0]->category_title ) ) ? "<div style='margin: 0px; padding: 0px;'><h4>Category: ".$this->items[0]->category_title."</h4></div>" : ''; 
                 if (! $this->items) { echo "<p><strong>There are no results</strong></p>"; }
