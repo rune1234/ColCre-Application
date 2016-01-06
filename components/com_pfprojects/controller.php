@@ -61,7 +61,7 @@ class PFprojectsController extends JControllerLegacy
           {
               $rows[0] = new stdClass();
               $rows[0]->id = 0;
-              $rows[0]->skill = "There's no match for the tag you are seeking. Click on Add a New Tag to add it.";
+              $rows[0]->skill = "There's no match for the tag you are seeking. Please Add the Tag Below.";
           }
           $fr = new stdClass();
           $fr->skills = json_encode($rows);
@@ -414,8 +414,7 @@ class PFprojectsController extends JControllerLegacy
     {
          if ($accepted) $mailMSG = "<p>Your Application for project ".ucwords($msg->title)." has been accepted.</p>"
                 . "<p>Please visit <a href='".JRoute::_('index.php?option=com_projectfork&view=dashboard&id='.$msg->project_id.'&Itemid=124')."'>".ucwords($msg->title)."</a>
-for more information.</p>
-<p>Sincerely,<br />the Make Whatever staff</p>";
+for more information.</p>";
          else 
          {
              $mailMSG = "<p>Your Application for project ".ucwords($msg->title)." has been declined.</p><p>Fortunately there are other projects you can be a part of.</p>";
@@ -468,9 +467,7 @@ for more information.</p>
 <p>You've been invited to apply for a job! Sign in and select \"Invitations\" on your dashboard to respond.</p>
 <p>Project: $row->title (ID: $row->id)
 Description: <p><i>".nl2br( strip_tags($row->description) )."</i></p>
-<p>
-Sincerely,<br />
-the Make Whatever staff</p>";
+<p>";
          
         //if (is_numeric($data->project_id) && is_numeric($data->user_id))
         {
@@ -480,7 +477,10 @@ the Make Whatever staff</p>";
             $thisID = $db->loadResult();
             if ($thisID && is_numeric($thisID)) 
             {
-                echo "You already invited ".$user_2->name." to project ".$row->title; 
+                $msgArr = array('error' => 1, 'msg' => "You already invited ".$user_2->name." to project ".$row->title);
+               // $msgArr['error'] = 1;
+                // $msgArr['msg'] = 2;//"You already invited ".$user_2->name." to project ".$row->title;
+                echo json_encode($msgArr); 
                 exit;
             }     
             $mainframe = JFactory::getApplication();
@@ -492,7 +492,8 @@ the Make Whatever staff</p>";
             $db->setQuery($query);
             $db->Query();
         }
-        
+        $msgArr = array('error' => 0, 'msg' => "You have successfully invited ".$user_2->name." to project ".$row->title);
+        echo json_encode($msgArr);
         exit;
     }
 }
