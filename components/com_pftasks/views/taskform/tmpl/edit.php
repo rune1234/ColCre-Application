@@ -240,7 +240,7 @@ Joomla.submitbutton = function(task)
     	    </div>
     	    <div class="controls">
     	    	<?php // print_r($this->item);
-                $rate = (isset($this->item->rate)) ? $this->item->rate : '10.00';
+                $rate = (isset($this->item->rate)) ? $this->item->rate : '';
                 echo $this->form->getInput('rate', null, $rate); ?>
     	    </div>
     	</div>
@@ -251,7 +251,7 @@ Joomla.submitbutton = function(task)
     	    </div>
     	    <div class="controls">
     	    	<?php 
-                $estimate = (isset($this->item->estimate)) ? $this->item->estimate : 10;
+                $estimate = (isset($this->item->estimate)) ? $this->item->estimate : '';
                 echo $this->form->getInput('estimate', null, $estimate); ?>
     	    </div>
     	</div>
