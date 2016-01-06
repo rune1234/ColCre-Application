@@ -304,7 +304,7 @@ class ProjectforkController extends JControllerLegacy
     {
         $post = $_POST;
         $db = JFactory::getDbo();
-        $proposal = $db->escape($post['proposal']);
+        $proposal = '';//$db->escape($post['proposal']);
         $howwould = $db->escape($post['howwould']);
         $project_id = $post['project_id'];
         $created_by = $post['created_by'];
@@ -323,7 +323,7 @@ class ProjectforkController extends JControllerLegacy
         $db->setQuery($query);
         $db->Query();
         if (!$exists) {$this->_messageUser($post, $name->name, $db);}
-        $post['proposal'] = nl2br($post['proposal']);
+        $post['proposal'] = '';///nl2br($post['proposal']);
         $post['howwould'] = nl2br($post['howwould']);
         echo json_encode($post);
         exit;
